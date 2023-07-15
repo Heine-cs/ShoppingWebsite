@@ -1,0 +1,54 @@
+﻿@model IEnumerable<OllieShop.Models.Announcements>
+
+@{
+    ViewData["Title"] = "商城公告區";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">新增公告</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ATID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PublicDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ATContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AD)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ATID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublicDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ATContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AD.ADID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ATID">編輯</a> |
+                <a asp-action="Details" asp-route-id="@item.ATID">完整內容</a> |
+                <a asp-action="Delete" asp-route-id="@item.ATID">刪除</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

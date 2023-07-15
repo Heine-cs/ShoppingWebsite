@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using OllieShop.Models;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<OllieShopContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("OllieShopConnection"))
+);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

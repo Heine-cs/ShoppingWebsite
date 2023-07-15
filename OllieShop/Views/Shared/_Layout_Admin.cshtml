@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OllieShop</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/OllieShop.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+        }
+
+        .ShopLogo {
+            height: 70px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+        }
+        /*左側選單*/
+
+        #SideMenu {
+            height: 50px;
+            width: 200px;
+        }
+
+
+            #SideMenu, #SideMenu ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+                #SideMenu li {
+                    background-color: rebeccapurple;
+                }
+
+                #SideMenu a {
+                    color: white;
+                    text-decoration: none;
+                    padding: 5px;
+                    display: block;
+                    width: 200px;
+                }
+
+                #SideMenu li ul {
+                    width: 200px;
+                }
+
+                #SideMenu > li > ul > li {
+                    background-color: white;
+                }
+
+                    #SideMenu > li > ul > li > a {
+                        color: #477dff;
+                    }
+
+        /*左側選單*/
+
+    </style>
+</head>
+<body>
+    <header class="mb-sm-2">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <div>
+                    <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
+                        <img src="~/img/logo.png" class="ShopLogo" />
+                    </a>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid d-flex">
+
+        <div class="text-nowrap">
+            <ul id="SideMenu">
+                <li class="list-unstyled">
+                    <a href="#">公告發布</a>
+                    <ul class="list-unstyled">
+                        <li><a href="#">尚未發布</a></li>
+                        <li><a href="#">點我發布</a></li>
+                        <li><a href="#">歷史紀錄</a></li>
+                    </ul>
+                </li>
+                <li class="list-unstyled">
+                    <a href="#">服務</a>
+                    <ul class="list-unstyled">
+                        <li><a href="#">線上客服</a></li>
+                        <li><a href="#">檔案下載</a></li>
+                        <li><a href="#">資料查詢</a></li>
+                    </ul>
+                </li>
+                <li class="list-unstyled">
+                    <a href="#">查詢</a>
+                    <ul class="list-unstyled">
+                        <li><a href="#">訂單查詢</a></li>
+                        <li><a href="#">歷史訂單</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+
+        <main role="main" class="container-fluid pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-light">
+        <div class="container-fluid d-flex">
+            &copy; 2023 - OllieShop - <a asp-area="" asp-controller="" asp-action="" class="me-auto">管理員9527 你好!</a>
+            <div class="d-flex">
+                <div>
+                    <a asp-controller="" asp-action="" class="btn btn-info me-5">內部公告</a>
+                </div>
+                <div>
+                    <a asp-controller="" asp-action="" class="btn btn-outline-success me-3">行事曆</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @*側邊攔選單*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $('#SideMenu li ul').hide();
+        $('#SideMenu>li').click(function () {
+            $(this).find('ul').slideToggle(500);
+        });
+
+    </script>
+    @*側邊攔選單*@
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
