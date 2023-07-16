@@ -10,6 +10,7 @@ public partial class Categorys
     public string CYID { get; set; } = null!;
 
     [Display(Name = "名稱")]
+    [Required(ErrorMessage = "必填欄位")]
     public string Name { get; set; } = null!;
 
     

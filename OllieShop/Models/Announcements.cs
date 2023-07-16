@@ -10,9 +10,12 @@ public partial class Announcements
     public int ATID { get; set; }
 
     [Display(Name = "發布日")]
+    [Required(ErrorMessage = "必填欄位")]
     public DateTime PublicDate { get; set; }
 
     [Display(Name = "內容")]
+    [DataType(DataType.MultilineText)]
+    [Required(ErrorMessage = "必填欄位")]
     public string ATContent { get; set; } = null!;
 
     public short? ADID { get; set; }

@@ -25,25 +25,6 @@ namespace OllieShop.Controllers
             return View(await ollieShopContext.ToListAsync());
         }
 
-        // GET: Categorys/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null || _context.Categorys == null)
-            {
-                return NotFound();
-            }
-
-            var categorys = await _context.Categorys
-                .Include(c => c.AD)
-                .FirstOrDefaultAsync(m => m.CYID == id);
-            if (categorys == null)
-            {
-                return NotFound();
-            }
-
-            return View(categorys);
-        }
-
         // GET: Categorys/Create
         public IActionResult Create()
         {

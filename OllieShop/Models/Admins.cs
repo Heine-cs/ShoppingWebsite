@@ -10,15 +10,20 @@ public partial class Admins
     public short ADID { get; set; }
 
     [Display(Name = "帳號")]
+    [Required(ErrorMessage ="必填欄位")]
     public string Account { get; set; } = null!;
 
     [Display(Name = "密碼")]
+    [Required(ErrorMessage = "必填欄位")]
     public string Password { get; set; } = null!;
 
     [Display(Name = "啟用日期")]
+    [Required(ErrorMessage = "必填欄位")]
+    [DataType(DataType.DateTime)]
     public DateTime EnableDate { get; set; }
 
     [Display(Name = "停用日期")]
+    [DataType(DataType.DateTime)]
     public DateTime? DisableDate { get; set; }
 
     public virtual ICollection<Announcements> Announcements { get; set; } = new List<Announcements>();

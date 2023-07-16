@@ -1,10 +1,11 @@
 ﻿@model OllieShop.Models.Categorys
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "編輯";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
 <h4>Categorys</h4>
 <hr />
@@ -31,7 +32,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">回類別總覽</a>
 </div>
 
 @section Scripts {
