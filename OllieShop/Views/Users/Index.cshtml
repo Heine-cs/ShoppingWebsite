@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "用戶清冊";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -44,7 +45,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.URID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.URID">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.URID">完整內容</a> |
                 <a asp-action="Delete" asp-route-id="@item.URID">Delete</a>
             </td>
         </tr>
