@@ -6,6 +6,7 @@ namespace OllieShop.Models;
 
 public partial class Users
 {
+    [Display(Name="編號")]
     public long URID { get; set; }
 
     [Display(Name ="名稱")]
@@ -18,6 +19,7 @@ public partial class Users
     public string Email { get; set; } = null!;
 
     [Display(Name = "生日")]
+    [DisplayFormat (DataFormatString = "{0:yyyy/MM/dd}" )]
     public DateTime BirthDay { get; set; }
 
     public virtual ICollection<Accounts> Accounts { get; set; } = new List<Accounts>();
