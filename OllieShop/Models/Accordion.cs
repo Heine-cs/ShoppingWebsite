@@ -33,5 +33,31 @@ namespace OllieShop.Models
             return result;
 
         }
+        //多載,適合一個頁面呼叫多個物件呼叫此函數時,id會發生重複的問題
+        public string accordionGenerator(string title, string content, int id,string idTag)
+        {
+            string result = "";
+            result =
+            "<div class='accordion'>" +
+                "<div class='accordion-item'>" +
+                    "<h2 class='accordion-header'>" +
+                        $"<button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse{idTag + id}' aria-expanded='true' aria-controls='collapse{idTag + id}'>" +
+                        $"{title}" +
+                        "</button>" +
+                    "</h2>" +
+                    $"<div class='accordion-collapse collapse' id='collapse{idTag + id}' aria-labelledby='heading{idTag + id}' data-bs-parent='#accordionExample' style=''>" +
+                        "<div class='accordion-body'>" +
+                            $"<strong>{content}</strong>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>" +
+            "</div>"
+            ;
+
+            return result;
+
+        }
+
+
     }
 }

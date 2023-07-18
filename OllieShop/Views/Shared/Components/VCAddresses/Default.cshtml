@@ -1,37 +1,47 @@
 ﻿@model IEnumerable<OllieShop.Models.Addresses>
 @{
     Layout = null;
+    string accordionContent;
+    Accordion accordion = new Accordion();
+    int accordionCaculactor = 1;
+    string accordionIDTag = "Addresses";
 }
 
 @foreach (var addressesInfo in Model)
 {
 
+    accordionContent = @"
     <dt class='col-sm-2'>
-        @Html.DisplayNameFor( a => addressesInfo.City)
+        " + @Html.DisplayNameFor(a => addressesInfo.City) + @"
     </dt>
     <dd class='col-sm-10'>
-        @Html.DisplayFor( a => addressesInfo.City)
+        " + @addressesInfo.City + @"
     </dd>
+    <hr>
+    <dt class='col-sm-2''>
+        " + @Html.DisplayNameFor(a => addressesInfo.District) + @"
+    </dt>
+    <dd class='col-sm-10'>
+        " + @addressesInfo.District + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(a => addressesInfo.Street) + @"
+    </dt>
+    <dd class='col-sm-10'>
+        " + @addressesInfo.Street + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(a => addressesInfo.Phone) + @"
+    </dt>
+    <dd class='col-sm-10'>
+        " + @addressesInfo.Phone + @"
+    </dd>
+    ";
 
-    <dt class='col-sm-2'>
-        @Html.DisplayNameFor( a => addressesInfo.District)
-    </dt>
-    <dd class='col-sm-10'>
-        @Html.DisplayFor( a => addressesInfo.District)
-    </dd>
-
-    <dt class='col-sm-2'>
-        @Html.DisplayNameFor( a => addressesInfo.Street)
-    </dt>
-    <dd class='col-sm-10'>
-        @Html.DisplayFor( a => addressesInfo.Street)
-    </dd>
-
-    <dt class='col-sm-2'>
-        @Html.DisplayNameFor( a => addressesInfo.Phone)
-    </dt>
-    <dd class='col-sm-10'>
-        @Html.DisplayFor( a => addressesInfo.Phone)
-    </dd>
+    accordionContent = accordion.accordionGenerator("地址組" + accordionCaculactor + " :", accordionContent, accordionCaculactor, accordionIDTag);
+    accordionCaculactor++;
+    <div>@Html.Raw(accordionContent)</div>
 
 }
