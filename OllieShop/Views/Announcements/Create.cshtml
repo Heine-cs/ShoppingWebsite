@@ -41,14 +41,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    @*多行文字方塊自適應高度*@
-@*    <script>
-        $("#Body").each(function () {
-            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
-        }).on("input", function () {
-            this.style.height = "auto";
-            this.style.height = (this.scrollHeight) + "px";
-        });
-    </script>*@
-
 }
