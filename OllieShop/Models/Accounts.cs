@@ -13,6 +13,12 @@ public partial class Accounts
 
     [Display(Name = "密碼")]
     public string Password { get; set; } = null!;
+    //呼叫方法後輸入字串參數就可以替換整段字串
+    public string GetMaskedPassword(string unDealPassword)
+    {
+        // Convert the real password to *** representation
+        return new string('*', unDealPassword.Length);
+    }
 
     [Display(Name = "階級")]
     public string Level { get; set; } = null!;

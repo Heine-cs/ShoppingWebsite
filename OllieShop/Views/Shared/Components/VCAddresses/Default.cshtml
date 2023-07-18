@@ -1,0 +1,37 @@
+﻿@model IEnumerable<OllieShop.Models.Addresses>
+@{
+    Layout = null;
+}
+
+@foreach (var addressesInfo in Model)
+{
+
+    <dt class='col-sm-2'>
+        @Html.DisplayNameFor( a => addressesInfo.City)
+    </dt>
+    <dd class='col-sm-10'>
+        @Html.DisplayFor( a => addressesInfo.City)
+    </dd>
+
+    <dt class='col-sm-2'>
+        @Html.DisplayNameFor( a => addressesInfo.District)
+    </dt>
+    <dd class='col-sm-10'>
+        @Html.DisplayFor( a => addressesInfo.District)
+    </dd>
+
+    <dt class='col-sm-2'>
+        @Html.DisplayNameFor( a => addressesInfo.Street)
+    </dt>
+    <dd class='col-sm-10'>
+        @Html.DisplayFor( a => addressesInfo.Street)
+    </dd>
+
+    <dt class='col-sm-2'>
+        @Html.DisplayNameFor( a => addressesInfo.Phone)
+    </dt>
+    <dd class='col-sm-10'>
+        @Html.DisplayFor( a => addressesInfo.Phone)
+    </dd>
+
+}

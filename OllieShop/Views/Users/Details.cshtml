@@ -35,7 +35,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.BirthDay)
         </dd>
+        @await Component.InvokeAsync("VCAccounts",new{urid=Model.URID})
+        @await Component.InvokeAsync("VCAddresses",new{urid=Model.URID})
     </dl>
+
+    
 </div>
 <div>
     <a asp-action="Index">回用戶清冊</a>

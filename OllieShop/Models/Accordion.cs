@@ -14,22 +14,20 @@ namespace OllieShop.Models
         {
             string result = "";
             result =
-
             "<div class='accordion'>" +
                 "<div class='accordion-item'>" +
                     "<h2 class='accordion-header'>" +
                         $"<button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse{id}' aria-expanded='true' aria-controls='collapse{id}'>" +
-                        $"Q: {title}" +
+                        $"{title}" +
                         "</button>" +
                     "</h2>" +
                     $"<div class='accordion-collapse collapse' id='collapse{id}' aria-labelledby='heading{id}' data-bs-parent='#accordionExample' style=''>" +
                         "<div class='accordion-body'>" +
-                            $"<strong>A: {content}</strong>" +
+                            $"<strong>{content}</strong>" +
                         "</div>" +
                     "</div>" +
                 "</div>" +
-            "</div>" 
-
+            "</div>"
             ;
 
             return result;

@@ -7,9 +7,7 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -50,9 +48,7 @@
                 @Html.DisplayFor(modelItem => item.BirthDay)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.URID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.URID">完整內容</a> |
-                <a asp-action="Delete" asp-route-id="@item.URID">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.URID">完整內容</a>
             </td>
         </tr>
 }
