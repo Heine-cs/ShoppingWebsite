@@ -1,12 +1,11 @@
 ﻿@model OllieShop.Models.Admins
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "編輯管理員內容";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Admins</h4>
+<h1>@ViewData["Title"]</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -34,7 +33,7 @@
                 <span asp-validation-for="DisableDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="編輯" class="btn btn-primary" />
             </div>
         </form>
     </div>

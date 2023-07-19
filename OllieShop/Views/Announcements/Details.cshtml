@@ -1,13 +1,13 @@
 ﻿@model OllieShop.Models.Announcements
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "公告內容";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Details</h1>
+<h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>Announcements</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -20,7 +20,7 @@
             @Html.DisplayNameFor(model => model.ATContent)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ATContent)
+            @Html.Raw(@Model.ATContent.ToString().Replace("\r\n","<br>"))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AD)
@@ -31,6 +31,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ATID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.ATID">編輯</a> |
+    <a asp-action="Index">回公告欄</a>
 </div>

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<OllieShop.Models.Announcements>
 
 @{
-    ViewData["Title"] = "商城公告區";
+    ViewData["Title"] = "商城公告欄";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
@@ -19,9 +19,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.PublicDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ATContent)
-            </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.AD)
             </th>
@@ -37,9 +35,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PublicDate)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ATContent)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.AD.ADID)
             </td>
