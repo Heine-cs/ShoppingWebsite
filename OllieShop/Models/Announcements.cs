@@ -22,4 +22,8 @@ public partial class Announcements
 
     [Display(Name = "管理員編號")]
     public virtual Admins? AD { get; set; }
+
+    [Display(Name = "標題")]
+    [Required(ErrorMessage = "必填欄位")]
+    public string Title { get; set; } = null!;
 }

@@ -58,7 +58,7 @@ namespace OllieShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ATID,PublicDate,ATContent,ADID")] Announcements announcements)
+        public async Task<IActionResult> Create([Bind("ATID,PublicDate,ATContent,ADID,Title")] Announcements announcements)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace OllieShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ATID,PublicDate,ATContent,ADID")] Announcements announcements)
+        public async Task<IActionResult> Edit(int id, [Bind("ATID,PublicDate,ATContent,ADID,Title")] Announcements announcements)
         {
             if (id != announcements.ATID)
             {

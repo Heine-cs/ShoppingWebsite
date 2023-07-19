@@ -1,21 +1,32 @@
 ﻿@model OllieShop.Models.Announcements
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "刪除公告";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3 class="text-danger">刪除公告為不可回復的操作，你確定要刪除此則公告嗎?</h3>
 <div>
-    <h4>Announcements</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ATID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ATID)
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PublicDate)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PublicDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ATContent)
@@ -33,7 +44,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ATID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="刪除" class="btn btn-danger" /> |
+        <a asp-action="Index">返回公告欄</a>
     </form>
 </div>

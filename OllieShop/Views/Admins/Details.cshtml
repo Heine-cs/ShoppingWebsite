@@ -1,13 +1,13 @@
 ﻿@model OllieShop.Models.Admins
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "管理員內容";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Details</h1>
+<h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>Admins</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -37,6 +37,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ADID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.ADID">編輯</a> |
+    <a asp-action="Index">回管理員清冊</a>
 </div>
