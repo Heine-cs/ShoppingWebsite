@@ -10,16 +10,20 @@ public partial class Users
     public long URID { get; set; }
 
     [Display(Name ="名稱")]
+    [StringLength(50,ErrorMessage = "名稱不能超過50個字")]
+    [Required(ErrorMessage = "必填欄位")]
     public string Name { get; set; } = null!;
 
     [Display(Name = "性別")]
     public bool Gender { get; set; }
 
     [Display(Name = "信箱")]
+    [Required(ErrorMessage = "必填欄位")]
     public string Email { get; set; } = null!;
 
     [Display(Name = "生日")]
     [DisplayFormat (DataFormatString = "{0:yyyy/MM/dd}" )]
+    [Required(ErrorMessage = "必填欄位")]
     public DateTime BirthDay { get; set; }
 
     public virtual ICollection<Accounts> Accounts { get; set; } = new List<Accounts>();

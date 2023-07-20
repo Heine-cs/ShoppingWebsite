@@ -1,0 +1,35 @@
+﻿@model OllieShop.Models.Announcements
+
+@{
+    ViewData["Title"] = "公告內容";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PublicDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PublicDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ATContent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.Raw(@Model.ATContent.ToString().Replace("\r\n","<br>"))
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">回公告欄</a>
+</div>
