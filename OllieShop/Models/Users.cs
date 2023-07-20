@@ -15,14 +15,17 @@ public partial class Users
     public string Name { get; set; } = null!;
 
     [Display(Name = "性別")]
+    [Required(ErrorMessage ="必填欄位")]
     public bool Gender { get; set; }
 
     [Display(Name = "信箱")]
+    [EmailAddress(ErrorMessage = "請填入有效的電子信箱")]
     [Required(ErrorMessage = "必填欄位")]
     public string Email { get; set; } = null!;
 
     [Display(Name = "生日")]
     [DisplayFormat (DataFormatString = "{0:yyyy/MM/dd}" )]
+    [DataType(DataType.Date)]
     [Required(ErrorMessage = "必填欄位")]
     public DateTime BirthDay { get; set; }
 

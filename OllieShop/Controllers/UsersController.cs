@@ -63,6 +63,7 @@ namespace OllieShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ModelState.AddModelError(string.Empty, "檢查輸入資料是否正確?");
             return View(users);
         }
 
