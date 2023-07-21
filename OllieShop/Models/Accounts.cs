@@ -9,9 +9,12 @@ public partial class Accounts
     public long ACID { get; set; }
 
     [Display(Name = "帳號")]
+    [Required(ErrorMessage = "必填欄位")]
     public string Account { get; set; } = null!;
 
     [Display(Name = "密碼")]
+    [Required(ErrorMessage = "必填欄位")]
+    [DataType(DataType.Password)]
     public string Password { get; set; } = null!;
     //呼叫方法後輸入字串參數就可以替換整段字串
     public string GetMaskedPassword(string unDealPassword)
