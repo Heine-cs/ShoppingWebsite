@@ -21,7 +21,7 @@ namespace OllieShop.Controllers
         // GET: DisplayAnnouncementsForUser
         public async Task<IActionResult> Index()
         {
-            var ollieShopContext = _context.Announcements.Include(a => a.AD);
+            var ollieShopContext = _context.Announcements.Include(a => a.AD).OrderByDescending(a => a.PublicDate);
             return View(await ollieShopContext.ToListAsync());
         }
 

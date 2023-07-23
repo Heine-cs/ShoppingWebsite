@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OllieShop.Models;
 using OllieShop.ViewModels;
 
@@ -20,7 +21,6 @@ namespace OllieShop.Controllers
         }
 
 
-        // GET: UsersFrontEndPage/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Users == null)
@@ -38,34 +38,51 @@ namespace OllieShop.Controllers
             return View(users);
         }
 
-        // GET: UsersFrontEndPage/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: UsersFrontEndPage/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("URID,Name,Gender,Email,BirthDay")] UserRegisterViewmodel registerViewmodel)
+        public async Task<IActionResult> Create(UserRegisterViewmodel registerViewmodel)
         {
-            Users user = new Users() { 
-            
-            };
-            Accounts account = new Accounts() { };
-            Addresses address = new Addresses() { };
-
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                Users user = new Users();
+                user.Name = registerViewmodel.Name;
+                user.Gender = registerViewmodel.Gender;
+                user.Email = registerViewmodel.Email;
+                user.BirthDay = registerViewmodel.BirthDay;
+                await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
-                return View();//暫時先這樣 先不跳轉到任何畫面，因為要進行測試
+                //Users資料表新增後，取出identity生成的主鍵，再填到Accounts、Addresses資料表當外鍵用
+
+                Accounts account = new Accounts();
+                account.Account = registerViewmodel.Account;
+                account.Password = registerViewmodel.Password;
+                account.Level = registerViewmodel.Level;
+                account.URID = user.URID;//外鍵
+
+                Addresses address = new Addresses();
+                address.District = registerViewmodel.District;
+                address.Street = registerViewmodel.Street;
+                address.City = registerViewmodel.City;
+                address.Phone = registerViewmodel.Phone;
+                address.URID = user.URID;//外鍵
+
+                await _context.Accounts.AddAsync(account);
+                await _context.Addresses.AddAsync(address);
+
+                await _context.SaveChangesAsync();
+
+                TempData["forUserIdentity"] = user.URID.ToString();//註冊後將用戶ID提取，要給用戶註冊身分頁面使用
+                return RedirectToAction("Create","Customers");
                 //return Redirect登入action
             }
             ModelState.AddModelError(string.Empty, "檢查輸入資料是否正確?");
-            return View(user);
+            return View(registerViewmodel);
         }
 
         // GET: UsersFrontEndPage/Edit/5
@@ -84,9 +101,6 @@ namespace OllieShop.Controllers
             return View(users);
         }
 
-        // POST: UsersFrontEndPage/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("URID,Name,Gender,Email,BirthDay")] Users users)
@@ -114,7 +128,7 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));//尚未開發用戶登入功能，之後回頭開發
             }
             return View(users);
         }

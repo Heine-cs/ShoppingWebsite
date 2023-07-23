@@ -1,0 +1,56 @@
+﻿@model IEnumerable<OllieShop.Models.Violations>
+
+@{
+    ViewData["Title"] = "違規案件列表(尚未處理)";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SubmitDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Submitter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Suspect)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Disabled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AD)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubmitDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Submitter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Suspect)
+                </td>
+                <td class="text-warning">
+                    尚未審核
+                </td>
+                <td class="text-warning">
+                    尚未有人員處理
+                </td>
+                <td>
+                    <a target="_blank" asp-action="Edit" asp-route-id="@item.VioID">審核</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

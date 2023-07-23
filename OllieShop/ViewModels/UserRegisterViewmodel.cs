@@ -41,12 +41,12 @@ namespace OllieShop.ViewModels
             [Required(ErrorMessage = "必填欄位")]
             [DataType(DataType.Password)]
             public string Password { get; set; } = null!;
-            //呼叫方法後輸入字串參數就可以替換整段字串
-            public string GetMaskedPassword(string unDealPassword)
-            {
-                // Convert the real password to *** representation
-                return new string('*', unDealPassword.Length);
-            }
+
+            [Display(Name = "密碼確認")]
+            [Required(ErrorMessage = "必填欄位")]
+            [Compare("Password",ErrorMessage ="須與密碼欄位相同")]
+            [DataType(DataType.Password)]
+            public string PasswordConfirm { get; set; } = null!;
 
             [Display(Name = "階級")]
             public string Level { get; set; } = null!;

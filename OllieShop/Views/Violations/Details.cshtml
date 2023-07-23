@@ -1,0 +1,78 @@
+﻿@model OllieShop.Models.Violations
+
+@{
+    ViewData["Title"] = "舉報內容";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.Raw(@Model.Reason.ToString().Replace("\r\n","<br>"))
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Submitter)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Submitter)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Suspect)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Suspect)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubmitDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubmitDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Disabled)
+        </dt>
+        @switch (Model.Disabled)
+        {
+            case true:
+                <dd class="text-danger col-sm-10">
+                    停權
+                </dd>
+                break;
+
+            case false:
+                <dd class="text-success col-sm-10">
+                    不停權
+                </dd>
+                break;
+            default:
+                <dd class="text-warning col-sm-10">
+                    尚未裁定
+                </dd>
+                break;
+        }
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AD)
+        </dt>
+        @if (Model.ADID != null){
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.AD.Account)
+            </dd>
+        }
+        else
+        {
+            <dd class="text-warning col-sm-10">
+                尚未有人員處理
+            </dd>
+        }
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">回違規案件列表</a>
+</div>
