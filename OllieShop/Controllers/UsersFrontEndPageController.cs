@@ -78,7 +78,7 @@ namespace OllieShop.Controllers
                 await _context.SaveChangesAsync();
 
                 TempData["forUserIdentity"] = user.URID.ToString();//註冊後將用戶ID提取，要給用戶註冊身分頁面使用
-                return RedirectToAction("Create","Customers");
+                return RedirectToAction("Create", "CustomersFrontEndPage");
                 //return Redirect登入action
             }
             ModelState.AddModelError(string.Empty, "檢查輸入資料是否正確?");

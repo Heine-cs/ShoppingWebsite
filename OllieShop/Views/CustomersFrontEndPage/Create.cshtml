@@ -1,0 +1,68 @@
+﻿@model OllieShop.Models.Customers
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    long URID = Convert.ToInt64(TempData["forUserIdentity"]);//取自User註冊action傳遞的參數並將其強制轉型
+}
+
+<h1>請選擇你在商城的身分</h1>
+
+<hr />
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group d-none">
+        <label asp-for="URID" class="control-label"></label>
+        <input asp-for="URID" class="form-control" value="@URID" />
+        <span asp-validation-for="URID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <img src="/img/buyer.png" class="w-25" /><br>
+        <input type="submit" value="點我領取消費者身分" class="btn btn-primary"/>
+    </div>
+    
+    <input type="hidden" name="target" value="true" />
+</form>
+
+@{
+    //forUserIdentity生命週期在此頁耗盡，這裡再次儲存備用，為了傳遞到SellersFrontEndPageCreate的action使用
+    TempData["forUserIdentity"] = TempData["forUserIdentity"];  
+}
+<div>
+    <img src="/img/earning.png" class="w-25" /><br>
+    <a asp-controller="SellersFrontEndPage" asp-action="Create" class="btn btn-primary">點我領取業者身分</a>
+</div>
+
+<div>
+    <img src="/img/IWannaAll.jpg" class="w-25" /><br>
+    <a asp-controller="SellersFrontEndPage" asp-action="Create" class="btn btn-primary">小孩子才做選擇，我全都要</a>
+</div>
+
+<form asp-action="Create" asp-route-a="test">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group d-none">
+        <label asp-for="URID" class="control-label"></label>
+        <input asp-for="URID" class="form-control" value="@URID" />
+        <span asp-validation-for="URID" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <img src="/img/buyer.png" class="w-25" /><br>
+        <input type="submit" value="小孩子才做選擇，我全都要" class="btn btn-primary" />
+    </div>
+    <input type="hidden" name="target" value="true" />
+</form>
+
+<hr>
+<div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">暫時不選擇身分，點我回賣場首頁</a>
+</div>
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

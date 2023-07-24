@@ -1,0 +1,60 @@
+﻿@model IEnumerable<OllieShop.Models.Sellers>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ShopNAME)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaxID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UR)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopNAME)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaxID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UR.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SRID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SRID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SRID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,49 @@
+﻿@model OllieShop.Models.Sellers
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Sellers</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ShopNAME)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ShopNAME)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TaxID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TaxID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BankCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BankCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BankAccount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BankAccount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UR)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UR.Email)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.SRID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

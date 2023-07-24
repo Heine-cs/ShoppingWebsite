@@ -9,16 +9,15 @@ using OllieShop.Models;
 
 namespace OllieShop.Controllers
 {
-    public class CustomersController : Controller
+    public class SellersFrontEndPageController : Controller
     {
         private readonly OllieShopContext _context;
 
-        public CustomersController(OllieShopContext context)
+        public SellersFrontEndPageController(OllieShopContext context)
         {
             _context = context;
         }
 
-        // GET: Customers/Create
         public IActionResult Create()
         {
             TempData["forUserIdentity"] = TempData["forUserIdentity"];//接受來自用戶註冊action，裡面放該用戶的URID
@@ -26,26 +25,25 @@ namespace OllieShop.Controllers
             return View();
         }
 
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CRID,URID")] Customers customers)
+        public async Task<IActionResult> Create([Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID")] Sellers sellers)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customers);
+                _context.Add(sellers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Create));//暫時先這樣，要回到登入頁面，但還沒製作
             }
-            
-            return View(customers);
+
+            return View(sellers);
         }
 
-        private bool CustomersExists(long id)
+
+
+        private bool SellersExists(long id)
         {
-          return (_context.Customers?.Any(e => e.CRID == id)).GetValueOrDefault();
+          return (_context.Sellers?.Any(e => e.SRID == id)).GetValueOrDefault();
         }
     }
 }
