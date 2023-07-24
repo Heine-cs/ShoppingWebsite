@@ -10,54 +10,57 @@
 
 <hr />
 
-<form asp-action="Create">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group d-none">
-        <label asp-for="URID" class="control-label"></label>
-        <input asp-for="URID" class="form-control" value="@URID" />
-        <span asp-validation-for="URID" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <img src="/img/buyer.png" class="w-25" /><br>
-        <input type="submit" value="點我領取消費者身分" class="btn btn-primary"/>
-    </div>
+<div class="container-fluid">
+    <div class="row text-center">
+        <form class="col-6 mb-1" asp-action="Create" asp-route-roadSwitch="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group d-none">
+                <label asp-for="URID" class="control-label"></label>
+                <input asp-for="URID" class="form-control" value="@URID" />
+                <span asp-validation-for="URID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <img src="/img/buyer.png" class="w-50" /><br>
+                <input type="submit" value="點我領取消費者身分" class="btn btn-primary"/>
+            </div>
     
-    <input type="hidden" name="target" value="true" />
-</form>
+            <input type="hidden" name="target" value="true" />
+        </form>
 
-@{
-    //forUserIdentity生命週期在此頁耗盡，這裡再次儲存備用，為了傳遞到SellersFrontEndPageCreate的action使用
-    TempData["forUserIdentity"] = TempData["forUserIdentity"];  
-}
-<div>
-    <img src="/img/earning.png" class="w-25" /><br>
-    <a asp-controller="SellersFrontEndPage" asp-action="Create" class="btn btn-primary">點我領取業者身分</a>
-</div>
+        @{
+            //forUserIdentity生命週期在此頁耗盡，這裡再次儲存備用，為了傳遞到SellersFrontEndPageCreate的action使用
+            TempData["forUserIdentity"] = TempData["forUserIdentity"];  
+        }
+        <div class="col-6  mb-1">
+            <img src="/img/earning.png" class="w-50" /><br>
+            <a asp-controller="SellersFrontEndPage" asp-action="Create" class="btn btn-primary">點我領取業者身分</a>
+        </div>
 
-<div>
-    <img src="/img/IWannaAll.jpg" class="w-25" /><br>
-    <a asp-controller="SellersFrontEndPage" asp-action="Create" class="btn btn-primary">小孩子才做選擇，我全都要</a>
-</div>
+        @*<div>
+            <img src="/img/IWannaAll.jpg" class="w-25" /><br>
+            <a asp-controller="SellersFrontEndPage" asp-action="Create" class="btn btn-primary">小孩子才做選擇，我全都要</a>
+        </div>
+        *@
+        <form class="col-6" asp-action="Create" asp-route-roadSwitch="false">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group d-none">
+                <label asp-for="URID" class="control-label"></label>
+                <input asp-for="URID" class="form-control" value="@URID" />
+                <span asp-validation-for="URID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <img src="/img/IWannaAll.jpg" class="w-50" /><br>
+                <input type="submit" value="小孩子才做選擇，我全都要" class="btn btn-primary" />
+            </div>
+            <input type="hidden" name="target" value="true" />
+        </form>
 
-<form asp-action="Create" asp-route-a="test">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group d-none">
-        <label asp-for="URID" class="control-label"></label>
-        <input asp-for="URID" class="form-control" value="@URID" />
-        <span asp-validation-for="URID" class="text-danger"></span>
+        <div class="col-6">
+            <img src="/img/thinking.png" class="w-50" /><br>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">我還沒想好，先不選擇身分</a>
+        </div>
     </div>
-    <div class="form-group">
-        <img src="/img/buyer.png" class="w-25" /><br>
-        <input type="submit" value="小孩子才做選擇，我全都要" class="btn btn-primary" />
-    </div>
-    <input type="hidden" name="target" value="true" />
-</form>
-
-<hr>
-<div>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">暫時不選擇身分，點我回賣場首頁</a>
 </div>
-
 
 
 

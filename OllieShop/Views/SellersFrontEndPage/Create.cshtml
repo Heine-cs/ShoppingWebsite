@@ -1,14 +1,13 @@
 ﻿@model OllieShop.Models.Sellers
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "領取業者身分頁";
     Layout = "~/Views/Shared/_Layout.cshtml";
     long URID = Convert.ToInt64(TempData["forUserIdentity"]);//源頭取自User註冊action傳遞的參數並將其強制轉型
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Sellers</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -40,14 +39,14 @@
                 <span asp-validation-for="URID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="輸入完資料後請點我領取業者身分" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-5">暫時不領取業者身分，請點我回賣場首頁</a>
 </div>
 
 @section Scripts {
