@@ -35,7 +35,13 @@ namespace OllieShop.Controllers
             }
 
             var users = await _context.Users
-                .FirstOrDefaultAsync(m => m.URID == id);
+                .FirstOrDefaultAsync(u => u.URID == id);
+
+            var userSellerData = from s in _context.Sellers
+                                 where s.URID == users.URID
+                                 select s
+                                 ;
+            ViewBag.userSellerData = userSellerData.ToList();
             if (users == null)
             {
                 return NotFound();

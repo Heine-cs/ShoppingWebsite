@@ -35,10 +35,14 @@ namespace OllieShop.ViewModels
 
             [Display(Name = "帳號")]
             [Required(ErrorMessage = "必填欄位")]
+            [StringLength(20,ErrorMessage = "帳號長度不得超過20字")]
+            [RegularExpression("[^\u4e00-\u9fa5]{0,20}", ErrorMessage = "僅接受輸入純英文或純數字或英數混合的帳號")]
             public string Account { get; set; } = null!;
 
             [Display(Name = "密碼")]
             [Required(ErrorMessage = "必填欄位")]
+            [StringLength(20, ErrorMessage = "密碼長度不得超過20字")]
+            [RegularExpression("[^\u4e00-\u9fa5]{0,20}", ErrorMessage = "僅接受輸入純英文或純數字或英數混合的密碼")]
             [DataType(DataType.Password)]
             public string Password { get; set; } = null!;
 
@@ -71,7 +75,7 @@ namespace OllieShop.ViewModels
             public string City { get; set; } = null!;
 
             [Display(Name = "手機號碼")]
-            [StringLength(10, ErrorMessage = "欄位不能超過24個字")]
+            [StringLength(10, ErrorMessage = "欄位不能超過10個字")]
             [Required(ErrorMessage = "必填欄位")]
             public string Phone { get; set; } = null!;
 
