@@ -26,7 +26,6 @@ namespace OllieShop.Controllers
                           Problem("Entity set 'OllieShopContext.Users'  is null.");
         }
 
-        // GET: Users/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Users == null)
@@ -35,13 +34,9 @@ namespace OllieShop.Controllers
             }
 
             var users = await _context.Users
+                .Include(u=>u.Sellers)
                 .FirstOrDefaultAsync(u => u.URID == id);
 
-            var userSellerData = from s in _context.Sellers
-                                 where s.URID == users.URID
-                                 select s
-                                 ;
-            ViewBag.userSellerData = userSellerData.ToList();
             if (users == null)
             {
                 return NotFound();

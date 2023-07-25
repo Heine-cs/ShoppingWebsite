@@ -155,9 +155,17 @@ public partial class OllieShopContext : DbContext
         {
             entity.HasKey(e => e.CRID).HasName("PK__Customer__F2363F52414C186F");
 
-            entity.HasOne(d => d.UR).WithMany(p => p.Customers)
-                .HasForeignKey(d => d.URID)
-                .HasConstraintName("FK__Customers__URID__4BAC3F29");
+
+            //修復為一對一關連
+            entity.HasOne(c => c.UR)
+            .WithOne()
+            .HasForeignKey<Customers>(c => c.URID)
+            .HasConstraintName("FK__Customers__URID__4BAC3F29");
+
+            //dbfirst產生的一對多關連
+            //entity.HasOne(d => d.UR).WithMany(p => p.Customers)
+            //    .HasForeignKey(d => d.URID)
+            //    .HasConstraintName("FK__Customers__URID__4BAC3F29");
         });
 
         modelBuilder.Entity<Messages>(entity =>
@@ -331,9 +339,15 @@ public partial class OllieShopContext : DbContext
                 .HasMaxLength(8)
                 .IsFixedLength();
 
-            entity.HasOne(d => d.UR).WithMany(p => p.Sellers)
-                .HasForeignKey(d => d.URID)
-                .HasConstraintName("FK__Sellers__URID__5165187F");
+            //修復為一對一關連
+            entity.HasOne(s => s.UR)
+            .WithOne()
+            .HasForeignKey<Sellers>(s => s.URID)
+            .HasConstraintName("FK__Sellers__URID__5165187F");
+            //dbfirst產生的一對多關連
+            //entity.HasOne(d => d.UR).WithMany(p => p.Sellers)
+            //    .HasForeignKey(d => d.URID)
+            //    .HasConstraintName("FK__Sellers__URID__5165187F");
         });
 
         modelBuilder.Entity<ShipVias>(entity =>
@@ -375,6 +389,18 @@ public partial class OllieShopContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Name).HasMaxLength(50);
+
+            //設定一對一關聯(與Sellers)
+            entity.HasOne(u => u.Sellers) // Users 資料模型的導航屬性
+                .WithOne(s => s.UR)    // Sellers 資料模型的導航屬性，這裡不用指定，因為是單向一對一
+                .HasForeignKey<Sellers>(s => s.URID) // 外鍵欄位，這裡使用 UserID 作為外鍵
+                .HasConstraintName("FK__Sellers__URID__5165187F");
+
+            //設定一對一關聯(與Customers)
+            entity.HasOne(u => u.Customers) // Users 資料模型的導航屬性
+                .WithOne(c => c.UR)    // Customers 資料模型的導航屬性，這裡不用指定，因為是單向一對一
+                .HasForeignKey<Customers>(c => c.URID) // 外鍵欄位，這裡使用 URID 作為外鍵
+                .HasConstraintName("FK__Customers__URID__4BAC3F29");
         });
 
         modelBuilder.Entity<Violations>(entity =>

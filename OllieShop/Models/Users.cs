@@ -33,9 +33,15 @@ public partial class Users
 
     public virtual ICollection<Addresses> Addresses { get; set; } = new List<Addresses>();
 
-    public virtual ICollection<Customers> Customers { get; set; } = new List<Customers>();
+    //與Customers資料表的一對一關連
+    public virtual Customers? Customers { get; set; }
+    //掉dbfirst生成錯誤的一對多關連
+    //public virtual ICollection<Customers> Customers { get; set; } = new List<Customers>();
 
-    public virtual ICollection<Sellers> Sellers { get; set; } = new List<Sellers>();
+    //與Sellers資料表的一對一關連
+    public virtual Sellers? Sellers { get; set; }
+    //拿掉dbfirst生成錯誤的一對多關連
+    //public virtual ICollection<Sellers> Sellers { get; set; } = new List<Sellers>();
 
     public virtual ICollection<Violations> ViolationsSubmitterNavigation { get; set; } = new List<Violations>();
 

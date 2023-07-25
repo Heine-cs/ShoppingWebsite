@@ -35,23 +35,28 @@
             @Html.DisplayFor(model => model.BirthDay)
         </dd>
         <div class="btn btn-dark text-start">
-            <h4 class="text-info text-center">用戶帳號</h4>
+            <div class="text-info text-center">用戶帳號</div>
             @await Component.InvokeAsync("VCAccounts",new{urid=Model.URID})
         </div>
         <div class="btn btn-danger text-start">
-            <div class="h4 text-dark text-center">用戶地址</div>
+            <div class="text-dark text-center">用戶地址</div>
             @await Component.InvokeAsync("VCAddresses",new{urid=Model.URID})
         </div>
+        @if (Model.Sellers != null)
+        {
+            <div>
+                商鋪名稱: @Model.Sellers.ShopNAME
+                統一編號: @Model.Sellers.TaxID
+                銀行局號: @Model.Sellers.BankCode
+                銀行帳號: @Model.Sellers.BankAccount
+            </div>
+        }
+        else
+        {
+            <div>No sellers found for this user.</div>
+        }
     </dl>
 
-@*    <table>
-            <tr>
-            <th>@ViewBag.userSellerData.</th>
-                <th>賣家名稱</th>
-                <!-- 添加其他賣家屬性欄位 -->
-            </tr>
-    </table>*@
-    
 </div>
 <div>
     <a asp-action="Index">回用戶清冊</a>
