@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OllieShop.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
@@ -14,7 +15,7 @@
             /* Margin bottom by footer height */
             margin-bottom: 60px;
         }
-        
+
         .ShopLogo {
             height: 70px;
         }
@@ -22,8 +23,7 @@
         .red {
             color: rgb(255,0,0);
         }
-
-        .lightYellow {
+        .lightYellow{
             background-color: #ffe6b3;
         }
 
@@ -62,11 +62,11 @@
 </head>
 <body>
     <header class="mb-sm-2">
-        <nav class="navbar navbar-expand-lg bg-success" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
                 <div>
                     <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img src="~/img/logo.png" class="ShopLogo"/>
+                        <img src="~/img/logo.png" class="ShopLogo" />
                     </a>
 
                     <ul class="nav nav-pills">
@@ -110,28 +110,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="d-flex container-fluid">
 
-                    <form class="d-flex me-auto w-50">
-                        <input class="form-control me-sm-2 text-center bg-light text-dark" type="search" placeholder="需要幫忙嗎? 請輸入你的問題">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
-                    </form>
+                    </div>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link navbar-brand" asp-controller="" asp-action="">賣場規範</a>
+                            <a class="nav-link text-nowrap" asp-controller="home" asp-action="Assistant">我的訂單</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link navbar-brand" asp-controller="Home" asp-action="Assistant">協助中心</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand" asp-controller="" asp-action="">最新公告</a>
+                            <a class="nav-link text-nowrap" asp-controller="home" asp-action="Assistant">協助中心</a>
                         </li>
                     </ul>
+                    <div class="btn-group navbar-nav">
+                        <a class="dropdown-toggle nav-item nav-link" data-bs-toggle="dropdown" aria-expanded="false" asp-controller="" asp-action="">
+                            歡迎xxx貴賓!!
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end bg-white border-info">
+                            <li><a class="dropdown-item" asp-controller="" asp-action="">個人資料</a></li>
+                            <li><a class="dropdown-item" asp-controller="" asp-action="">修改個人資料</a></li>
+                            <li><a class="dropdown-item" asp-controller="" asp-action="">登出</a></li>
+                        </ul>
+                    </div>
+
                 </div>
 
             </div>
         </nav>
     </header>
- 
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -151,7 +157,6 @@
             </div>
         </div>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

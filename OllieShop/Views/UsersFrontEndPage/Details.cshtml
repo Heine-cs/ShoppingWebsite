@@ -1,14 +1,14 @@
 ﻿@model OllieShop.Models.Users
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "個人資料";
 }
 
-<h1>Details</h1>
+<h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>Users</h4>
     <hr />
+    <div class="text-primary">@TempData["editSuccessMessage"]</div>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -19,8 +19,8 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Gender)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
+        <dd class="col-sm-10">
+            @(Model.Gender ? "男性" : "女性")
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
@@ -37,6 +37,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.URID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.URID">修改內容</a> |
+    <a asp-action="Index">點我回到用戶後台</a>
 </div>

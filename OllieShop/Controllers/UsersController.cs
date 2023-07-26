@@ -35,6 +35,7 @@ namespace OllieShop.Controllers
 
             var users = await _context.Users
                 .Include(u=>u.Sellers)
+                .Include(u=>u.Customers)
                 .FirstOrDefaultAsync(u => u.URID == id);
 
             if (users == null)

@@ -63,14 +63,14 @@ namespace OllieShop.Controllers
                 account.Account = registerViewmodel.Account;
                 account.Password = registerViewmodel.Password;
                 account.Level = registerViewmodel.Level;
-                account.URID = user.URID;//外鍵
+                account.URID = user.URID;//填外鍵
 
                 Addresses address = new Addresses();
                 address.District = registerViewmodel.District;
                 address.Street = registerViewmodel.Street;
                 address.City = registerViewmodel.City;
                 address.Phone = registerViewmodel.Phone;
-                address.URID = user.URID;//外鍵
+                address.URID = user.URID;//填外鍵
 
                 await _context.Accounts.AddAsync(account);
                 await _context.Addresses.AddAsync(address);
@@ -128,7 +128,9 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction(nameof(Index));//尚未開發用戶登入功能，之後回頭開發
+                TempData["editSuccessMessage"] = "本次修改成功! 您可再次確認是否符合預期";
+                return RedirectToAction("Details", new {id = users.URID});
+
             }
             return View(users);
         }
