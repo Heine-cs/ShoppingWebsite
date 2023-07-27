@@ -1,9 +1,8 @@
 ﻿@model OllieShop.Models.Sellers
 
 @{
-    ViewData["Title"] = "領取業者身分頁";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    long URID = Convert.ToInt64(TempData["forUserIdentity"]);//源頭取自User註冊action傳遞的參數並將其強制轉型
+    ViewData["Title"] = "修改商鋪資料";
+    Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -11,13 +10,16 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SRID" />
             <div class="form-group">
                 <label asp-for="ShopNAME" class="control-label"></label>
                 <input asp-for="ShopNAME" class="form-control" />
                 <span asp-validation-for="ShopNAME" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <label>是否為具有統一編號之業者？</label>
                 <div class="form-check">
@@ -46,57 +48,53 @@
                 <input asp-for="BankAccount" class="form-control" />
                 <span asp-validation-for="BankAccount" class="text-danger"></span>
             </div>
-            <div class="form-group ">
+            <div class="form-group d-none">
                 <label asp-for="URID" class="control-label"></label>
-                <input asp-for="URID" class="form-control" value="@URID" />
+                <input asp-for="URID" class="form-control" value="@Model.URID"></input>
                 <span asp-validation-for="URID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="輸入完資料後請點我領取業者身分" class="btn btn-primary" />
+                <input type="submit" value="儲存修改" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-5">暫時不領取業者身分，請點我回賣場首頁</a>
+    <a asp-action="Details">不修改，返回商鋪後台</a>
 </div>
 
 <script>
-        const taxIdOption1 = document.getElementById("taxIdOption1");
-        const taxIdOption2 = document.getElementById("taxIdOption2");
-        const taxIdInput = document.getElementById("taxIdInput");
+    const taxIdOption1 = document.getElementById("taxIdOption1");
+    const taxIdOption2 = document.getElementById("taxIdOption2");
+    const taxIdInput = document.getElementById("taxIdInput");
 
-        taxIdOption1.addEventListener("change", function () {
-            if (taxIdOption1.checked) {
-                taxIdInput.value ="";
-                taxIdInput.removeAttribute("readonly");
-            }
-        });
-
-        taxIdOption2.addEventListener("change", function () {
-            if (taxIdOption2.checked) {
-
-                taxIdInput.value = "無統一編號之業者";
-                taxIdInput.setAttribute("readonly" , "readonly");
-            }
-        });
-
-        // 初始化時根據Radio button的默认选项进行显示和隐藏
+    taxIdOption1.addEventListener("change", function () {
         if (taxIdOption1.checked) {
-            taxIdInputContainer.style.display = "block";
-            setTaxIDInputReadOnly(false);
-        } else if (taxIdOption2.checked) {
-            taxIdInputContainer.style.display = "none";
-            taxIdInput.value = "無統一編號之業者";
-            setTaxIDInputReadOnly(true);
+            taxIdInput.value = "";
+            taxIdInput.removeAttribute("readonly");
         }
+    });
+
+    taxIdOption2.addEventListener("change", function () {
+        if (taxIdOption2.checked) {
+
+            taxIdInput.value = "無統一編號之業者";
+            taxIdInput.setAttribute("readonly", "readonly");
+        }
+    });
+
+    // 初始化時根據Radio button的默认选项进行显示和隐藏
+    if (taxIdOption1.checked) {
+        taxIdInputContainer.style.display = "block";
+        setTaxIDInputReadOnly(false);
+    } else if (taxIdOption2.checked) {
+        taxIdInputContainer.style.display = "none";
+        taxIdInput.value = "無統一編號之業者";
+        setTaxIDInputReadOnly(true);
+    }
 
 </script>
-
-
-
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

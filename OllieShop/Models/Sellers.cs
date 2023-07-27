@@ -16,7 +16,7 @@ public partial class Sellers
 
     [Display(Name = "統一編號")]
     [Required(ErrorMessage = "必填欄位")]
-    [RegularExpression("[0-9]{8}", ErrorMessage = "統編長度為0到9的8個數字組合，請檢查是否漏填或填錯")]
+    [RegularExpression("[0-9無統一編號之業者]{8}", ErrorMessage = "統編長度為0到9的8個數字組合，請檢查是否漏填或填錯")]
     [StringLength(8, ErrorMessage = "統一編號長度僅為8碼之間的數字組合，請檢查是否漏填或填錯")]
     public string TaxID { get; set; } = null!;
 

@@ -31,6 +31,7 @@ namespace OllieShop.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 _context.Add(sellers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Create));//暫時先這樣，要回到登入頁面，但還沒製作
