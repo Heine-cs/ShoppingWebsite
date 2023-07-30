@@ -7,18 +7,49 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OllieShop.styles.css" asp-append-version="true" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        body {
-            /* Margin bottom by footer height */
-            margin-bottom: 60px;
+
+        .body{
+            margin-bottom:70px;
         }
 
         .ShopLogo {
             height: 70px;
         }
+
+        /*左側選單*/
+        #SideMenu, #SideMenu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            background-color: rebeccapurple;
+        }
+
+        #SideMenu > li {
+            color: white;
+            text-decoration: none;
+            font-size: 1.4rem;
+        }
+        #SideMenu > li > ul > li{
+            background-color: bisque;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        
+        }
+
+        #SideMenu li > ul > li:hover {
+            background-color: silver;
+        }
+
+        #SideMenu > li > ul > li > a {
+            text-decoration: none;
+            color: #477dff;
+        }
+        /*左側選單*/
 
         .footer {
             position: absolute;
@@ -27,120 +58,148 @@
             /* Set the fixed height of the footer here */
             height: 60px;
         }
-        /*左側選單*/
-
-        #SideMenu {
-            height: 50px;
-            width: 200px;
-        }
 
 
-            #SideMenu, #SideMenu ul {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
-
-                #SideMenu li {
-                    background-color: rebeccapurple;
-                }
-
-                #SideMenu a {
-                    color: white;
-                    text-decoration: none;
-                    padding: 5px;
-                    display: block;
-                    width: 200px;
-                }
-
-                #SideMenu li ul {
-                    width: 200px;
-                }
-
-                #SideMenu > li > ul > li {
-                    background-color: white;
-                }
-
-                    #SideMenu > li > ul > li > a {
-                        color: #477dff;
-                    }
-
-        /*左側選單*/
 
     </style>
 </head>
 <body>
-    <header class="mb-0">
-        <nav class="navbar navbar-expand-lg bg-info" data-bs-theme="dark">
-            <div class="container-fluid">
-                <div>
-                    <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img src="~/img/logo.png" class="ShopLogo" />
-                    </a>
+    <div class="d-flex flex-column min-vh-100">
+        <header class="mb-0 flex-grow-0">
+            <nav class="navbar navbar-expand-lg bg-info" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <div>
+                        <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
+                            <img src="~/img/logo.png" class="ShopLogo" />
+                        </a>
+                    </div>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                 </div>
+            </nav>
+        </header>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <div class="container-fluid d-flex flex-column flex-grow-1">
+            <div class="row flex-grow-1">
+                <ul id="SideMenu" class="col-1 text-center">
+                    <li>
+                        <i class="me-2 bi bi-megaphone-fill"></i><a>公告發布</a>
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link">尚未發布</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  asp-controller="Announcements" asp-action="Create">點我發布</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Announcements" asp-action="Index">總紀錄</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <i class="me-2 bi bi-person-fill-gear"></i><a>商城管理</a>
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Users" asp-action="Index">用戶清冊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admins" asp-action="Index">管理員清冊</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <i class="me-2 bi bi-pencil-square"></i><a>違規管理</a>
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Violations" asp-action="unhandleViolationsPage">尚未處理</a>
+                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Violations" asp-action="Index">案件總覽</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <i class="me-2 bi bi-gift"></i><a>商品管理</a>
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Categorys" asp-action="Index">商品類別</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Products" asp-action="Index">商品總覽</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link">尚未決定</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a>尚未決定</a>
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link">尚未決定</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link">尚未決定</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a>尚未決定</a>
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link">尚未決定</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link">尚未決定</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <main role="main" class="col-11">
+                    @RenderBody()
+                </main>
             </div>
-        </nav>
-    </header>
-    <div class="container-fluid d-flex p-0">
-
-        <div class="text-nowrap">
-            <ul id="SideMenu" class="text-center">
-                <li class="list-unstyled ">
-                    <a href="#">公告發布</a>
-                    <ul class="list-unstyled">
-                        <li><a href="#">尚未發布</a></li>
-                        <li><a asp-controller="Announcements" asp-action="Create">點我發布</a></li>
-                        <li><a asp-controller="Announcements" asp-action="Index">總紀錄</a></li>
-                    </ul>
-                </li>
-                <li class="list-unstyled">
-                    <a href="#">商城管理</a>
-                    <ul class="list-unstyled">
-                        <li><a asp-controller="Categorys" asp-action="Index">商品類別</a></li>
-                        <li><a asp-controller="Users" asp-action="Index">用戶清冊</a></li>
-                        <li><a asp-controller="Admins" asp-action="Index">管理員清冊</a></li>
-                    </ul>
-                </li>
-                <li class="list-unstyled">
-                    <a>違規管理</a>
-                    <ul class="list-unstyled">
-                        <li><a asp-controller="Violations" asp-action="unhandleViolationsPage">尚未處理</a></li>
-                        <li><a asp-controller="Violations" asp-action="Index">案件總覽</a></li>
-                    </ul>
-                </li>
-                <li class="list-unstyled">
-                    <a href="#">尚未決定</a>
-                    <ul class="list-unstyled">
-                        <li><a href="#">尚未決定</a></li>
-                        <li><a href="#">尚未決定</a></li>
-                    </ul>
-                </li>
-            </ul>
 
         </div>
 
-        <main role="main" class="container-fluid m-2 pb-3">
-            @RenderBody()
-        </main>
+        <footer class="border-top footer text-muted bg-body-tertiary shadow-lg flex-grow-0">
+            <div class="container-fluid d-flex">
+                <div class="me-auto">
+                    <div class="btn-group">
+                        <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i><span class="ms-2">當前登入 : 管理員9527</span>
+                        </button>
+                        <ul class="dropdown-menu text-center">
+                            <li>
+                                <a class="dropdown-item p-0">
+                                    <i class="me-2 bi bi-sliders"></i>
+                                    <span>偏好</span>
+                                </a>
+                            </li>
+                            <li >
+                                <a class="dropdown-item">
+                                    <i class="me-2 bi bi-gear"></i>
+                                    <span>設定</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                    <div>
+                        <a asp-controller="" asp-action="" class="btn btn-info me-5">內部公告</a>
+                    </div>
+                    <div>
+                        <a asp-controller="" asp-action="" class="btn btn-outline-success me-3">行事曆</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
-
-    <footer class="border-top footer text-muted bg-light">
-        <div class="container-fluid d-flex">
-            &copy; 2023 - OllieShop - <a asp-area="" asp-controller="" asp-action="" class="me-auto">管理員9527 你好!</a>
-            <div class="d-flex">
-                <div>
-                    <a asp-controller="" asp-action="" class="btn btn-info me-5">內部公告</a>
-                </div>
-                <div>
-                    <a asp-controller="" asp-action="" class="btn btn-outline-success me-3">行事曆</a>
-                </div>
-            </div>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

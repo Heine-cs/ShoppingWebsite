@@ -1,18 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OllieShop.Models;
 
 public partial class Products
 {
+    [Display(Name = "編號")]
     public long PTID { get; set; }
 
+    [Display(Name = "名稱")]
+    [StringLength(100,ErrorMessage = "商品名稱不得超過100個字")]
+    [Required(ErrorMessage = "必填欄位")]
     public string Name { get; set; } = null!;
 
+    [Display(Name = "宅配運費")]
+    [Required(ErrorMessage = "必填欄位")]
     public decimal DeliveryFee { get; set; }
 
+    [Display(Name = "上架時間")]
+    [DataType(DataType.DateTime)]
+    [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日 hh時:mm分:ss秒}")]
     public DateTime LaunchDate { get; set; }
 
+    [Display(Name = "在售情況")]
+    [Required(ErrorMessage = "必填欄位")]
     public bool Hidden { get; set; }
 
     public bool Locked { get; set; }

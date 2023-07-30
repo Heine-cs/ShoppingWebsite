@@ -1,0 +1,110 @@
+﻿@model IEnumerable<OllieShop.Models.Products>
+
+@{
+    ViewData["Title"] = "商品總覽";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaunchDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hidden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Locked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquired)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Installment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unopened)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShelfQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoldQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CY)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SR)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaunchDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hidden)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Locked)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inquired)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Installment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unopened)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShelfQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoldQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CY.CYID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SR.BankAccount)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PTID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PTID">Details</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
