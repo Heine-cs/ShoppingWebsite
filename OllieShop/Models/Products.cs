@@ -27,6 +27,9 @@ public partial class Products
     [Required(ErrorMessage = "必填欄位")]
     public bool Hidden { get; set; }
 
+
+    [Display(Name = "上鎖情況")]
+    //[Required(ErrorMessage =)]
     public bool Locked { get; set; }
 
     public bool Inquired { get; set; }
