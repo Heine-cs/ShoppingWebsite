@@ -11,10 +11,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.PTID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeliveryFee)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LaunchDate)
@@ -24,12 +24,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Locked)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquired)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Installment)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Unopened)
@@ -44,13 +38,7 @@
                 @Html.DisplayNameFor(model => model.SoldQuantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CY)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SR)
+                @Html.DisplayNameFor(model => model.SRID)
             </th>
             <th></th>
         </tr>
@@ -59,10 +47,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.PTID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeliveryFee)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LaunchDate)
@@ -72,12 +60,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Locked)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Inquired)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Installment)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Unopened)
@@ -92,17 +74,11 @@
                 @Html.DisplayFor(modelItem => item.SoldQuantity)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.SRID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CY.CYID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SR.BankAccount)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PTID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PTID">Details</a>
+                <a asp-action="Edit" asp-route-id="@item.PTID">鎖定</a> |
+                <a asp-action="Details" asp-route-id="@item.PTID">完整內容</a>
             </td>
         </tr>
 }

@@ -1,16 +1,21 @@
 ﻿@model OllieShop.Models.Products
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "商品資料";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Details</h1>
+<h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>Products</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PTID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PTID)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -81,23 +86,24 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.Raw(Model.Description.ToString().Replace("\r\n","<br>"))
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CY)
+            @Html.DisplayNameFor(model => model.CYID)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CY.CYID)
+            @Html.DisplayFor(model => model.CYID)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SR)
+            @Html.DisplayNameFor(model => model.SRID)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SR.BankAccount)
+            @Html.DisplayFor(model => model.SRID)
         </dd>
     </dl>
 </div>
+@await Component.InvokeAsync("VCSpecifications" , new {ptid = Model.PTID})
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.PTID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.PTID">鎖定</a> |
+    <a asp-action="Index">返回商品總覽</a>
 </div>

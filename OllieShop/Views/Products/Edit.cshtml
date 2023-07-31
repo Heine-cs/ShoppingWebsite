@@ -1,37 +1,43 @@
 ﻿@model OllieShop.Models.Products
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "鎖定商品";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Products</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PTID" />
+            <div class="form-group">
+                <label asp-for="PTID" class="control-label"></label>
+                <input asp-for="PTID" class="form-control" readonly />
+                <span asp-validation-for="PTID" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" readonly/>
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div>
+                @await Component.InvokeAsync("VCSpecifications" , new {ptid = Model.PTID})
             </div>
             <div class="form-group">
                 <label asp-for="DeliveryFee" class="control-label"></label>
-                <input asp-for="DeliveryFee" class="form-control" />
+                <input asp-for="DeliveryFee" class="form-control" readonly />
                 <span asp-validation-for="DeliveryFee" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LaunchDate" class="control-label"></label>
-                <input asp-for="LaunchDate" class="form-control" />
+                <input asp-for="LaunchDate" class="form-control" readonly/>
                 <span asp-validation-for="LaunchDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Hidden" /> @Html.DisplayNameFor(model => model.Hidden)
+                    <input class="form-check-input" asp-for="Hidden" disabled /> @Html.DisplayNameFor(model => model.Hidden)
                 </label>
             </div>
             <div class="form-group form-check">
@@ -41,58 +47,58 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Inquired" /> @Html.DisplayNameFor(model => model.Inquired)
+                    <input class="form-check-input" asp-for="Inquired" disabled /> @Html.DisplayNameFor(model => model.Inquired)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Installment" /> @Html.DisplayNameFor(model => model.Installment)
+                    <input class="form-check-input" asp-for="Installment" disabled /> @Html.DisplayNameFor(model => model.Installment)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Unopened" /> @Html.DisplayNameFor(model => model.Unopened)
+                    <input class="form-check-input" asp-for="Unopened" disabled /> @Html.DisplayNameFor(model => model.Unopened)
                 </label>
             </div>
             <div class="form-group">
                 <label asp-for="UnitPrice" class="control-label"></label>
-                <input asp-for="UnitPrice" class="form-control" />
+                <input asp-for="UnitPrice" class="form-control" readonly />
                 <span asp-validation-for="UnitPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ShelfQuantity" class="control-label"></label>
-                <input asp-for="ShelfQuantity" class="form-control" />
+                <input asp-for="ShelfQuantity" class="form-control" readonly />
                 <span asp-validation-for="ShelfQuantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SoldQuantity" class="control-label"></label>
-                <input asp-for="SoldQuantity" class="form-control" />
+                <input asp-for="SoldQuantity" class="form-control" readonly />
                 <span asp-validation-for="SoldQuantity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control" readonly></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CYID" class="control-label"></label>
-                <select asp-for="CYID" class="form-control" asp-items="ViewBag.CYID"></select>
+                <input asp-for="CYID" class="form-control" readonly></input>
                 <span asp-validation-for="CYID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SRID" class="control-label"></label>
-                <select asp-for="SRID" class="form-control" asp-items="ViewBag.SRID"></select>
+                <input asp-for="SRID" class="form-control" readonly></input>
                 <span asp-validation-for="SRID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="儲存變更" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">返回商品總覽</a>
 </div>
 
 @section Scripts {

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<OllieShop.Models.Specifications>
+@{
+    Layout = null;
+    string accordionContent;
+    Accordion accordion = new Accordion();
+    int accordionCaculactor = 1;
+    string accordionIDTag = "Specifications";
+}
+
+@foreach(var specificationsInfo in Model){
+    accordionContent = @"
+    <dt class='col-sm-2'>
+    " + @Html.DisplayNameFor(s => specificationsInfo.SNID) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        " + @specificationsInfo.SNID + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2''>
+        " + @Html.DisplayNameFor(s => specificationsInfo.Name) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        " + @specificationsInfo.Name + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(a => specificationsInfo.Picture) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        <img src=' " + specificationsInfo.Picture + @" ' />" + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(modelItem => specificationsInfo.Weight) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        " + @specificationsInfo.Weight + @"
+    </dd>
+        <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(modelItem => specificationsInfo.Size) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        " + @specificationsInfo.Size + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(modelItem => specificationsInfo.LeadDay) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        " + @specificationsInfo.LeadDay + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(modelItem => specificationsInfo.PackageSize) + @":
+    </dt>
+    <dd class='col-sm-10'>
+    " + @specificationsInfo.PackageSize + @"
+    </dd>
+    <hr>
+    <dt class='col-sm-2'>
+        " + @Html.DisplayNameFor(modelItem => specificationsInfo.Freebie) + @":
+    </dt>
+    <dd class='col-sm-10'>
+        " + @specificationsInfo.Freebie + @"
+    </dd>
+    ";
+
+    accordionContent = accordion.accordionGenerator("規格組" + accordionCaculactor + " :", accordionContent, accordionCaculactor, accordionIDTag);
+    accordionCaculactor++;
+    <div>@Html.Raw(accordionContent)</div>
+}

@@ -55,14 +55,10 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["CYID"] = new SelectList(_context.Categorys, "CYID", "CYID", products.CYID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", products.SRID);
+
             return View(products);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("PTID,Name,DeliveryFee,LaunchDate,Hidden,Locked,Inquired,Installment,Unopened,UnitPrice,ShelfQuantity,SoldQuantity,Description,CYID,SRID")] Products products)
@@ -92,8 +88,7 @@ namespace OllieShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CYID"] = new SelectList(_context.Categorys, "CYID", "CYID", products.CYID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", products.SRID);
+
             return View(products);
         }
 
