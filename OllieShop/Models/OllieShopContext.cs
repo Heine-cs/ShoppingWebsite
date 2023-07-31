@@ -370,7 +370,7 @@ public partial class OllieShopContext : DbContext
             entity.HasKey(e => e.SNID).HasName("PK__Specific__A7781D5B072BCFA1");
 
             entity.Property(e => e.Freebie).HasMaxLength(50);
-            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.SpecName).HasMaxLength(50);
             entity.Property(e => e.Picture)
                 .HasMaxLength(500)
                 .IsUnicode(false);

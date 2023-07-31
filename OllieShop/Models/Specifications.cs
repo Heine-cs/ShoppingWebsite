@@ -12,7 +12,7 @@ public partial class Specifications
     [Display(Name = "名稱")]
     [Required(ErrorMessage = "必填欄位")]
     [StringLength(50,ErrorMessage = "名稱不得超過50個字")]
-    public string Name { get; set; } = null!;
+    public string SpecName { get; set; } = null!;
 
     [Display(Name = "圖片")]
     [Required(ErrorMessage = "請上傳圖片一張")]
