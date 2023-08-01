@@ -16,6 +16,7 @@ public partial class Products
 
     [Display(Name = "宅配運費")]
     [Required(ErrorMessage = "必填欄位")]
+    [DisplayFormat(DataFormatString = "{0:0}")]
     public decimal DeliveryFee { get; set; }
 
     [Display(Name = "上架時間")]
@@ -23,7 +24,7 @@ public partial class Products
     [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日 hh時:mm分:ss秒}")]
     public DateTime LaunchDate { get; set; }
 
-    [Display(Name = "在售情況")]
+    [Display(Name = "停售")]
     [Required(ErrorMessage = "必填欄位")]
     public bool Hidden { get; set; }
 
@@ -46,6 +47,7 @@ public partial class Products
 
     [Display(Name = "售價")]
     [Required(ErrorMessage = "必填欄位")]
+    [DisplayFormat(DataFormatString = "{0:0}")]
     public decimal UnitPrice { get; set; }
 
     [Display(Name = "上架量")]

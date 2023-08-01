@@ -1,9 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OllieShop.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace OllieShop.ViewModels
 {
     public class VMSellerProductsManagement
     {
+
+        //為了INDEX存在的兩個資料表成員，目的是要透過這兩個成員對於資料庫操作，取出整個table
+        public List<Products>? productTable { get;set; }
+
+        public List<Specifications>? specificationsTable { get; set; }
+        ////////////////////////////////////////////////////////////////////////////
+        
+        
         //From Products Model
         [Display(Name = "編號")]
         public long PTID { get; set; }
@@ -15,6 +24,7 @@ namespace OllieShop.ViewModels
 
         [Display(Name = "宅配運費")]
         [Required(ErrorMessage = "必填欄位")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal DeliveryFee { get; set; }
 
         [Display(Name = "上架時間")]
@@ -22,7 +32,7 @@ namespace OllieShop.ViewModels
         [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日 hh時:mm分:ss秒}")]
         public DateTime LaunchDate { get; set; }
 
-        [Display(Name = "在售情況")]
+        [Display(Name = "停售")]
         [Required(ErrorMessage = "必填欄位")]
         public bool Hidden { get; set; }
 
@@ -45,6 +55,7 @@ namespace OllieShop.ViewModels
 
         [Display(Name = "售價")]
         [Required(ErrorMessage = "必填欄位")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal UnitPrice { get; set; }
 
         [Display(Name = "上架量")]

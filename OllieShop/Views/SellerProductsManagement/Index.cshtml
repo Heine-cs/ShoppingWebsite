@@ -1,0 +1,102 @@
+﻿@model OllieShop.ViewModels.VMSellerProductsManagement
+@{
+    ViewData["Title"] = "商品總覽";
+    Layout = "~/Views/Shared/_Layout_Seller.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">新增商品</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.specificationsTable.FirstOrDefault().Picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().LaunchDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().Hidden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().ShelfQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().SoldQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productTable.FirstOrDefault().DeliveryFee)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 1;
+        }
+        @foreach (var productInfo in Model.productTable) {
+            <tr id="singalProductWithSpec@(i)">
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.LaunchDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.Hidden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.ShelfQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.SoldQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => productInfo.DeliveryFee)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@productInfo.PTID">編輯</a> |
+                    <a asp-action="Details" asp-route-id="@productInfo.PTID">完整內容</a> |
+                    <a asp-action="Delete" asp-route-id="@productInfo.PTID">刪除</a>
+                </td>
+            </tr>
+            i++;
+        }
+        @{i = 1;
+            foreach (var specInfo in Model.specificationsTable)
+            {
+                <td>
+                    <img src="@(specInfo.Picture)" id="SpecPicture@(i)" width="100px" height="100px" />
+                </td>
+                i++;
+            }
+        }
+
+        <script>
+        var SpecPicture ;
+        var singalProductWithSpec ;
+
+        for( j = 1 ; j<@i ; j++){
+            SpecPicture = document.getElementById("SpecPicture"+j)
+            console.log(SpecPicture);
+            singalProductWithSpec = document.getElementById("singalProductWithSpec" + j)
+            singalProductWithSpec.prepend(SpecPicture);
+                    
+        }
+
+        </script>
+
+    </tbody>
+</table>
