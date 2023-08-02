@@ -63,6 +63,8 @@
 </div>
 
 <script>
+
+        //統一編號的Radio選項
         const taxIdOption1 = document.getElementById("taxIdOption1");
         const taxIdOption2 = document.getElementById("taxIdOption2");
         const taxIdInput = document.getElementById("taxIdInput");
@@ -82,15 +84,7 @@
             }
         });
 
-        // 初始化時根據Radio button的默认选项进行显示和隐藏
-        if (taxIdOption1.checked) {
-            taxIdInputContainer.style.display = "block";
-            setTaxIDInputReadOnly(false);
-        } else if (taxIdOption2.checked) {
-            taxIdInputContainer.style.display = "none";
-            taxIdInput.value = "無統一編號之業者";
-            setTaxIDInputReadOnly(true);
-        }
+
 
 </script>
 

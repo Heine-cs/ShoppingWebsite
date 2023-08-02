@@ -22,14 +22,40 @@ namespace OllieShop.Controllers
         // GET: SellerProductsManagement
         public async Task<IActionResult> Index()
         {
+            var productsTable = _context.Products.Include(c => c.CY).Include(s => s.SR);
+            var specificationsTable = _context.Specifications.ToList();
 
-            VMSellerProductsManagement productPlusSpec = new VMSellerProductsManagement() {
-                productTable = _context.Products.ToList(),
-                specificationsTable = _context.Specifications.ToList(),
-            };
-            
+            List<VMSellerProductsManagement> allProductPlusSpec = new List<VMSellerProductsManagement>();
+            VMSellerProductsManagement productPlusSpec;
+            foreach (var singalDataLine in productsTable)
+            {
+
+                productPlusSpec = new VMSellerProductsManagement()
+                {
+                    //Product的資料寫入物件成員
+                    PTID = singalDataLine.PTID,
+                    Name = singalDataLine.Name,
+                    DeliveryFee = singalDataLine.DeliveryFee,
+                    LaunchDate = singalDataLine.LaunchDate,
+                    Hidden = singalDataLine.Hidden,
+                    Locked = singalDataLine.Locked,
+                    Inquired = singalDataLine.Inquired,
+                    Installment = singalDataLine.Installment,
+                    Unopened = singalDataLine.Unopened,
+                    UnitPrice = singalDataLine.UnitPrice,
+                    ShelfQuantity = singalDataLine.ShelfQuantity,
+                    SoldQuantity = singalDataLine.SoldQuantity,
+                    Description = singalDataLine.Description,
+                    CYID = singalDataLine.CYID,
+                    SRID = singalDataLine.SRID,
+                    //specification的資料寫入物件成員
+                    Picture = specificationsTable.FirstOrDefault(s => s.PTID == singalDataLine.PTID).Picture.ToString()
+                };
+                allProductPlusSpec.Add(productPlusSpec);
+
+            }
             //return View(await ollieShopContext.ToListAsync());
-            return View(productPlusSpec);
+            return View(allProductPlusSpec);
         }
 
         // GET: SellerProductsManagement/Details/5
@@ -55,8 +81,8 @@ namespace OllieShop.Controllers
         // GET: SellerProductsManagement/Create
         public IActionResult Create()
         {
-            ViewData["CYID"] = new SelectList(_context.Categorys, "CYID", "CYID");
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount");
+            ViewData["LaunchDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name");
             return View();
         }
 
@@ -65,17 +91,48 @@ namespace OllieShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PTID,Name,DeliveryFee,LaunchDate,Hidden,Locked,Inquired,Installment,Unopened,UnitPrice,ShelfQuantity,SoldQuantity,Description,CYID,SRID")] Products products)
+        public async Task<IActionResult> Create(VMSellerProductsManagement sellerProduct)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(products);
+                Products products = new Products() {
+                    Name = sellerProduct.Name,
+                    DeliveryFee = sellerProduct.DeliveryFee,
+                    LaunchDate = sellerProduct.LaunchDate,
+                    Hidden = sellerProduct.Hidden,
+                    Locked = sellerProduct.Locked,
+                    Inquired= sellerProduct.Inquired,
+                    Installment = sellerProduct.Installment,
+                    Unopened= sellerProduct.Unopened,
+                    UnitPrice = sellerProduct.UnitPrice,
+                    ShelfQuantity = sellerProduct.ShelfQuantity,
+                    SoldQuantity= sellerProduct.SoldQuantity,
+                    Description = sellerProduct.Description,
+                    CYID = sellerProduct.CYID,
+                    SRID = sellerProduct.SRID,
+                };
+                await _context.Products.AddAsync(products);
+                await _context.SaveChangesAsync();
+                //Products資料表新增後，取出identity生成的主鍵，再填到Specifications資料表當外鍵用
+
+                Specifications specifications = new Specifications()
+                {
+                    SpecName = sellerProduct.SpecName,
+                    Picture = sellerProduct.Picture,
+                    Weight = sellerProduct.Weight,
+                    Size= sellerProduct.Size,
+                    LeadDay= sellerProduct.LeadDay,
+                    PackageSize= sellerProduct.PackageSize,
+                    Freebie = sellerProduct.Freebie,
+                    PTID = products.PTID//填外鍵
+                };
+
+                await _context.Specifications.AddAsync(specifications);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CYID"] = new SelectList(_context.Categorys, "CYID", "CYID", products.CYID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", products.SRID);
-            return View(products);
+            ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name", sellerProduct.CYID);
+            return View(sellerProduct);
         }
 
         // GET: SellerProductsManagement/Edit/5

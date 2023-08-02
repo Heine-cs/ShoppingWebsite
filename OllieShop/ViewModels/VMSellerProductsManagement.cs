@@ -5,14 +5,6 @@ namespace OllieShop.ViewModels
 {
     public class VMSellerProductsManagement
     {
-
-        //為了INDEX存在的兩個資料表成員，目的是要透過這兩個成員對於資料庫操作，取出整個table
-        public List<Products>? productTable { get;set; }
-
-        public List<Specifications>? specificationsTable { get; set; }
-        ////////////////////////////////////////////////////////////////////////////
-        
-        
         //From Products Model
         [Display(Name = "編號")]
         public long PTID { get; set; }
@@ -71,9 +63,7 @@ namespace OllieShop.ViewModels
         [StringLength(500, ErrorMessage = "描述欄位不得超過500個字")]
         public string Description { get; set; } = null!;
 
-        [Display(Name = "類別編號")]
-        [StringLength(5, ErrorMessage = "類別編號必須5個字")]
-        [MinLength(5, ErrorMessage = "類別編號必須5個字")]
+        [Display(Name = "類別名稱")]
         public string? CYID { get; set; }
 
         [Display(Name = "商家編號")]
@@ -83,7 +73,7 @@ namespace OllieShop.ViewModels
         [Display(Name = "編號")]
         public long SNID { get; set; }
 
-        [Display(Name = "名稱")]
+        [Display(Name = "規格名稱")]
         [Required(ErrorMessage = "必填欄位")]
         [StringLength(50, ErrorMessage = "名稱不得超過50個字")]
         public string SpecName { get; set; } = null!;
@@ -102,7 +92,7 @@ namespace OllieShop.ViewModels
         [Required(ErrorMessage = "必填欄位")]
         public double Size { get; set; }
 
-        [Display(Name = "備貨日(單位:天")]
+        [Display(Name = "備貨日(單位:天)")]
         [Required(ErrorMessage = "必填欄位")]
         public int LeadDay { get; set; }
 
@@ -110,7 +100,7 @@ namespace OllieShop.ViewModels
         [Required(ErrorMessage = "必填欄位")]
         public double PackageSize { get; set; }
 
-        [Display(Name = "贈品")]
+        [Display(Name = "贈品名稱")]
         [Required(ErrorMessage = "必填欄位")]
         [StringLength(50, ErrorMessage = "贈品名稱不得超過50個字")]
         public string Freebie { get; set; } = null!;

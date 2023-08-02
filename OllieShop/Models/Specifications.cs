@@ -27,7 +27,7 @@ public partial class Specifications
     [Required(ErrorMessage = "必填欄位")]
     public double Size { get; set; }
 
-    [Display(Name = "備貨日(單位:天")]
+    [Display(Name = "備貨日(單位:天)")]
     [Required(ErrorMessage = "必填欄位")]
     public int LeadDay { get; set; }
 
@@ -35,7 +35,7 @@ public partial class Specifications
     [Required(ErrorMessage = "必填欄位")]
     public double PackageSize { get; set; }
 
-    [Display(Name = "贈品")]
+    [Display(Name = "贈品名稱")]
     [Required(ErrorMessage = "必填欄位")]
     [StringLength(50,ErrorMessage = "贈品名稱不得超過50個字")]
     public string Freebie { get; set; } = null!;
