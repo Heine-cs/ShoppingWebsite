@@ -135,7 +135,6 @@ namespace OllieShop.Controllers
             return View(sellerProduct);
         }
 
-        // GET: SellerProductsManagement/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null || _context.Products == null)
