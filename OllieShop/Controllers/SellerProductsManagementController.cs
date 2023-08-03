@@ -83,6 +83,7 @@ namespace OllieShop.Controllers
         {
             ViewData["LaunchDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name");
+            ViewData["SRID"] = "2";
             return View();
         }
 

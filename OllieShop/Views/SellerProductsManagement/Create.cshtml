@@ -1,16 +1,22 @@
 ﻿@model OllieShop.ViewModels.VMSellerProductsManagement
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "新增商品頁";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Products</h4>
 <hr />
-    <div>
-        <form class="row" asp-action="Create">
+    <div class="row">
+        <div class="col-4">
+            <label asp-for="Picture" class="control-label"></label>
+            <form asp-controller="FileUpload" asp-action="photoUpload" asp-route-SRID="@ViewBag.SRID" enctype="multipart/form-data">
+                <input type="file" name="photo" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
+            </form>
+        </div>
+        <form class="col-8 row" asp-action="Create">
             <div class="col">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
@@ -145,8 +151,8 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group d-grid gap-2 my-4">
-                <input type="submit" value="新增" class="btn btn-primary" />
+            <div class="form-group my-4 text-end">
+                <input type="submit" value="新增" class="btn btn-primary btn-lg" />
             </div>
         </form>
     </div>
