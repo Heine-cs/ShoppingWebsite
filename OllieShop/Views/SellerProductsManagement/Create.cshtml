@@ -11,12 +11,14 @@
     <div class="row">
         <div class="col-4">
             <label asp-for="Picture" class="control-label"></label>
-            <form asp-controller="FileUpload" asp-action="photoUpload" asp-route-SRID="@ViewBag.SRID" enctype="multipart/form-data">
-                <input type="file" name="photo" />
-                <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
+            <form asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
+                <input type="file" name="photo" id="photoInput" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳" />
             </form>
+            <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
+            <img id="afterUploadShow" class="w-100 my-2"/>
         </div>
-        <form class="col-8 row" asp-action="Create">
+        <form class="col-8 row" asp-action="Create" id="productSpecForm">
             <div class="col">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
@@ -131,8 +133,7 @@
             <div class="col">
                 <div class="form-group">
                     <label asp-for="Picture" class="control-label"></label>
-                    <input asp-for="Picture" class="form-control" />
-                    <span asp-validation-for="Picture" class="text-danger"></span>
+                    <input asp-for="Picture" class="form-control" id="pictureAddressInput"/>
                 </div>
                 <div class="form-group">
                     <label>是否加入商品描述?</label>
@@ -225,4 +226,42 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // 使用jQuery的方式綁定Form的submit事件
+        $("#pictureForm").submit(function (e) {
+            e.preventDefault(); // 阻止Form的默認提交行為
+
+            // 使用FormData來構建請求數據，包括文字數據和檔案
+            var formData = new FormData(this);
+
+            // 使用AJAX向Controller的Action發送POST請求
+            $.ajax({
+                url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+                type: "POST",
+                data: formData, // 把Form中的數據序列化作為請求參數
+                processData: false, // 不要處理data
+                contentType: false, // 不要設置contentType，因為FormData已經處理了
+                success: function (response) {
+                    // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
+                    $("#pictureAddressInput").val(response);
+                    $("#afterUploadShow").attr("src", response);
+                    $('#pictureValidation').addClass("d-none");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        // 使用jQuery的方式綁定otherForm的submit事件
+        $("#productSpecForm").submit(function (e) {
+            // 檢查是否至少選擇了一張圖片
+            if (!$('#photoInput').get(0).files.length) {
+                e.preventDefault(); // 阻止Form的默認提交行為
+                $('#pictureValidation').removeClass("d-none");
+            }
+        });
+    </script>
+
 }

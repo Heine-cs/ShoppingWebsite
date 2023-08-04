@@ -1,16 +1,15 @@
 ﻿@model OllieShop.Models.Products
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "編輯商品內容";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Products</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PTID" />
@@ -21,12 +20,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="DeliveryFee" class="control-label"></label>
-                <input asp-for="DeliveryFee" class="form-control" />
+                <input asp-for="DeliveryFee" class="form-control"/>
                 <span asp-validation-for="DeliveryFee" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LaunchDate" class="control-label"></label>
-                <input asp-for="LaunchDate" class="form-control" />
+                <input asp-for="LaunchDate" class="form-control" readonly/>
                 <span asp-validation-for="LaunchDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -34,7 +33,7 @@
                     <input class="form-check-input" asp-for="Hidden" /> @Html.DisplayNameFor(model => model.Hidden)
                 </label>
             </div>
-            <div class="form-group form-check">
+            <div class="form-group form-check d-none">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Locked" /> @Html.DisplayNameFor(model => model.Locked)
                 </label>
@@ -64,7 +63,7 @@
                 <input asp-for="ShelfQuantity" class="form-control" />
                 <span asp-validation-for="ShelfQuantity" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="SoldQuantity" class="control-label"></label>
                 <input asp-for="SoldQuantity" class="form-control" />
                 <span asp-validation-for="SoldQuantity" class="text-danger"></span>
@@ -76,23 +75,26 @@
             </div>
             <div class="form-group">
                 <label asp-for="CYID" class="control-label"></label>
-                <select asp-for="CYID" class="form-control" asp-items="ViewBag.CYID"></select>
+                <select asp-for="CYID" class="form-control" asp-items="ViewBag.CategorysSelectList"></select>
                 <span asp-validation-for="CYID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SRID" class="control-label"></label>
-                <select asp-for="SRID" class="form-control" asp-items="ViewBag.SRID"></select>
-                <span asp-validation-for="SRID" class="text-danger"></span>
+                <input asp-for="SRID" class="form-control" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="編輯" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+    <div class="col-8">
+        <a asp-controller="SellerSpecificationsManagement" asp-action="Index">規格總覽</a>
+        @await Component.InvokeAsync("VCSpecifications" , new{ptid = Model.PTID})
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">不編輯，返回商品總覽</a>
 </div>
 
 @section Scripts {

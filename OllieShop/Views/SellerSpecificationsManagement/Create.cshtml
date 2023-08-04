@@ -1,0 +1,114 @@
+﻿@model OllieShop.Models.Specifications
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout_Seller.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Specifications</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div>
+            <label asp-for="Picture" class="control-label"></label>
+            <form asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
+                <input type="file" name="photo" id="photoInput" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳" />
+            </form>
+            <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
+            <img id="afterUploadShow" class="w-100 my-2"/>
+        </div>
+
+        <form asp-action="Create" id="specForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SpecName" class="control-label"></label>
+                <input asp-for="SpecName" class="form-control" />
+                <span asp-validation-for="SpecName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Picture" class="control-label"></label>
+                <input asp-for="Picture" class="form-control" />
+                <span asp-validation-for="Picture" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Weight" class="control-label"></label>
+                <input asp-for="Weight" class="form-control" />
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <input asp-for="Size" class="form-control" />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeadDay" class="control-label"></label>
+                <input asp-for="LeadDay" class="form-control" />
+                <span asp-validation-for="LeadDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PackageSize" class="control-label"></label>
+                <input asp-for="PackageSize" class="form-control" />
+                <span asp-validation-for="PackageSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Freebie" class="control-label"></label>
+                <input asp-for="Freebie" class="form-control" />
+                <span asp-validation-for="Freebie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PTID" class="control-label"></label>
+                <select asp-for="PTID" class ="form-control" asp-items="ViewBag.PTID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // 使用jQuery的方式綁定Form的submit事件
+        $("#pictureForm").submit(function (e) {
+            e.preventDefault(); // 阻止Form的默認提交行為
+
+            // 使用FormData來構建請求數據，包括文字數據和檔案
+            var formData = new FormData(this);
+
+            // 使用AJAX向Controller的Action發送POST請求
+            $.ajax({
+                url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+                type: "POST",
+                data: formData, // 把Form中的數據序列化作為請求參數
+                processData: false, // 不要處理data
+                contentType: false, // 不要設置contentType，因為FormData已經處理了
+                success: function (response) {
+                    // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
+                    $("#pictureAddressInput").val(response);
+                    $("#afterUploadShow").attr("src", response);
+                    $('#pictureValidation').addClass("d-none");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
+        // 使用jQuery的方式綁定otherForm的submit事件
+        $("#specForm").submit(function (e) {
+            // 檢查是否至少選擇了一張圖片
+            if (!$('#photoInput').get(0).files.length) {
+                e.preventDefault(); // 阻止Form的默認提交行為
+                $('#pictureValidation').removeClass("d-none");
+            }
+        });
+    </script>
+}

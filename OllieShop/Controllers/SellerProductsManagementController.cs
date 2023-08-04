@@ -19,7 +19,6 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
-        // GET: SellerProductsManagement
         public async Task<IActionResult> Index()
         {
             var productsTable = _context.Products.Include(c => c.CY).Include(s => s.SR);
@@ -58,7 +57,6 @@ namespace OllieShop.Controllers
             return View(allProductPlusSpec);
         }
 
-        // GET: SellerProductsManagement/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Products == null)
@@ -78,18 +76,14 @@ namespace OllieShop.Controllers
             return View(products);
         }
 
-        // GET: SellerProductsManagement/Create
         public IActionResult Create()
         {
             ViewData["LaunchDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name");
-            ViewData["SRID"] = "2";
+            ViewData["SRID"] = "2"; //寫死
             return View();
         }
 
-        // POST: SellerProductsManagement/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VMSellerProductsManagement sellerProduct)
@@ -148,14 +142,11 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["CYID"] = new SelectList(_context.Categorys, "CYID", "CYID", products.CYID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", products.SRID);
+            ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name", products.CYID);
+            
             return View(products);
         }
 
-        // POST: SellerProductsManagement/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("PTID,Name,DeliveryFee,LaunchDate,Hidden,Locked,Inquired,Installment,Unopened,UnitPrice,ShelfQuantity,SoldQuantity,Description,CYID,SRID")] Products products)
@@ -185,12 +176,10 @@ namespace OllieShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CYID"] = new SelectList(_context.Categorys, "CYID", "CYID", products.CYID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", products.SRID);
+            ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name", products.CYID);
             return View(products);
         }
 
-        // GET: SellerProductsManagement/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null || _context.Products == null)

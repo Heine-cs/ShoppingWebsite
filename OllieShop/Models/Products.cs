@@ -64,8 +64,6 @@ public partial class Products
     public string Description { get; set; } = null!;
 
     [Display(Name = "類別編號")]
-    [StringLength(5,ErrorMessage = "類別編號必須5個字")]
-    [MinLength(5,ErrorMessage = "類別編號必須5個字")]
     public string? CYID { get; set; }
 
     [Display(Name = "商家編號")]
