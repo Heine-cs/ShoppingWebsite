@@ -13,7 +13,7 @@
             <label asp-for="Picture" class="control-label"></label>
             <form asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
                 <input type="file" name="photo" id="photoInput" />
-                <input class="btn btn-outline-dark" type="submit" value="上傳" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
             </form>
             <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
             <img id="afterUploadShow" class="w-100 my-2"/>
@@ -163,96 +163,118 @@
     <a asp-action="Index">不新增，返回商品總覽</a>
 </div>
 
-<script>
-    //監視textarea回車後觸發縱向高度調整
-    var textarea = document.querySelector('textarea');
-    textarea.addEventListener('keydown', autosize);
-    function autosize(){
-      var el = this;
-      setTimeout(function(){
-        el.style.cssText = 'height:auto; padding:0';
-        el.style.cssText = 'height:' + el.scrollHeight + 'px';
-      },0);
-    }
-
-    //將SpecName欄位值同步到Name欄位輸入內容
-    var forSpecNameCopy;
-    var specName = document.getElementById("specName")
-    function syncInput(){
-        forSpecNameCopy = document.getElementById("forSpecNameCopy").value;
-        specName.value = forSpecNameCopy;
-    }
-
-    //描述欄位的Radio選項
-    const descriptionIdOption1 = document.getElementById("descriptionIdOption1");
-    const descriptionIdOption2 = document.getElementById("descriptionIdOption2");
-    const descriptionInput = document.getElementById("descriptionInput");
-
-    descriptionIdOption1.addEventListener("change", function () {
-        if (descriptionIdOption1.checked) {
-            descriptionInput.value = "";
-            descriptionInput.removeAttribute("readonly");
-        }
-    });
-
-    descriptionIdOption2.addEventListener("change", function () {
-        if (descriptionIdOption2.checked) {
-            descriptionInput.value = "無描述";
-            descriptionInput.setAttribute("readonly", "readonly");
-        }
-    });
-
-    //贈品欄位的Radio選項
-    const freebieIdOption1 = document.getElementById("freebieIdOption1");
-    const freebieIdOption2 = document.getElementById("freebieIdOption2");
-    const freebieInput = document.getElementById("freebieInput");
-
-    freebieIdOption1.addEventListener("change", function () {
-        if (freebieIdOption1.checked) {
-            freebieInput.value = "";
-            freebieInput.removeAttribute("readonly");
-        }
-    });
-
-    freebieIdOption2.addEventListener("change", function () {
-        if (freebieIdOption2.checked) {
-
-            freebieInput.value = "無贈品";
-            freebieInput.setAttribute("readonly", "readonly");
-        }
-    });
-
-</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+
+        //監視textarea回車後觸發縱向高度調整
+        var textarea = document.querySelector('textarea');
+        textarea.addEventListener('keydown', autosize);
+        function autosize() {
+            var el = this;
+            setTimeout(function () {
+                el.style.cssText = 'height:auto; padding:0';
+                el.style.cssText = 'height:' + el.scrollHeight + 'px';
+            }, 0);
+        }
+
+        //將SpecName欄位值同步到Name欄位輸入內容
+        var forSpecNameCopy;
+        var specName = document.getElementById("specName")
+        function syncInput() {
+            forSpecNameCopy = document.getElementById("forSpecNameCopy").value;
+            specName.value = forSpecNameCopy;
+        }
+
+        //描述欄位的Radio選項
+        const descriptionIdOption1 = document.getElementById("descriptionIdOption1");
+        const descriptionIdOption2 = document.getElementById("descriptionIdOption2");
+        const descriptionInput = document.getElementById("descriptionInput");
+
+        descriptionIdOption1.addEventListener("change", function () {
+            if (descriptionIdOption1.checked) {
+                descriptionInput.value = "";
+                descriptionInput.removeAttribute("readonly");
+            }
+        });
+
+        descriptionIdOption2.addEventListener("change", function () {
+            if (descriptionIdOption2.checked) {
+                descriptionInput.value = "無描述";
+                descriptionInput.setAttribute("readonly", "readonly");
+            }
+        });
+
+        //贈品欄位的Radio選項
+        const freebieIdOption1 = document.getElementById("freebieIdOption1");
+        const freebieIdOption2 = document.getElementById("freebieIdOption2");
+        const freebieInput = document.getElementById("freebieInput");
+
+        freebieIdOption1.addEventListener("change", function () {
+            if (freebieIdOption1.checked) {
+                freebieInput.value = "";
+                freebieInput.removeAttribute("readonly");
+            }
+        });
+
+        freebieIdOption2.addEventListener("change", function () {
+            if (freebieIdOption2.checked) {
+
+                freebieInput.value = "無贈品";
+                freebieInput.setAttribute("readonly", "readonly");
+            }
+        });
+
         // 使用jQuery的方式綁定Form的submit事件
         $("#pictureForm").submit(function (e) {
             e.preventDefault(); // 阻止Form的默認提交行為
+            if (photoInput.value != "") {
+                // 使用FormData來構建請求數據，包括文字數據和檔案
+                var formData = new FormData(this);
 
-            // 使用FormData來構建請求數據，包括文字數據和檔案
-            var formData = new FormData(this);
+                // 添加 replacePhotoAction 到 formData，用來為替換圖庫內圖檔操作的分歧點
+                var replacePhotoRoadSwitch = false; //false代表直接將圖片新增到圖庫中
+                formData.append("replacePhotoRoadSwitch", replacePhotoRoadSwitch);
 
-            // 使用AJAX向Controller的Action發送POST請求
-            $.ajax({
-                url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
-                type: "POST",
-                data: formData, // 把Form中的數據序列化作為請求參數
-                processData: false, // 不要處理data
-                contentType: false, // 不要設置contentType，因為FormData已經處理了
-                success: function (response) {
-                    // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
-                    $("#pictureAddressInput").val(response);
-                    $("#afterUploadShow").attr("src", response);
-                    $('#pictureValidation').addClass("d-none");
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
+                // 使用AJAX向Controller的Action發送POST請求
+                $.ajax({
+                    url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+                    type: "POST",
+                    data: formData, // 把Form中的數據序列化作為請求參數
+                    processData: false, // 不要處理data
+                    contentType: false, // 不要設置contentType，因為FormData已經處理了
+                    success: function (response) {
+                        // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
+                        if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
+                            $("#pictureAddressInput").val(response);
+                            $("#afterUploadShow").attr("src", response);
+                            $('#pictureValidation').addClass("d-none");
+                        }
+                        else {
+                            alert("上傳圖片檔案類型僅限jpg或png兩種格式之一");
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+            else {
+                alert("請先選擇圖片後再點上傳");
+            }
         });
+
+        // 使用jQuery的方式綁定otherForm的submit事件
+        $("#specForm").submit(function (e) {
+            // 檢查是否至少選擇了一張圖片
+            if (!$('#photoInput').get(0).files.length) {
+                e.preventDefault(); // 阻止Form的默認提交行為
+                $('#pictureValidation').removeClass("d-none");
+            }
+        });
+
 
         // 使用jQuery的方式綁定otherForm的submit事件
         $("#productSpecForm").submit(function (e) {

@@ -1,17 +1,25 @@
 ﻿@model OllieShop.Models.Specifications
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "編輯商品規格頁";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Specifications</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+        <div class="col">
+            <span>變更</span><label asp-for="Picture" class="control-label"></label>
+            <form asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
+                <input type="file" name="photo" id="photoInput" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
+            </form>
+            <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
+            <img class="w-100 my-2" src="@Model.Picture" />
+            <img id="afterUploadShow" class="w-100 my-2" />
+        </div>
+        <form class="col" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="SNID" />
             <div class="form-group">
@@ -45,26 +53,108 @@
                 <span asp-validation-for="PackageSize" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Freebie" class="control-label"></label>
-                <input asp-for="Freebie" class="form-control" />
-                <span asp-validation-for="Freebie" class="text-danger"></span>
+                <label>商品附贈品?</label>
+                <div class="form-check">
+                    <input type="radio" name="HasFreebie" value="true" id="freebieIdOption1" />
+                    <label class="form-check-label" for="taxIdOption">有贈品</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="HasFreebie" value="false" id="freebieIdOption2" />
+                    <label class="form-check-label">無贈品</label>
+                </div>
             </div>
             <div class="form-group">
+                <label asp-for="Freebie" class="control-label"></label>
+                <input asp-for="Freebie" class="form-control" id="freebieInput" readonly />
+                <span asp-validation-for="Freebie" class="text-danger"></span>
+            </div>
+
+            <div class="form-group d-none">
                 <label asp-for="PTID" class="control-label"></label>
-                <select asp-for="PTID" class="form-control" asp-items="ViewBag.PTID"></select>
+                <input asp-for="PTID" class="form-control" value="@ViewBag.PTID" />
                 <span asp-validation-for="PTID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="編輯" class="btn btn-primary" />
             </div>
         </form>
-    </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="SellerProductsManagement" asp-action="Edit" asp-route-id="@Model.PTID">不編輯此筆規格，返回商品編輯頁</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // 使用jQuery的方式綁定Form的submit事件
+        $("#pictureForm").submit(function (e) {
+            e.preventDefault(); // 阻止Form的默認提交行為
+            if (photoInput.value != "") {
+                // 使用FormData來構建請求數據，包括文字數據和檔案
+                var formData = new FormData(this);
+
+
+                // 添加 replacePhotoAction 到 formData，用來為替換圖庫內圖檔操作的分歧點
+                var replacePhotoRoadSwitch = true; //false代表直接將圖片新增到圖庫中
+                formData.append("replacePhotoRoadSwitch", replacePhotoRoadSwitch);
+
+                // 使用AJAX向Controller的Action發送POST請求
+                $.ajax({
+                    url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+                    type: "POST",
+                    data: formData, // 把Form中的數據序列化作為請求參數
+                    processData: false, // 不要處理data
+                    contentType: false, // 不要設置contentType，因為FormData已經處理了
+                    success: function (response) {
+                        // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
+                        if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
+                            $("#pictureAddressInput").val(response);
+                            $("#afterUploadShow").attr("src", response);
+                            $('#pictureValidation').addClass("d-none");
+                        }
+                        else {
+                            alert(response);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+            else {
+                alert("請先選擇圖片後再點上傳");
+            }
+        });
+
+        // 使用jQuery的方式綁定otherForm的submit事件
+        $("#specForm").submit(function (e) {
+            // 檢查是否至少選擇了一張圖片
+            if (!$('#photoInput').get(0).files.length) {
+                e.preventDefault(); // 阻止Form的默認提交行為
+                $('#pictureValidation').removeClass("d-none");
+            }
+        });
+
+
+        //贈品欄位的Radio選項
+        const freebieIdOption1 = document.getElementById("freebieIdOption1");
+        const freebieIdOption2 = document.getElementById("freebieIdOption2");
+        const freebieInput = document.getElementById("freebieInput");
+
+        freebieIdOption1.addEventListener("change", function () {
+            if (freebieIdOption1.checked) {
+                freebieInput.value = "";
+                freebieInput.removeAttribute("readonly");
+            }
+        });
+
+        freebieIdOption2.addEventListener("change", function () {
+            if (freebieIdOption2.checked) {
+
+                freebieInput.value = "無贈品";
+                freebieInput.setAttribute("readonly", "readonly");
+            }
+        });
+    </script>
 }

@@ -88,7 +88,8 @@
         </form>
     </div>
     <div class="col-8">
-        <a asp-controller="SellerSpecificationsManagement" asp-action="Index">規格總覽</a>
+        <a class="btn btn-outline-primary" asp-controller="SellerSpecificationsManagement" asp-action="Create" 
+        asp-route-SRID="@Model.SRID" asp-route-PTID="@Model.PTID" asp-route-productName="@Model.Name">新增規格</a>
         @await Component.InvokeAsync("VCSpecifications" , new{ptid = Model.PTID})
     </div>
 </div>
@@ -99,4 +100,12 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        //要在此畫面隱藏default載入的編號欄位，因為這是商家頁面
+        const specificationNumber = document.getElementsByClassName("specificationNumber");
+        for (i=0;i<specificationNumber.length;i++) {
+            specificationNumber[i].classList.add("d-none");
+        }
+        
+    </script>
 }

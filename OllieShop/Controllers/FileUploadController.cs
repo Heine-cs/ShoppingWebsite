@@ -8,8 +8,8 @@ namespace OllieShop.Controllers
     {
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public string photoUpload(IFormFile photo,long SRID)
-        {
+        public string photoUpload(IFormFile photo,long SRID,bool replacePhotoRoadSwitch)
+        {//replacePhotoRoadSwitch收到true值就將圖庫內圖檔使用新圖檔替換，false為直接新增到圖庫
 
             if (photo != null)
             {
@@ -43,7 +43,7 @@ namespace OllieShop.Controllers
                     else
                     {
                         //從資料夾撈出所有檔名轉為檔名陣列
-                        string[] fileNames = Directory.GetFiles(path)
+                        string?[] fileNames = Directory.GetFiles(path)
                             .Select(Path.GetFileName)
                             .ToArray();
                         //提取檔名陣列長度+1作為新檔名

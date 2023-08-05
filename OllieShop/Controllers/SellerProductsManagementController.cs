@@ -21,8 +21,8 @@ namespace OllieShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var productsTable = _context.Products.Include(c => c.CY).Include(s => s.SR);
-            var specificationsTable = _context.Specifications.ToList();
+            var productsTable =  await _context.Products.Include(c => c.CY).Include(s => s.SR).ToListAsync();
+            var specificationsTable = await _context.Specifications.ToListAsync();
 
             List<VMSellerProductsManagement> allProductPlusSpec = new List<VMSellerProductsManagement>();
             VMSellerProductsManagement productPlusSpec;

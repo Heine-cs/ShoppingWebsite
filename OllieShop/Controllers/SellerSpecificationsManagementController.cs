@@ -18,12 +18,6 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var ollieShopContext = _context.Specifications.Include(s => s.PT);
-            return View(await ollieShopContext.ToListAsync());
-        }
-
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Specifications == null)
@@ -42,11 +36,12 @@ namespace OllieShop.Controllers
             return View(specifications);
         }
 
-        public IActionResult Create()
+        public IActionResult Create(long SRID,long PTID,string productName)
         {
-            ViewData["SRID"] = "2";
+            ViewData["SRID"] = SRID;//上傳圖片到業者個人圖庫會用到此參數
 
-            ViewData["PTID"] = new SelectList(_context.Products, "PTID", "Description");
+            ViewData["PTID"] = PTID;//存規格資料表會需要此作為外鍵
+            ViewData["productName"] = productName;//在新增規格頁顯示產品名稱，data來源自SellerProducts Create頁
             return View();
         }
 
@@ -58,9 +53,9 @@ namespace OllieShop.Controllers
             {
                 _context.Add(specifications);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Edit","SellerProductsManagement", new { id = specifications.PTID});
             }
-            ViewData["PTID"] = new SelectList(_context.Products, "PTID", "Description", specifications.PTID);
+            ViewData["PTID"] = specifications.PTID;
             return View(specifications);
         }
 
@@ -77,13 +72,20 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["PTID"] = new SelectList(_context.Products, "PTID", "Description", specifications.PTID);
+            //撈出SRID用意是要傳給Edit頁面上傳圖片時要存入對應業者的資料夾，會需要用到這個SRID組合路徑，
+            //其程式碼為 url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+            var productInfo = await _context.Products.Where(p => p.PTID == specifications.PTID).ToListAsync();
+            if (productInfo == null)
+            {
+                return NotFound();
+            }
+            
+            ViewData["SRID"] = productInfo[0].SRID;
+
+            ViewData["PTID"] = specifications.PTID;
             return View(specifications);
         }
 
-        // POST: SellerSpecificationsManagerment/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("SNID,SpecName,Picture,Weight,Size,LeadDay,PackageSize,Freebie,PTID")] Specifications specifications)
@@ -113,7 +115,7 @@ namespace OllieShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PTID"] = new SelectList(_context.Products, "PTID", "Description", specifications.PTID);
+            ViewData["PTID"] = specifications.PTID;
             return View(specifications);
         }
 

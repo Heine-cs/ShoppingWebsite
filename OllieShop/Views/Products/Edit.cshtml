@@ -103,4 +103,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        //要在此畫面隱藏default載入通往業者編輯頁的a標籤，因為這是管理員頁面
+        const editSpecificationLink = document.getElementsByClassName("editSpecificationLink");
+        for (i = 0; i < editSpecificationLink.length; i++) {
+            editSpecificationLink[i].classList.add("d-none");
+        }
+    </script>
 }
