@@ -74,33 +74,45 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CYID" class="control-label"></label>
+                <label asp-for="CY.Name" class="control-label"></label>
                 <select asp-for="CYID" class="form-control" asp-items="ViewBag.CategorysSelectList"></select>
                 <span asp-validation-for="CYID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="SRID" class="control-label"></label>
                 <input asp-for="SRID" class="form-control" />
             </div>
-            <div class="form-group">
-                <input type="submit" value="編輯" class="btn btn-primary" />
+            <div class="form-group my-4">
+                <input type="submit" value="編輯" class="btn btn-primary btn-lg" />
             </div>
         </form>
     </div>
     <div class="col-8">
+        <div class="text-end">
+            <a asp-action="Index">不編輯，返回商品總覽</a>
+        </div>
         <a class="btn btn-outline-primary" asp-controller="SellerSpecificationsManagement" asp-action="Create" 
         asp-route-SRID="@Model.SRID" asp-route-PTID="@Model.PTID" asp-route-productName="@Model.Name">新增規格</a>
         @await Component.InvokeAsync("VCSpecifications" , new{ptid = Model.PTID})
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">不編輯，返回商品總覽</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        //監視textarea回車後觸發縱向高度調整
+        var textarea = document.querySelector('textarea');
+        textarea.addEventListener('keydown', autosize);
+        function autosize() {
+            var el = this;
+            setTimeout(function () {
+                el.style.cssText = 'height:auto; padding:0';
+                el.style.cssText = 'height:' + el.scrollHeight + 'px';
+            }, 0);
+        }
+
+
         //要在此畫面隱藏default載入的編號欄位，因為這是商家頁面
         const specificationNumber = document.getElementsByClassName("specificationNumber");
         for (i=0;i<specificationNumber.length;i++) {
