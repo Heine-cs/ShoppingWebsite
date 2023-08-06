@@ -113,7 +113,8 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Edit", "SellerProductsManagement", new { id = specifications.PTID });
             }
             ViewData["PTID"] = specifications.PTID;
             return View(specifications);

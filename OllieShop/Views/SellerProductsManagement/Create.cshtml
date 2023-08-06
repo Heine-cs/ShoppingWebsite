@@ -233,11 +233,6 @@
             if (photoInput.value != "") {
                 // 使用FormData來構建請求數據，包括文字數據和檔案
                 var formData = new FormData(this);
-
-                // 添加 replacePhotoAction 到 formData，用來為替換圖庫內圖檔操作的分歧點
-                var replacePhotoRoadSwitch = false; //false代表直接將圖片新增到圖庫中
-                formData.append("replacePhotoRoadSwitch", replacePhotoRoadSwitch);
-
                 // 使用AJAX向Controller的Action發送POST請求
                 $.ajax({
                     url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
@@ -253,7 +248,7 @@
                             $('#pictureValidation').addClass("d-none");
                         }
                         else {
-                            alert("上傳圖片檔案類型僅限jpg或png兩種格式之一");
+                            alert(response);
                         }
                     },
                     error: function (error) {

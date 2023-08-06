@@ -11,13 +11,12 @@
 <div class="row">
         <div class="col">
             <span>變更</span><label asp-for="Picture" class="control-label"></label>
-            <form asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
+            <form asp-controller="FileUpload" asp-action="photoReplace" enctype="multipart/form-data" id="pictureForm">
                 <input type="file" name="photo" id="photoInput" />
                 <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
             </form>
             <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
-            <img class="w-100 my-2" src="@Model.Picture" />
-            <img id="afterUploadShow" class="w-100 my-2" />
+            <img class="w-100 my-2" src="@Model.Picture" id="afterUploadShow" />
         </div>
         <form class="col" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -27,9 +26,9 @@
                 <input asp-for="SpecName" class="form-control" />
                 <span asp-validation-for="SpecName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="Picture" class="control-label"></label>
-                <input asp-for="Picture" class="form-control" />
+                <input asp-for="Picture" class="form-control" id="pictureAddress"/>
                 <span asp-validation-for="Picture" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -93,15 +92,11 @@
             if (photoInput.value != "") {
                 // 使用FormData來構建請求數據，包括文字數據和檔案
                 var formData = new FormData(this);
-
-
-                // 添加 replacePhotoAction 到 formData，用來為替換圖庫內圖檔操作的分歧點
-                var replacePhotoRoadSwitch = true; //false代表直接將圖片新增到圖庫中
-                formData.append("replacePhotoRoadSwitch", replacePhotoRoadSwitch);
-
+                //上傳圖片前，要把保存在圖庫的舊圖片給替換掉，將舊圖路徑參數傳到formData並透過post交由replacePhoto action處理
+                formData.append("oldPhotoPath", "@Model.Picture");
                 // 使用AJAX向Controller的Action發送POST請求
                 $.ajax({
-                    url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+                    url: "@Url.Action("photoReplace", "FileUpload",new {SRID=@ViewBag.SRID})",
                     type: "POST",
                     data: formData, // 把Form中的數據序列化作為請求參數
                     processData: false, // 不要處理data
@@ -109,8 +104,8 @@
                     success: function (response) {
                         // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
                         if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
-                            $("#pictureAddressInput").val(response);
                             $("#afterUploadShow").attr("src", response);
+                            $("#pictureAddress").val(response);
                             $('#pictureValidation').addClass("d-none");
                         }
                         else {
