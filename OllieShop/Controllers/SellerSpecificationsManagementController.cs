@@ -18,24 +18,6 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Details(long? id)
-        {
-            if (id == null || _context.Specifications == null)
-            {
-                return NotFound();
-            }
-
-            var specifications = await _context.Specifications
-                .Include(s => s.PT)
-                .FirstOrDefaultAsync(m => m.SNID == id);
-            if (specifications == null)
-            {
-                return NotFound();
-            }
-
-            return View(specifications);
-        }
-
         public IActionResult Create(long SRID,long PTID,string productName)
         {
             ViewData["SRID"] = SRID;//上傳圖片到業者個人圖庫會用到此參數

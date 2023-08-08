@@ -16,7 +16,8 @@
                 <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
             </form>
             <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
-            <img class="w-100 my-2" src="@Model.Picture" id="afterUploadShow" />
+            <span class="text-success" id="afterRelpaceMessage"></span>
+            <img class="w-100 my-2" src="@Model.Picture" />
         </div>
         <form class="col" asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -28,7 +29,7 @@
             </div>
             <div class="form-group d-none">
                 <label asp-for="Picture" class="control-label"></label>
-                <input asp-for="Picture" class="form-control" id="pictureAddress"/>
+                <input asp-for="Picture" class="form-control"/>
                 <span asp-validation-for="Picture" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -104,9 +105,8 @@
                     success: function (response) {
                         // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
                         if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
-                            $("#afterUploadShow").attr("src", response);
-                            $("#pictureAddress").val(response);
                             $('#pictureValidation').addClass("d-none");
+                            $('#afterRelpaceMessage').html(response);
                         }
                         else {
                             alert(response);

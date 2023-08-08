@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using OllieShop.Models;
+using System.IO;
 
 
 namespace OllieShop.Controllers
@@ -84,32 +85,16 @@ namespace OllieShop.Controllers
 
                 if (fileInfo.Extension == ".jpg" || fileInfo.Extension == ".png")
                 {
-                    //刪除舊檔案
                     string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                    FileInfo oldPhoto = new FileInfo(rootPath + oldPhotoPath);
+                    string oldPhotoFullPath = rootPath + oldPhotoPath;
 
-                    if (oldPhoto.Exists)
+                    using (var stream = new FileStream(oldPhotoFullPath, FileMode.Create))
                     {
-                        oldPhoto.Delete();
-                    }
-
-
-                    //上傳的新檔案目前在photo物件中
-                    //FileStream參數需要路徑與名稱才能用FileStream()，新檔案路徑要組合wwwroot
-                    string oldPhotoPathWithoutExtension = oldPhotoPath.Substring(0, oldPhotoPath.Length-4);
-                    oldPhotoPathWithoutExtension += ("_" + DateTime.Now.Ticks.ToString()) + oldPhoto.Extension;
-
-
-                    string newPhotoPath = rootPath+oldPhotoPathWithoutExtension;
-                    using (var stream = new FileStream(newPhotoPath, FileMode.Create))
-                    {
-                        //使用copy to的方法將檔案複製到資料夾
+                        //使用copy to的方法將新檔案覆蓋舊檔
                         photo.CopyTo(stream);
                     }
 
-                    // 回傳新的檔案路徑讓呼叫者頁面的 img src 重寫後重載圖片
-                    return oldPhotoPathWithoutExtension;
-
+                    return "上傳圖片成功";
                 }
                 return "上傳圖片檔案類型僅限jpg或png兩種格式之一";
             }
