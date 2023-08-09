@@ -1,0 +1,47 @@
+﻿@model IEnumerable<OllieShop.Models.ShipVias>
+
+@{
+    ViewData["Title"] = "運送方式總覽";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">新增運送方式</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SVID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AD)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SVID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AD.Account)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SVID">編輯</a> |
+                <a asp-action="Delete" asp-route-id="@item.SVID">刪除</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
