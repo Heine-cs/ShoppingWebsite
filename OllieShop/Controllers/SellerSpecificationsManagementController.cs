@@ -124,7 +124,7 @@ namespace OllieShop.Controllers
         // POST: SellerSpecificationsManagerment/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id,long PTID)
         {
             if (_context.Specifications == null)
             {
@@ -137,7 +137,7 @@ namespace OllieShop.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Edit", "SellerProductsManagement", new { id = PTID });
         }
 
         private bool SpecificationsExists(long id)

@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-4">
             <label asp-for="Picture" class="control-label"></label>
-            <form asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
+            <form class="d-flex justify-content-between" asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
                 <input type="file" name="photo" id="photoInput" />
                 <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
             </form>
