@@ -21,7 +21,7 @@ namespace OllieShop.Controllers
         // GET: SellerPaymentMethodsManagement
         public async Task<IActionResult> Index(long SRID)
         {
-            SRID = 1;//
+            SRID = 2;//先寫死，要修改
             var ollieShopContext = _context.SellerPaymentMethods.Include(s => s.PM).Include(s => s.SR).Where(s =>s.SRID == SRID);
             ViewData["SRID"] = SRID;
             return View(await ollieShopContext.ToListAsync());
@@ -56,20 +56,25 @@ namespace OllieShop.Controllers
         }
 
         // POST: SellerPaymentMethodsManagement/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SRID,PMID,Canceled")] SellerPaymentMethods sellerPaymentMethods)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(sellerPaymentMethods);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            //撈出資料庫與sellerPaymentMethods相符的資料，只是為了判斷是否存在，存在就不能進行POST
+            var compareQuery = from s in _context.SellerPaymentMethods
+                        where ((s.SRID == sellerPaymentMethods.SRID && s.PMID == sellerPaymentMethods.PMID))
+                        select s;
+            if(!compareQuery.Any()) { 
+                if (ModelState.IsValid)
+                {
+                    _context.Add(sellerPaymentMethods);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name", sellerPaymentMethods.PMID);
             ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "SRID", sellerPaymentMethods.SRID);
+            ViewData["ErrorMessage"] = "已經綁定此種付款方式，不能再次綁定既有類別";
             return View(sellerPaymentMethods);
         }
 

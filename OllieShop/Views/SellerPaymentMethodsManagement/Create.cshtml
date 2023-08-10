@@ -8,31 +8,33 @@
 <h1>@ViewData["Title"]</h1>
 
 <hr />
+<span class="text-danger">@ViewData["ErrorMessage"]</span>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group d-none">
+                <label asp-for="SRID" class="control-label"></label>
                 <input asp-for="SRID" class ="form-control" value="@ViewBag.SRID"/>
             </div>
             <div class="form-group">
-                <label asp-for="PMID" class="control-label"></label>
+                <label asp-for="PM.Name" class="control-label"></label>
                 <select asp-for="PMID" class="form-control" asp-items="@ViewBag.PMInfo"></select>
             </div>
-            <div class="form-group form-check">
+            <div class="form-group form-check d-none">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="綁定" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">返回付款方式總覽</a>
 </div>
 
 @section Scripts {

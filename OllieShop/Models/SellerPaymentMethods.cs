@@ -13,7 +13,7 @@ public partial class SellerPaymentMethods
     [Display(Name ="取消綁定")]
     public bool Canceled { get; set; }
 
-    public virtual PaymentMethods PM { get; set; } = null!;
+    public virtual PaymentMethods? PM { get; set; }
 
-    public virtual Sellers SR { get; set; } = null!;
+    public virtual Sellers? SR { get; set; }
 }
