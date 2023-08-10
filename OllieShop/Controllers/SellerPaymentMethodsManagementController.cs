@@ -27,26 +27,6 @@ namespace OllieShop.Controllers
             return View(await ollieShopContext.ToListAsync());
         }
 
-        // GET: SellerPaymentMethodsManagement/Details/5
-        public async Task<IActionResult> Details(long? id)
-        {
-            if (id == null || _context.SellerPaymentMethods == null)
-            {
-                return NotFound();
-            }
-
-            var sellerPaymentMethods = await _context.SellerPaymentMethods
-                .Include(s => s.PM)
-                .Include(s => s.SR)
-                .FirstOrDefaultAsync(m => m.SRID == id);
-            if (sellerPaymentMethods == null)
-            {
-                return NotFound();
-            }
-
-            return View(sellerPaymentMethods);
-        }
-
         // GET: SellerPaymentMethodsManagement/Create
         public IActionResult Create(long SRID)
         {
@@ -74,7 +54,7 @@ namespace OllieShop.Controllers
             }
             ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name", sellerPaymentMethods.PMID);
             ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "SRID", sellerPaymentMethods.SRID);
-            ViewData["ErrorMessage"] = "已經綁定此種付款方式，不能再次綁定既有類別";
+            ViewData["ErrorMessage"] = "已經綁定此種付款方式，不能再次綁定既存付款方式";
             return View(sellerPaymentMethods);
         }
 
@@ -128,45 +108,6 @@ namespace OllieShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET: SellerPaymentMethodsManagement/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null || _context.SellerPaymentMethods == null)
-            {
-                return NotFound();
-            }
-
-            var sellerPaymentMethods = await _context.SellerPaymentMethods
-                .Include(s => s.PM)
-                .Include(s => s.SR)
-                .FirstOrDefaultAsync(m => m.SRID == id);
-            if (sellerPaymentMethods == null)
-            {
-                return NotFound();
-            }
-
-            return View(sellerPaymentMethods);
-        }
-
-        // POST: SellerPaymentMethodsManagement/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
-            if (_context.SellerPaymentMethods == null)
-            {
-                return Problem("Entity set 'OllieShopContext.SellerPaymentMethods'  is null.");
-            }
-            var sellerPaymentMethods = await _context.SellerPaymentMethods.FindAsync(id);
-            if (sellerPaymentMethods != null)
-            {
-                _context.SellerPaymentMethods.Remove(sellerPaymentMethods);
-            }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
