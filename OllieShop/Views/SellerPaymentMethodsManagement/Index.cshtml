@@ -1,0 +1,42 @@
+﻿@model IEnumerable<OllieShop.Models.SellerPaymentMethods>
+
+@{
+    ViewData["Title"] = "商家付款方式總覽";
+    Layout = "~/Views/Shared/_Layout_Seller.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" asp-route-SRID="@ViewBag.SRID">綁定新付款方式</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PM.Name)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Canceled)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.PM.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Canceled)
+            </td>
+            <td>
+                @Html.ActionLink("取消綁定", "Edit", new {SRID=item.SRID,PMID=item.PMID})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

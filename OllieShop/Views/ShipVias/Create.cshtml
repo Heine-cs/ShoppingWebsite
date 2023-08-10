@@ -1,21 +1,20 @@
 ﻿@model OllieShop.Models.ShipVias
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "新增運送方式";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>ShipVias</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="SVID" class="control-label"></label>
-                <input asp-for="SVID" class="form-control" />
+                <input asp-for="SVID" class="form-control" value="SVID"/>
                 <span asp-validation-for="SVID" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,14 +27,14 @@
                 <select asp-for="ADID" class ="form-control" asp-items="ViewBag.ADID"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="送出" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">回運送方式總覽</a>
 </div>
 
 @section Scripts {

@@ -1,0 +1,36 @@
+﻿@model OllieShop.Models.PaymentMethods
+
+@{
+    ViewData["Title"] = "刪除付款方式頁";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="alert alert-dismissible alert-warning">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <h4 class="alert-heading">請詳讀以下說明!!</h4>
+    <p class="mb-0">提醒您，付款方式一經刪除就無法回復本次操作，刪除時請慎重決定</p>
+</div>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PMID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PMID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="PMID" />
+        <input type="submit" value="刪除" class="btn btn-danger" /> |
+        <a asp-action="Index">返回付款方式總覽</a>
+    </form>
+</div>

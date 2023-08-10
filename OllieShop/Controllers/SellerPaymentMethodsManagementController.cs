@@ -1,0 +1,173 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using OllieShop.Models;
+
+namespace OllieShop.Controllers
+{
+    public class SellerPaymentMethodsManagementController : Controller
+    {
+        private readonly OllieShopContext _context;
+
+        public SellerPaymentMethodsManagementController(OllieShopContext context)
+        {
+            _context = context;
+        }
+
+        // GET: SellerPaymentMethodsManagement
+        public async Task<IActionResult> Index(long SRID)
+        {
+            SRID = 1;//
+            var ollieShopContext = _context.SellerPaymentMethods.Include(s => s.PM).Include(s => s.SR).Where(s =>s.SRID == SRID);
+            ViewData["SRID"] = SRID;
+            return View(await ollieShopContext.ToListAsync());
+        }
+
+        // GET: SellerPaymentMethodsManagement/Details/5
+        public async Task<IActionResult> Details(long? id)
+        {
+            if (id == null || _context.SellerPaymentMethods == null)
+            {
+                return NotFound();
+            }
+
+            var sellerPaymentMethods = await _context.SellerPaymentMethods
+                .Include(s => s.PM)
+                .Include(s => s.SR)
+                .FirstOrDefaultAsync(m => m.SRID == id);
+            if (sellerPaymentMethods == null)
+            {
+                return NotFound();
+            }
+
+            return View(sellerPaymentMethods);
+        }
+
+        // GET: SellerPaymentMethodsManagement/Create
+        public IActionResult Create(long SRID)
+        {
+            ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name");
+            ViewData["SRID"] = SRID;
+            return View();
+        }
+
+        // POST: SellerPaymentMethodsManagement/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("SRID,PMID,Canceled")] SellerPaymentMethods sellerPaymentMethods)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(sellerPaymentMethods);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name", sellerPaymentMethods.PMID);
+            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "SRID", sellerPaymentMethods.SRID);
+            return View(sellerPaymentMethods);
+        }
+
+        // GET: SellerPaymentMethodsManagement/Edit/5
+        public async Task<IActionResult> Edit(long? SRID,string PMID)
+        {
+            if (SRID == null || PMID == null ||_context.SellerPaymentMethods == null)
+            {
+                return NotFound();
+            }
+
+            var sellerPaymentMethods = await _context.SellerPaymentMethods.FindAsync(SRID,PMID);
+            if (sellerPaymentMethods == null)
+            {
+                return NotFound();
+            }
+            ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name", sellerPaymentMethods.PMID);
+            ViewData["SRID"] = SRID;
+            return View(sellerPaymentMethods);
+        }
+
+        // POST: SellerPaymentMethodsManagement/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long SRID, string PMID, [Bind("SRID,PMID,Canceled")] SellerPaymentMethods sellerPaymentMethods)
+        {
+            if (SRID != sellerPaymentMethods.SRID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(sellerPaymentMethods);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SellerPaymentMethodsExists(sellerPaymentMethods.SRID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: SellerPaymentMethodsManagement/Delete/5
+        public async Task<IActionResult> Delete(long? id)
+        {
+            if (id == null || _context.SellerPaymentMethods == null)
+            {
+                return NotFound();
+            }
+
+            var sellerPaymentMethods = await _context.SellerPaymentMethods
+                .Include(s => s.PM)
+                .Include(s => s.SR)
+                .FirstOrDefaultAsync(m => m.SRID == id);
+            if (sellerPaymentMethods == null)
+            {
+                return NotFound();
+            }
+
+            return View(sellerPaymentMethods);
+        }
+
+        // POST: SellerPaymentMethodsManagement/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(long id)
+        {
+            if (_context.SellerPaymentMethods == null)
+            {
+                return Problem("Entity set 'OllieShopContext.SellerPaymentMethods'  is null.");
+            }
+            var sellerPaymentMethods = await _context.SellerPaymentMethods.FindAsync(id);
+            if (sellerPaymentMethods != null)
+            {
+                _context.SellerPaymentMethods.Remove(sellerPaymentMethods);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool SellerPaymentMethodsExists(long id)
+        {
+          return (_context.SellerPaymentMethods?.Any(e => e.SRID == id)).GetValueOrDefault();
+        }
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OllieShop.Models;
 
@@ -9,6 +10,7 @@ public partial class SellerPaymentMethods
 
     public string PMID { get; set; } = null!;
 
+    [Display(Name ="取消綁定")]
     public bool Canceled { get; set; }
 
     public virtual PaymentMethods PM { get; set; } = null!;

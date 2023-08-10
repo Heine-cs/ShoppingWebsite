@@ -1,38 +1,36 @@
-﻿@model OllieShop.Models.ShipVias
+﻿@model OllieShop.Models.PaymentMethods
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>新增付款方式</h1>
 
-<h4>ShipVias</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SVID" />
+            <div class="form-group d-none">
+                <label asp-for="PMID" class="control-label"></label>
+                <input asp-for="PMID" class="form-control" value="PMID"/>
+                <span asp-validation-for="PMID" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ADID" class="control-label"></label>
-                <select asp-for="ADID" class="form-control" asp-items="ViewBag.ADID"></select>
-                <span asp-validation-for="ADID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input class="my-4 btn btn-primary" type="submit" value="新增"/>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">返回付款方式總覽</a>
 </div>
 
 @section Scripts {

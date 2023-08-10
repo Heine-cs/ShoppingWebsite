@@ -49,59 +49,6 @@ namespace OllieShop.Controllers
             return View(categorys);
         }
 
-        // GET: Categorys/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null || _context.Categorys == null)
-            {
-                return NotFound();
-            }
-
-            var categorys = await _context.Categorys.FindAsync(id);
-            if (categorys == null)
-            {
-                return NotFound();
-            }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID", categorys.ADID);
-            return View(categorys);
-        }
-
-        // POST: Categorys/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("CYID,Name,ADID")] Categorys categorys)
-        {
-            if (id != categorys.CYID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(categorys);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategorysExists(categorys.CYID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID", categorys.ADID);
-            return View(categorys);
-        }
-
         // GET: Categorys/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
