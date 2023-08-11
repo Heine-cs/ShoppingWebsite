@@ -1,0 +1,50 @@
+﻿@model IEnumerable<OllieShop.Models.CustomerCoupons>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+}
+
+<h1>折價券總覽</h1>
+
+<p>
+    <a asp-action="Create" asp-route-CRID="@Model.FirstOrDefault().CRID">新增折價券</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CN.CODE)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CN.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateAdded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppliedDate)
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CN.CODE)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CN.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAdded)
+            </td>
+            <td>
+                @(item.AppliedDate != null ? @Html.DisplayFor(modelItem => item.AppliedDate) : Html.Raw("<span class='text-primary'>尚未使用</span>"))
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

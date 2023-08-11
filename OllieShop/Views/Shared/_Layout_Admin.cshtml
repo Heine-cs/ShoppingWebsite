@@ -105,7 +105,7 @@
                         </ul>
                     </li>
                     <li>
-                        <i class="me-2 bi bi-gift"></i><a>商品管理</a>
+                        <i class="me-2 bi bi-gift"></i><a>商品相關</a>
                         <ul>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Categorys" asp-action="Index">商品類別</a>
@@ -120,13 +120,16 @@
                         </ul>
                     </li>
                     <li>
-                        <a><i class="me-2 bi bi-clipboard"></i>訂單管理</a>
+                        <a><i class="me-2 bi bi-clipboard"></i>訂單相關</a>
                         <ul>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="PaymentMethods" asp-action="Index">付款方式</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link">尚未決定</a>
+                                <a class="nav-link" asp-controller="Coupons" asp-action="Index">折價券總覽</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="CustomerCoupons" asp-action="Index">消費者票券總覽</a>
                             </li>
                         </ul>
                     </li>

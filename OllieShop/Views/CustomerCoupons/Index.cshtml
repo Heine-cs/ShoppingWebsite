@@ -1,0 +1,47 @@
+﻿@model IEnumerable<OllieShop.Models.CustomerCoupons>
+
+@{
+    ViewData["Title"] = "消費者票券總覽";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CRID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateAdded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppliedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CNID)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CRID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAdded)
+            </td>
+            <td>
+                @(item.AppliedDate != null ? @Html.DisplayFor(modelItem => item.AppliedDate) : Html.Raw("<span class='text-primary'>尚未使用</span>"))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CNID)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
