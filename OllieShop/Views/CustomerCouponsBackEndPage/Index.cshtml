@@ -31,12 +31,16 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CN.CODE)
             </td>
+            @{
+                decimal discountPercentage = (decimal)((1 - @item.CN.Discount) * 100);
+                string discountPercentageRemainIntPart = discountPercentage.ToString("0");
+            }
             <td>
-                @Html.DisplayFor(modelItem => item.CN.Discount)
+                @Html.DisplayFor(modelItem => discountPercentageRemainIntPart)%減免
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateAdded)
@@ -48,3 +52,4 @@
 }
     </tbody>
 </table>
+

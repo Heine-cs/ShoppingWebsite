@@ -1,46 +1,59 @@
 ﻿@model OllieShop.Models.CustomerCoupons
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "新增折價券頁";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>CustomerCoupons</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" id="CustomerCouponsForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CRID" class="form-control" value="@ViewBag.CRID"/>
+            <!--填寫假值用來通過模型驗證-->
+            <input type="hidden" asp-for="CNID" class="form-control" value="1" />
             <div class="form-group">
+                <label for="CODE" class="control-label">請輸入折價券代碼</label>
+                <input name="CODE" id="CODE" class="form-control" value="@ViewBag.CODE" />
+                <span class="text-secondary" id="ErrorMessageColumn">@ViewData["ErrorMessage"]</span>
+            </div>
+            <div class="form-group d-none">
                 <label asp-for="DateAdded" class="control-label"></label>
                 <input asp-for="DateAdded" class="form-control" value='@ViewData["DateAdded"]' />
                 <span asp-validation-for="DateAdded" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
+                <label asp-for="AppliedDate" class="control-label"></label>
+                <input asp-for="AppliedDate" class="form-control" />
+                <span asp-validation-for="AppliedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group d-none">
                 <label asp-for="AppliedDate" class="control-label"></label>
                 <input asp-for="AppliedDate" class="form-control" />
                 <span asp-validation-for="AppliedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CNID" class="control-label"></label>
-                <select asp-for="CNID" class ="form-control" asp-items="ViewBag.CNID"></select>
-            </div>
-            <div class="form-group">
-                <input asp-for="CRID" class ="form-control" asp-items="ViewBag.CRID"></input>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input class="my-4 btn btn-primary" type="submit" value="新增" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-CRID="@ViewBag.CRID">返回折價券總覽</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#CustomerCouponsForm').submit(function (e) {
+            if($('#CODE').val() === ""){
+                e.preventDefault();
+                $('#ErrorMessageColumn').text('必填欄位');
+            }
+        });
+    </script>
 }

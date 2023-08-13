@@ -262,16 +262,6 @@
         });
 
         // 使用jQuery的方式綁定otherForm的submit事件
-        $("#specForm").submit(function (e) {
-            // 檢查是否至少選擇了一張圖片
-            if (!$('#photoInput').get(0).files.length) {
-                e.preventDefault(); // 阻止Form的默認提交行為
-                $('#pictureValidation').removeClass("d-none");
-            }
-        });
-
-
-        // 使用jQuery的方式綁定otherForm的submit事件
         $("#productSpecForm").submit(function (e) {
             // 檢查是否至少選擇了一張圖片
             if (!$('#photoInput').get(0).files.length) {
