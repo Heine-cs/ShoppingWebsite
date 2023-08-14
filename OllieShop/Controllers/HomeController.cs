@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OllieShop.Models;
+using OllieShop.ViewComponents;
+using OllieShop.ViewModels;
 using System.Diagnostics;
 
 namespace OllieShop.Controllers
@@ -13,9 +15,20 @@ namespace OllieShop.Controllers
             _logger = logger;
         }
 
+        private readonly OllieShopContext _context;
+
+        public HomeController(OllieShopContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            List<VMProductWithSpecification> allProduct= new List<VMProductWithSpecification>();
+            VMProductWithSpecification productFullInfomation = new VMProductWithSpecification(){
+                
+            };
+            return View(productFullInfomation);
         }
 
         public IActionResult Privacy()
