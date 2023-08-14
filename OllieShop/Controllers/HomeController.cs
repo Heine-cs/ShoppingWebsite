@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OllieShop.Models;
 using OllieShop.ViewComponents;
 using OllieShop.ViewModels;
@@ -9,26 +10,46 @@ namespace OllieShop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly OllieShopContext _context;
+        public HomeController(ILogger<HomeController> logger, OllieShopContext context)
         {
             _logger = logger;
-        }
-
-        private readonly OllieShopContext _context;
-
-        public HomeController(OllieShopContext context)
-        {
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<VMProductWithSpecification> allProduct= new List<VMProductWithSpecification>();
-            VMProductWithSpecification productFullInfomation = new VMProductWithSpecification(){
-                
-            };
-            return View(productFullInfomation);
+            var productsTable = await _context.Products.Include(c => c.CY).Include(s => s.SR).ToListAsync();
+            var specificationsTable = await _context.Specifications.ToListAsync();
+            List<VMProductWithSpecification> allProductPlusSpec = new List<VMProductWithSpecification>();
+            VMProductWithSpecification productPlusSpec;
+            foreach (var singalDataLine in productsTable) {
+
+                productPlusSpec = new VMProductWithSpecification()
+                {
+                    //Product的資料寫入物件成員
+                    PTID = singalDataLine.PTID,
+                    Name = singalDataLine.Name,
+                    DeliveryFee = singalDataLine.DeliveryFee,
+                    LaunchDate = singalDataLine.LaunchDate,
+                    Hidden = singalDataLine.Hidden,
+                    Locked = singalDataLine.Locked,
+                    Inquired = singalDataLine.Inquired,
+                    Installment = singalDataLine.Installment,
+                    Unopened = singalDataLine.Unopened,
+                    UnitPrice = singalDataLine.UnitPrice,
+                    ShelfQuantity = singalDataLine.ShelfQuantity,
+                    SoldQuantity = singalDataLine.SoldQuantity,
+                    Description = singalDataLine.Description,
+                    CYID = singalDataLine.CYID,
+                    SRID = singalDataLine.SRID,
+                    //specification的資料寫入物件成員
+                    Picture = specificationsTable.FirstOrDefault(s => s.PTID == singalDataLine.PTID).Picture.ToString()
+                };
+                allProductPlusSpec.Add(productPlusSpec);
+            }
+
+            return View(allProductPlusSpec);
         }
 
         public IActionResult Privacy()

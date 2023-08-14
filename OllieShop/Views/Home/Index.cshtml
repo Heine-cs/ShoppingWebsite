@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<OllieShop.ViewModels.VMProductWithSpecification>
+@{
+    ViewData["Title"] = "Ollie Shop網站首頁";
 }
 <div class="row flex-grow-1">
     <div class="col-1">
@@ -7,12 +8,19 @@
         <p>本日促銷</p>
         <p>其他</p>
     </div>
-    <div class="col-9">
-        test
+    <div class="col-9 container" id="container">
+        <!--CardComponentPlacePosition-->
+        <div class="card" style="width: 18rem;">
+            <img src="~/img/buyer.png" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">品</h5>
+                <p class="card-text">描述</p>
+            </div>
+        </div>
     </div>
     <div class="col-2 d-flex flex-column p-0">
         <div class="flex-grow-1">
-            <!--carouse-->
+            <!--carouseforBanner-->
             <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -48,3 +56,7 @@
         </div>
     </div>
 </div>
+
+@{
+
+}
