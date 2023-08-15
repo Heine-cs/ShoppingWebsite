@@ -3,7 +3,9 @@
     ViewData["Title"] = "Ollie Shop網站首頁";
 }
 <style>
-
+    .card{
+        height:350px;
+    }
 </style>
 <div class="row flex-grow-1">
     <div class="col-1">
@@ -14,7 +16,7 @@
     <div class="col-9 container" id="container">
         <!--CardComponentPlacePosition-->
         <div class="row p-0 d-flex justify-content-between">
-            @foreach(var productInfo in Model)
+            @foreach (var productInfo in Model)
             {
                 <div class="col-2 card m-2 p-0 d-flex flex-column">
                     <img src="@productInfo.Picture" class="card-img-top flex-grow-1 img-fluid">
@@ -24,24 +26,7 @@
                     </div>
                 </div>
             }
-            @{
-                //計算透過資料行數量來計算需要多少個Card父容器
-                if (Model.Count()%4 != 0)
-                {
-                    int ContainerQuentity = (Model.Count()) / 4;
-                    CreateCardContainer(ContainerQuentity);
-                }
-                else
-                {
-                    int ContainerQuentity = ((Model.Count()) / 4 )+ 1;
-                }
-                //建造需要的父容器
-                void CreateCardContainer(int ContainerQuentity){
-                    ContainerQuentity = ContainerQuentity;
-                }
-            }
         </div>
-
     </div>
     <div class="col-2 d-flex flex-column p-0">
         <div class="flex-grow-1">

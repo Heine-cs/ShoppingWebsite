@@ -4,6 +4,7 @@ using OllieShop.Models;
 using OllieShop.ViewComponents;
 using OllieShop.ViewModels;
 using System.Diagnostics;
+using System.Text;
 
 namespace OllieShop.Controllers
 {
@@ -24,7 +25,7 @@ namespace OllieShop.Controllers
             List<VMProductWithSpecification> allProductPlusSpec = new List<VMProductWithSpecification>();
             VMProductWithSpecification productPlusSpec;
             foreach (var singalDataLine in productsTable) {
-
+                //將商品與規格資料combine為單一物件並寫入物件集合中 start
                 productPlusSpec = new VMProductWithSpecification()
                 {
                     //Product的資料寫入物件成員
@@ -47,8 +48,8 @@ namespace OllieShop.Controllers
                     Picture = specificationsTable.FirstOrDefault(s => s.PTID == singalDataLine.PTID).Picture.ToString()
                 };
                 allProductPlusSpec.Add(productPlusSpec);
+                //將商品與規格資料combine為單一物件並寫入物件集合中 end
             }
-
             return View(allProductPlusSpec);
         }
 
