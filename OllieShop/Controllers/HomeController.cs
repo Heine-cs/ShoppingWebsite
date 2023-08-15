@@ -40,7 +40,7 @@ namespace OllieShop.Controllers
                     UnitPrice = singalDataLine.UnitPrice,
                     ShelfQuantity = singalDataLine.ShelfQuantity,
                     SoldQuantity = singalDataLine.SoldQuantity,
-                    Description = singalDataLine.Description,
+                    Description = singalDataLine.Description == "無描述" ? "": singalDataLine.Description,
                     CYID = singalDataLine.CYID,
                     SRID = singalDataLine.SRID,
                     //specification的資料寫入物件成員
