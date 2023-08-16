@@ -1,0 +1,73 @@
+﻿@model IEnumerable<OllieShop.ViewModels.VMProductWithSpecification>
+@{
+    var productPlusSpec = @Model.FirstOrDefault();
+    ViewData["Title"] = "商品【" + @productPlusSpec.Name + "】頁面";
+}
+<style>
+    #ImgContainer{
+        height:750px;
+    }
+    #ImgContainer >img:first-child{
+        width:100%;
+        height: 100%;
+        object-fit:contain;
+    }
+    i{
+        cursor:pointer;
+    }
+
+</style>
+
+<div class="container-fluid row p-1">
+    <div class="col align-self-center" id="ImgContainer">
+        <img src="@productPlusSpec.Picture" />
+    </div>
+
+    @{
+        //資料顯示格式處理
+        string Inquired = productPlusSpec.Inquired == true ? "開放詢價" : "不開放詢價";
+        string Unopened = productPlusSpec.Unopened == true ? "全新品" : "二手品";
+        string Installment = productPlusSpec.Installment == true ? "開放分期" : "不開放分期";
+        int RestQuantity  = productPlusSpec.ShelfQuantity - productPlusSpec.SoldQuantity;
+    }
+
+    <div class="col mt-1 d-flex flex-column">
+        <div class="flex-grow-1">
+            <h1><strong>@productPlusSpec.Name</strong></h1>
+            <div>商品贈品 : @productPlusSpec.Freebie</div>
+            <div>詢價許可 : @Inquired</div>
+            <div>運費 : NT$@productPlusSpec.DeliveryFee.ToString("0")</div>
+            <div>商品狀況 : @Unopened</div>
+            <div>分期許可 : @Installment</div>
+            <div>備貨日 : @(productPlusSpec.LeadDay)個工作天</div>
+            <div>商品數量 : @(RestQuantity)件</div>
+            <div>體積 : @productPlusSpec.Size cm³</div>
+            <div>商品重量 : @productPlusSpec.Weight 公斤</div>
+            <div>商品描述 : @productPlusSpec.Description</div>
+        </div>
+        <div class="row flex-grow-0">
+            <h2 class="col-4 align-self-center">售價 : NT$ @productPlusSpec.UnitPrice.ToString("0")</h2>
+            <div class="col-8 d-flex justify-content-end mb-2">
+                <i class="bi bi-plus-circle fs-1 me-3 text-primary" onclick="ProductQuantityChange(1)"></i>
+                <i class="bi bi-dash-circle fs-1 me-3 text-secondary" onclick="ProductQuantityChange(-1)"></i>
+                <input id="InputQuantity" class="form-control w-25" type="number" value="0" /><span class="fs-1 me-2">個</span>
+                <div class="btn btn-outline-primary btn-lg">
+                    加入購物車
+                    <i class="ms-1 bi bi-cart4 fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    function ProductQuantityChange(QuantityChangeValue) {
+        let InputQuantity = document.getElementById("InputQuantity");
+        let IntInputQuantity = parseInt(InputQuantity.value);
+        if (IntInputQuantity === 0 && QuantityChangeValue === -1)
+        return "";
+        IntInputQuantity += QuantityChangeValue;
+        InputQuantity.value = IntInputQuantity;
+    }
+</script>

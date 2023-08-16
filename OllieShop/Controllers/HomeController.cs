@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OllieShop.Models;
 using OllieShop.ViewComponents;
 using OllieShop.ViewModels;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -80,6 +81,49 @@ namespace OllieShop.Controllers
         public IActionResult OfficialContactInfo()
         {
             return View();
+        }
+
+        public async Task<IActionResult> ProductPage(long PTID)
+        {
+            Products Product= _context.Products.FirstOrDefault(p => p.PTID == PTID);
+            List<Specifications> Specifications= await _context.Specifications.Where(p => p.PTID == PTID).ToListAsync();
+            List<VMProductWithSpecification> ProductPlusSpecificationCollection = new List<VMProductWithSpecification>();
+            VMProductWithSpecification singleProductWholeData;
+            foreach(var singalDataLine in Specifications)
+            {
+                singleProductWholeData = new VMProductWithSpecification()
+                {
+                    //Product的資料寫入物件成員
+                    PTID = Product.PTID,
+                    Name = Product.Name,
+                    DeliveryFee = Product.DeliveryFee,
+                    LaunchDate = Product.LaunchDate,
+                    Hidden = Product.Hidden,
+                    Locked = Product.Locked,
+                    Inquired = Product.Inquired,
+                    Installment = Product.Installment,
+                    Unopened = Product.Unopened,
+                    UnitPrice = Product.UnitPrice,
+                    ShelfQuantity = Product.ShelfQuantity,
+                    SoldQuantity = Product.SoldQuantity,
+                    Description = Product.Description,
+                    CYID = Product.CYID,
+                    SRID = Product.SRID,
+                    //specification的資料寫入物件成員
+                    SNID = singalDataLine.SNID,
+                    SpecName = singalDataLine.SpecName,
+                    Picture = singalDataLine.Picture.ToString(),
+                    Weight = singalDataLine.Weight,
+                    Size = singalDataLine.Size,
+                    LeadDay = singalDataLine.LeadDay,
+                    PackageSize = singalDataLine.PackageSize,
+                    Freebie = singalDataLine.Freebie,
+
+                };
+                ProductPlusSpecificationCollection.Add(singleProductWholeData);
+
+            }
+            return View(ProductPlusSpecificationCollection);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

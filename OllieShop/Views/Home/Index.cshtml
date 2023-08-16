@@ -4,7 +4,7 @@
 }
 <style>
     .card{
-        height:350px;
+        height:400px;
     }
 </style>
 <div class="row flex-grow-1">
@@ -18,7 +18,7 @@
         <div class="row p-0 d-flex justify-content-between">
             @foreach (var productInfo in Model)
             {
-                <div class="col-2 card m-2 p-0 d-flex flex-column">
+                <div class="col-2 card m-2 p-0 d-flex flex-column" onclick="RedirectToProductPage(@productInfo.PTID)">
                     <img src="@productInfo.Picture" class="card-img-top flex-grow-1 img-fluid">
                     <div class="card-body flex-grow-0">
                         <h5 class="card-title"><strong>@productInfo.Name</strong></h5>
@@ -66,3 +66,19 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        function RedirectToProductPage(PTID) {
+            $.ajax({
+                type: "GET",
+                url: "/Home/ProductPage",
+                data: {PTID:PTID},
+                success:function(response){
+                    //跳轉到ProductPageAction
+                    window.location.href = "/Home/ProductPage?PTID=" + PTID;
+                }
+            });
+        }
+    </script>
+}
