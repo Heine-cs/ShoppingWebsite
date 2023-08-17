@@ -71,7 +71,7 @@
             <div class="col-8 d-flex justify-content-end mb-2">
                 <i class="bi bi-plus-circle fs-1 me-3 text-primary" onclick="ProductQuantityChange(1)"></i>
                 <i class="bi bi-dash-circle fs-1 me-3 text-secondary" onclick="ProductQuantityChange(-1)"></i>
-                <input id="InputQuantity" class="form-control w-25" type="number" min="0" value="0" oninput="InputvalidateAndClear();validity.valid||(value=0);" /><span class="fs-1 me-2">個</span>
+                <input id="InputQuantity" class="form-control w-25" type="number" min="1" value="1" oninput="InputvalidateAndClear();validity.valid||(value=1);" /><span class="fs-1 me-2">個</span>
                 <div class="btn btn-outline-primary btn-lg" onclick="saveProductToCart()">
                     加入購物車
                     <i class="ms-1 bi bi-cart4 fs-4"></i>
@@ -80,13 +80,12 @@
         </div>
     </div>
 </div>
-
 <script>
     
     function ProductQuantityChange(QuantityChangeValue) {
         let InputQuantity = document.getElementById("InputQuantity");
         let IntInputQuantity = parseInt(InputQuantity.value);
-        if (IntInputQuantity === 0 && QuantityChangeValue === -1){
+        if (IntInputQuantity === 1 && QuantityChangeValue === -1){
             return "";
         }
         IntInputQuantity += QuantityChangeValue;
@@ -101,18 +100,45 @@
         let inputElement = document.getElementById("InputQuantity");
         let inputValue = inputElement.value;
         // 執行驗證邏輯
-        if (inputValue > @RestQuantity) {
+        if (inputValue > @RestQuantity || inputValue === 0) {
             // 驗證失敗，清除輸入
-            inputElement.value = 0;
+            inputElement.value = 1;
         }
     }
 
     function saveProductToCart() {
-        //儲存要加入購物車商品的資料到Client端
-        let jsonData = @Html.Raw(ViewBag.ProductFullInfo);
-        localStorage.setItem('ProductFullInfo', jsonData);
-        localStorage.setItem('InputQuantity', document.getElementById("InputQuantity").value);
-        console.log(localStorage.getItem('InputQuantity'));
-        //將資料傳遞到
+        // 取得當前存在 localStorage 的商品資料
+        let cartData = localStorage.getItem('cartData');
+        let newCartData = [];
+
+        if (cartData !== null) {
+            // 轉回陣列放入 newCartData 陣列
+            newCartData = JSON.parse(cartData);
+            newCartData[0].push(@Model.FirstOrDefault().PTID);
+            newCartData[1].push(@Model.FirstOrDefault().SNID);
+            newCartData[2].push(document.getElementById("InputQuantity").value);
+        }
+        else {
+            // 初始化 productID 、specificationsID 、 inputQuantity
+            let productID = [];
+            let specificationsID = [];
+            let inputQuantity = [];
+
+            // PTID 放在第一個陣列
+            productID.push(@Model.FirstOrDefault().PTID);
+            newCartData.push(productID);
+            
+            // SNID 放在第二個陣列
+            specificationsID.push(@Model.FirstOrDefault().SNID);
+            newCartData.push(specificationsID);
+
+            // InputQuantity 放在第三個陣列
+            inputQuantity.push(document.getElementById("InputQuantity").value);
+            newCartData.push(inputQuantity);
+        }
+
+        // 存储到 localStorage
+        localStorage.setItem('cartData', JSON.stringify(newCartData));
     }
+    // 結帳時將資料傳遞到購物車的action處理
 </script>

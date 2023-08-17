@@ -122,7 +122,6 @@ namespace OllieShop.Controllers
                 };
                 ProductPlusSpecificationCollection.Add(singleProductWholeData);
             }
-            ViewData["ProductFullInfo"] = JsonConvert.SerializeObject(ProductPlusSpecificationCollection);
             return View(ProductPlusSpecificationCollection);
         }
 
