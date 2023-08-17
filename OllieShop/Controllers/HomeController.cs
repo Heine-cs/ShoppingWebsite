@@ -6,6 +6,7 @@ using OllieShop.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace OllieShop.Controllers
 {
@@ -118,12 +119,16 @@ namespace OllieShop.Controllers
                     LeadDay = singalDataLine.LeadDay,
                     PackageSize = singalDataLine.PackageSize,
                     Freebie = singalDataLine.Freebie,
-
                 };
                 ProductPlusSpecificationCollection.Add(singleProductWholeData);
-
             }
+            ViewData["ProductFullInfo"] = JsonConvert.SerializeObject(ProductPlusSpecificationCollection);
             return View(ProductPlusSpecificationCollection);
+        }
+
+        public async Task<IActionResult> CartPage(long CRID)
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

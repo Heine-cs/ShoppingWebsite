@@ -56,13 +56,23 @@
             <div>商品重量 : @productPlusSpec.Weight 公斤</div>
             <div>商品描述 : @productPlusSpec.Description</div>
         </div>
+
+        <div class="d-flex justify-content-end d-none">
+            <div class="alert alert-dismissible alert-success w-25">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <strong>商品已加至購物車 <i class="bi bi-check-circle-fill"></i></strong>
+            </div>
+        </div>
+        <h2 class="text-sucess flex-grow-0">
+            
+        </h2>
         <div class="row flex-grow-0">
             <h2 class="col-4 align-self-center">售價 : NT$ @productPlusSpec.UnitPrice.ToString("0")</h2>
             <div class="col-8 d-flex justify-content-end mb-2">
                 <i class="bi bi-plus-circle fs-1 me-3 text-primary" onclick="ProductQuantityChange(1)"></i>
                 <i class="bi bi-dash-circle fs-1 me-3 text-secondary" onclick="ProductQuantityChange(-1)"></i>
                 <input id="InputQuantity" class="form-control w-25" type="number" min="0" value="0" oninput="InputvalidateAndClear();validity.valid||(value=0);" /><span class="fs-1 me-2">個</span>
-                <div class="btn btn-outline-primary btn-lg">
+                <div class="btn btn-outline-primary btn-lg" onclick="saveProductToCart()">
                     加入購物車
                     <i class="ms-1 bi bi-cart4 fs-4"></i>
                 </div>
@@ -97,4 +107,12 @@
         }
     }
 
+    function saveProductToCart() {
+        //儲存要加入購物車商品的資料到Client端
+        let jsonData = @Html.Raw(ViewBag.ProductFullInfo);
+        localStorage.setItem('ProductFullInfo', jsonData);
+        localStorage.setItem('InputQuantity', document.getElementById("InputQuantity").value);
+        console.log(localStorage.getItem('InputQuantity'));
+        //將資料傳遞到
+    }
 </script>
