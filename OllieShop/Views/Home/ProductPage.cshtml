@@ -57,15 +57,6 @@
             <div>商品描述 : @productPlusSpec.Description</div>
         </div>
 
-        <div class="d-flex justify-content-end d-none">
-            <div class="alert alert-dismissible alert-success w-25">
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                <strong>商品已加至購物車 <i class="bi bi-check-circle-fill"></i></strong>
-            </div>
-        </div>
-        <h2 class="text-sucess flex-grow-0">
-            
-        </h2>
         <div class="row flex-grow-0">
             <h2 class="col-4 align-self-center">售價 : NT$ @productPlusSpec.UnitPrice.ToString("0")</h2>
             <div class="col-8 d-flex justify-content-end mb-2">
@@ -110,19 +101,19 @@
         // 取得當前存在 localStorage 的商品資料
         let cartData = localStorage.getItem('cartData');
         let newCartData = [];
-
+        let InputQuantity = Number(document.getElementById("InputQuantity").value);
         if (cartData !== null) {
             // 轉回陣列放入 newCartData 陣列
             newCartData = JSON.parse(cartData);
             newCartData[0].push(@Model.FirstOrDefault().PTID);
             newCartData[1].push(@Model.FirstOrDefault().SNID);
-            newCartData[2].push(document.getElementById("InputQuantity").value);
+            newCartData[2].push(InputQuantity);
         }
         else {
             // 初始化 productID 、specificationsID 、 inputQuantity
             let productID = [];
             let specificationsID = [];
-            let inputQuantity = [];
+            let inputQuantityArr = [];
 
             // PTID 放在第一個陣列
             productID.push(@Model.FirstOrDefault().PTID);
@@ -133,12 +124,13 @@
             newCartData.push(specificationsID);
 
             // InputQuantity 放在第三個陣列
-            inputQuantity.push(document.getElementById("InputQuantity").value);
-            newCartData.push(inputQuantity);
+            inputQuantityArr.push(InputQuantity);
+            newCartData.push(inputQuantityArr);
         }
-
         // 存储到 localStorage
         localStorage.setItem('cartData', JSON.stringify(newCartData));
+
+        //提示用戶存入購物車操作成功
+        alert('成功將商品加入購物車!!');
     }
-    // 結帳時將資料傳遞到購物車的action處理
 </script>

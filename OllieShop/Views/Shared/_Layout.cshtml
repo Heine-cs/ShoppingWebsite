@@ -86,8 +86,9 @@
                                 <div>
                                     <a href="https://www.instagram.com/explore/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/" target="_blank">
                                         <i class="bi bi-instagram m-1 rainbowGradient"></i>
+                                    </a>
                                 </div>
-                                </a>
+                                
                                 <div>
                                     <a href="@Html.Raw("https://youtube.com/@OllieShop-fz1is")" target="_blank">
                                         <i class="bi bi-youtube m-1 red"></i>
@@ -121,11 +122,31 @@
                 @RenderBody()
             </main>
         </div>
+        <!--Shopping Cart Start-->
         <div class="text-end me-3 mb-3">
-            <a asp-controller="Home" asp-action="CartPage">
-                <i class="bi bi-cart4 fs-1 text-info"></i>
-            </a>
+            <i class="bi bi-cart4 fs-1 text-info" data-bs-toggle="modal" data-bs-target="#CartModal" onclick="getCartItems()"></i>
         </div>
+        <div class="modal fade" id="CartModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">購物車內容</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-primary">結帳去</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Shopping Cart END-->
+
         <footer class="border-top sticky-footer text-muted bg-light shadow-lg flex-grow-0">
             <div class="container-fluid d-flex align-items-center p-2">
                 <div class="me-auto">
@@ -145,5 +166,24 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        function getCartItems(){
+            //cartData內放的是二維陣列，陣列索引值0的陣列為productID,陣列索引值1的陣列為specificationsID,陣列索引值2的陣列為inputQuantity
+            let cartData = JSON.parse(localStorage.getItem('cartData'));
+            var postData = { values: cartData };
+            $.ajax({
+                url: '@Url.Action("getCartInfo","Home")',
+                type:"POST",
+                data: postData,
+                dataType: 'json',
+                traditional: true,
+                success:function(response){
+                    console.log(response);
+                }
+
+            });
+        }
+
+    </script>
 </body>
 </html>

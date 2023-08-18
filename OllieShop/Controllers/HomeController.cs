@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace OllieShop.Controllers
 {
@@ -125,9 +127,21 @@ namespace OllieShop.Controllers
             return View(ProductPlusSpecificationCollection);
         }
 
-        public async Task<IActionResult> CartPage(long CRID)
+        [HttpPost]
+        public String getCartInfo(long[][] values)
         {
-            return View();
+            long productID = 0;
+            long specificationsID = 0;
+            int inputQuantityArr = 0;
+            long[] test = values[0];
+            var test2= test[0];
+            var test3= test[1];
+            //for (int i = 0; i < (values長度/3); i++)
+            //{
+            //    productID = values[0][0];
+            //    specificationsID = values[1][0];
+            //}
+            return "";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
