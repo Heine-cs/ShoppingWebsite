@@ -103,5 +103,8 @@ namespace OllieShop.ViewModels
         [Required(ErrorMessage = "必填欄位")]
         [StringLength(50, ErrorMessage = "贈品名稱不得超過50個字")]
         public string Freebie { get; set; } = null!;
+
+        //Store Product requireQuantities for shopping cart page
+        public int RequireQuantities { get; set; }
     }
 }

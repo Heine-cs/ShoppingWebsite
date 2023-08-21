@@ -42,9 +42,19 @@
             border-radius: var(--bs-dropdown-item-border-radius, 0);
         }
 
+        .modal-body> table>tbody td{
+            height:150px;
+        }
+
+        .Cartfixed {
+            position: fixed;
+            bottom: 15%;
+            right: 2%;
+        }
+
     </style>
 </head>
-<body>
+<body class="position-relative">
     <div class="d-flex flex-column min-vh-100">
         <header class="mb-0 flex-grow-0">
             <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
@@ -122,30 +132,6 @@
                 @RenderBody()
             </main>
         </div>
-        <!--Shopping Cart Start-->
-        <div class="text-end me-3 mb-3">
-            <i class="bi bi-cart4 fs-1 text-info" data-bs-toggle="modal" data-bs-target="#CartModal" onclick="getCartItems()"></i>
-        </div>
-        <div class="modal fade" id="CartModal">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">購物車內容</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p></p>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="btn btn-primary">結帳去</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Shopping Cart END-->
 
         <footer class="border-top sticky-footer text-muted bg-light shadow-lg flex-grow-0">
             <div class="container-fluid d-flex align-items-center p-2">
@@ -162,28 +148,103 @@
             </div>
         </footer>
     </div>
+    <!--Shopping Cart Start-->
+    <!--Shopping Cart Modal Trigger-->
+    <div class="Cartfixed">
+        <i class="bi bi-cart4 fs-1 text-info text-end z-2" data-bs-toggle="modal" data-bs-target="#CartModal" onclick="getCartItems()"></i>
+    </div>
+    <div class="modal fade" id="CartModal" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary-subtle">
+                    <h5 class="modal-title fs-4" id="exampleModalXlLabel" onclick="test()">購物車內容</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body p-2">
+                </div>
+                <div class="modal-footer">
+                    <div class="me-auto fs-4"></div>
+                    <!--BillForm Start-->
+                    @using (Html.BeginForm("PlaceOrder", "Home", FormMethod.Post))
+                    {
+                        //productID
+                        <input type="hidden" id="CartTableWithChildNode" name="CartTableWithChildNode" value=""/>
+                        <input type="submit" id="btnSearch" class="btn btn-primary btn-lg" value="結帳去" />
+                    }
+                    <!--BillForm End-->
+                    <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Shopping Cart END-->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        function getCartItems(){
-            //cartData內放的是二維陣列，陣列索引值0的陣列為productID,陣列索引值1的陣列為specificationsID,陣列索引值2的陣列為inputQuantity
-            let cartData = JSON.parse(localStorage.getItem('cartData'));
-            var postData = { values: cartData };
+        function getCartItems() {
+            let cartData = localStorage.getItem('cartData');
+            if(cartData == null){
+                $('.modal-body').html("<h3 class='text-center text-primary'>目前購物車尚未加入任何商品!!</p>");
+                return "";
+            }
             $.ajax({
                 url: '@Url.Action("getCartInfo","Home")',
                 type:"POST",
-                data: postData,
-                dataType: 'json',
-                traditional: true,
+                data: cartData,
+                contentType: 'application/json',
                 success:function(response){
-                    console.log(response);
+                    ProductInfo = JSON.parse(response);
+                    let CartTable = `
+                            <table class="w-100 text-center table table-borderless table-striped table-hover fs-3 align-middle" id="CartTable">
+                                <thead>
+                                    <tr>
+                                        <th>圖片</th>
+                                        <th>品名</th>
+                                        <th>售價</th>
+                                        <th>數量</th>
+                                        <th>小計</th>
+                                        <th colspan="2">贈品</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>`;
+                    $('.modal-body').html(CartTable);
+                    let ProductFeeCount = 0;
+                    for (let singleProductInfo of ProductInfo) {
+                        bodyRow =`
+                        <tr class="border border-bottom-0 table-dark table-hover">
+                            <td><img class="w-100 h-100 object-fit-fill" src="${singleProductInfo.Picture}" /></td>
+                            <td>${singleProductInfo.SpecName}</td>
+                            <td>NT$${singleProductInfo.UnitPrice}</td>
+                            <td>${singleProductInfo.RequireQuantities}</td>
+                            <td>NT$${singleProductInfo.UnitPrice * singleProductInfo.RequireQuantities}</td>
+                            <td colspan="2">${singleProductInfo.Freebie}</td>
+                        </tr>
+                        `
+                        $('.modal-body>table>tbody').append(bodyRow);
+                        //加總所有產品小計
+                        ProductFeeCount += (singleProductInfo.UnitPrice * singleProductInfo.RequireQuantities)
+                    }
+                    $('.modal-footer>.me-auto').append(`商品共計: <span class="text-success">NT$${ProductFeeCount}</span>`);
+                    //取出整個CartTable節點(含子節點)填入轉向結帳頁面需要的Form表單，用意是將此table顯示在結帳頁面上
+                    $('#CartTableWithChildNode').val($('#CartTable').prop("outerHTML"));
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error");
                 }
-
             });
         }
-
+        //modal關閉後,清空modal內的與購物車相關的節點
+        const CartModal = document.getElementById('CartModal')
+        CartModal.addEventListener('hidden.bs.modal', event => {
+            $('.modal-body').empty();
+            $('.modal-footer>.me-auto').empty();
+        })
     </script>
 </body>
 </html>

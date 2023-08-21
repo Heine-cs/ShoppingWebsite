@@ -9,6 +9,10 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Dynamic;
+using System.Drawing;
+using System.Net.Sockets;
+using Microsoft.CodeAnalysis;
 
 namespace OllieShop.Controllers
 {
@@ -45,7 +49,7 @@ namespace OllieShop.Controllers
                     UnitPrice = singalDataLine.UnitPrice,
                     ShelfQuantity = singalDataLine.ShelfQuantity,
                     SoldQuantity = singalDataLine.SoldQuantity,
-                    Description = singalDataLine.Description == "無描述" ? "": singalDataLine.Description,
+                    Description = singalDataLine.Description == "無描述" ? "" : singalDataLine.Description,
                     CYID = singalDataLine.CYID,
                     SRID = singalDataLine.SRID,
                     //specification的資料寫入物件成員
@@ -88,11 +92,11 @@ namespace OllieShop.Controllers
 
         public async Task<IActionResult> ProductPage(long PTID)
         {
-            Products Product= _context.Products.FirstOrDefault(p => p.PTID == PTID);
-            List<Specifications> Specifications= await _context.Specifications.Where(p => p.PTID == PTID).ToListAsync();
+            Products Product = await _context.Products.FirstOrDefaultAsync(p => p.PTID == PTID);
+            List<Specifications> Specifications = await _context.Specifications.Where(p => p.PTID == PTID).ToListAsync();
             List<VMProductWithSpecification> ProductPlusSpecificationCollection = new List<VMProductWithSpecification>();
             VMProductWithSpecification singleProductWholeData;
-            foreach(var singalDataLine in Specifications)
+            foreach (var singalDataLine in Specifications)
             {
                 singleProductWholeData = new VMProductWithSpecification()
                 {
@@ -127,21 +131,93 @@ namespace OllieShop.Controllers
             return View(ProductPlusSpecificationCollection);
         }
 
+        //顯示購物車畫面用的function
         [HttpPost]
-        public String getCartInfo(long[][] values)
+        public async Task<string> getCartInfo([FromBody] IEnumerable<IEnumerable<long>> cartData)
         {
+            //cartData本來是一個2D陣列，經過下方程式碼轉換就會將2D陣列內所有1D陣列組合成一個集合
+            //例如:[[1,2,3][4,5,6][66,50,2]]->[1,2,3,4,5,6,66,50,2]
+            IEnumerable<long> cart2DArrayTo1D = cartData.SelectMany(innerCollection => innerCollection);
+
+            //透過迴圈打包成VMProductWithSpecification物件，另外說明:購物車2D陣列的封存邏輯放在_Layout.cshtml檔案中
             long productID = 0;
             long specificationsID = 0;
-            int inputQuantityArr = 0;
-            long[] test = values[0];
-            var test2= test[0];
-            var test3= test[1];
-            //for (int i = 0; i < (values長度/3); i++)
-            //{
-            //    productID = values[0][0];
-            //    specificationsID = values[1][0];
-            //}
-            return "";
+            int requireQuantities = 0;
+            VMProductWithSpecification SingleProdctRequiredInfo = new VMProductWithSpecification();
+            List<VMProductWithSpecification> RequireAllProductInfo = new List<VMProductWithSpecification>();
+            //先計算for迴圈運轉次數，等於或不等於1會是迴圈索引運作的關鍵，因為當商品數量增加時第一個商品對應索引值將會變動
+            var ForloopTimes = (cart2DArrayTo1D.Count()) / 3;
+            //計算商品數量增加時第一個商品對應的3個索引值(productID,specificationsID,requireQuantities)
+            int f = 0;
+            int g = 0;
+            for (int h = 1;h< ForloopTimes; h++)
+            {
+                f++;
+                g+=2;
+            }
+            //迴圈建構商品物件
+            for (int i = 0; i < ForloopTimes; i++)
+                {
+                    productID = cart2DArrayTo1D.ElementAt(i);
+                    specificationsID = cart2DArrayTo1D.ElementAt(f+1);
+                    //資料表(OrderDetail)訂購數量欄位資料型態定義為INT，但是javascript物件會轉換為cartData物件，
+                    //cartData嵌套陣列被設定為LONG資料型態，所以要轉換資料型態requireQuantities避免問題
+                    requireQuantities = Convert.ToInt32(cart2DArrayTo1D.ElementAt(g+2));
+                    f++;
+                    g++;
+                    //MakeAndCollectCartProductsObject鑄造購物車單一商品物件後加至List保存，為避免迴圈重複宣告將使用後的SingleProdctRequiredInfo作為參數傳遞
+                    RequireAllProductInfo.Add(MakeAndCollectCartProductsObject(productID, specificationsID, requireQuantities,SingleProdctRequiredInfo));
+                }
+
+            //將List序列化回傳到layout的ajax接收，接收後才能顯示在想要的地方
+            string RequireAllProductInfoJsonType = JsonConvert.SerializeObject(RequireAllProductInfo);
+            return RequireAllProductInfoJsonType;
+        }
+
+        private VMProductWithSpecification MakeAndCollectCartProductsObject(long productID,long specificationsID,int requireQuantities,VMProductWithSpecification SingleProdctRequiredInfo)
+        {
+            //建構單一商品訂購物件，先尋得需要商品的相關資料行
+            Products Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
+            Specifications Specification = _context.Specifications.FirstOrDefault(p => p.SNID == specificationsID);
+
+            //寫入物件成員
+            SingleProdctRequiredInfo = new VMProductWithSpecification()
+            {
+                //Product的資料寫入物件成員
+                PTID = Product.PTID,
+                Name = Product.Name,
+                DeliveryFee = Product.DeliveryFee,
+                LaunchDate = Product.LaunchDate,
+                Hidden = Product.Hidden,
+                Locked = Product.Locked,
+                Inquired = Product.Inquired,
+                Installment = Product.Installment,
+                Unopened = Product.Unopened,
+                UnitPrice = Product.UnitPrice,
+                ShelfQuantity = Product.ShelfQuantity,
+                SoldQuantity = Product.SoldQuantity,
+                Description = Product.Description,
+                CYID = Product.CYID,
+                SRID = Product.SRID,
+                //specification的資料寫入物件成員
+                SNID = Specification.SNID,
+                SpecName = Specification.SpecName,
+                Picture = Specification.Picture.ToString(),
+                Weight = Specification.Weight,
+                Size = Specification.Size,
+                LeadDay = Specification.LeadDay,
+                PackageSize = Specification.PackageSize,
+                Freebie = Specification.Freebie,
+                //需求數量寫入物件成員
+                RequireQuantities = requireQuantities
+            };
+            return SingleProdctRequiredInfo;
+        }
+
+        [HttpPost]
+        public IActionResult PlaceOrder(string CartTableWithChildNode)
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

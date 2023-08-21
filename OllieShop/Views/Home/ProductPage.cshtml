@@ -22,8 +22,7 @@
         -webkit-appearance: none;
         margin: 0;
     }
-
-    /* Firefox */
+    /* 隱藏input欄位的增減鍵 Firefox */
     input[type=number] {
         -moz-appearance: textfield;
     }
@@ -92,8 +91,8 @@
         let inputValue = inputElement.value;
         // 執行驗證邏輯
         if (inputValue > @RestQuantity || inputValue === 0) {
-            // 驗證失敗，清除輸入
-            inputElement.value = 1;
+        // 驗證失敗，清除輸入
+        inputElement.value = 1;
         }
     }
 
@@ -103,11 +102,24 @@
         let newCartData = [];
         let InputQuantity = Number(document.getElementById("InputQuantity").value);
         if (cartData !== null) {
-            // 轉回陣列放入 newCartData 陣列
+            // 從localStorage取出序列化後的2D ARRAY先轉回Javascript的陣列放入 newCartData 陣列儲存
             newCartData = JSON.parse(cartData);
-            newCartData[0].push(@Model.FirstOrDefault().PTID);
-            newCartData[1].push(@Model.FirstOrDefault().SNID);
-            newCartData[2].push(InputQuantity);
+            //push到newCartData陣列之前先到存放specificationsID的陣列搜尋SNID，搜尋到就直接在inputQuantityArr加總，
+            //indexof找不到會回傳-1
+            let SNIDIndexValue = newCartData[1].indexOf(@Model.FirstOrDefault().SNID);
+            if (SNIDIndexValue == -1) {
+                newCartData[0].push(@Model.FirstOrDefault().PTID);
+                newCartData[1].push(@Model.FirstOrDefault().SNID);
+                newCartData[2].push(InputQuantity);
+            }
+            //搜尋到撈出記錄在newCartData的數量
+            //與當前inputQuantityArr加總確認是否超出商品數量，如果超出跳警告，沒有超出就新增
+            if ((InputQuantity + newCartData[2][SNIDIndexValue]) > @RestQuantity){
+                alert('加入購物車操作失敗，因加入數量與購物車商品數量加總超出商品數量【@RestQuantity】件，請先確認購物車商品數量再重新添加');
+                return "";
+            }
+            //沒有超出商品數量就新增
+            newCartData[2][SNIDIndexValue] += InputQuantity;
         }
         else {
             // 初始化 productID 、specificationsID 、 inputQuantity

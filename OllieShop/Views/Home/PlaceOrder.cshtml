@@ -1,0 +1,87 @@
+﻿@model OllieShop.Models.Orders
+
+@{
+    ViewData["Title"] = "PlaceOrder";
+    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+}
+
+<h1>PlaceOrderPage</h1>
+
+<h4>Orders</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PlaceOrderPage">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentDate" class="control-label"></label>
+                <input asp-for="PaymentDate" class="form-control" />
+                <span asp-validation-for="PaymentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippedDate" class="control-label"></label>
+                <input asp-for="ShippedDate" class="form-control" />
+                <span asp-validation-for="ShippedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArrivalDate" class="control-label"></label>
+                <input asp-for="ArrivalDate" class="form-control" />
+                <span asp-validation-for="ArrivalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Locked" /> @Html.DisplayNameFor(model => model.Locked)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="SVID" class="control-label"></label>
+                <select asp-for="SVID" class ="form-control" asp-items="ViewBag.SVID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CRID" class="control-label"></label>
+                <select asp-for="CRID" class ="form-control" asp-items="ViewBag.CRID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ASID" class="control-label"></label>
+                <select asp-for="ASID" class ="form-control" asp-items="ViewBag.ASID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PCID" class="control-label"></label>
+                <select asp-for="PCID" class ="form-control" asp-items="ViewBag.PCID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SRID" class="control-label"></label>
+                <select asp-for="SRID" class ="form-control" asp-items="ViewBag.SRID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PMID" class="control-label"></label>
+                <select asp-for="PMID" class ="form-control" asp-items="ViewBag.PMID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CNID" class="control-label"></label>
+                <select asp-for="CNID" class ="form-control" asp-items="ViewBag.CNID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
