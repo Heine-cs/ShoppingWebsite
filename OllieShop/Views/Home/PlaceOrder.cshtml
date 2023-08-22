@@ -6,11 +6,14 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-@Html.Raw(@ViewData["CartTableWithChildNode"])
-<hr />
 <div class="row">
+    <div class="col-8">
+        @Html.Raw(@ViewData["CartTableWithChildNode"])
+    </div>
+
     <div class="col-md-4">
-        <form asp-action="PlaceOrderPage">
+        <h2>訂單總金額 : <span class="text-primary">NT$@ViewData["ProductFeeCount"]</span></h2>
+        <form asp-action="GenerateOrdersBaseOnDifferentProducts">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group d-none">
                 <label asp-for="OrderDate" class="control-label"></label>
@@ -42,45 +45,51 @@
                     <input class="form-check-input" asp-for="Locked" /> @Html.DisplayNameFor(model => model.Locked)
                 </label>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="SVID" class="control-label"></label>
-                <select asp-for="SVID" class ="form-control" asp-items="ViewBag.SVID"></select>
+                <input asp-for="SVID" class ="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="CRID" class="control-label"></label>
                 <input asp-for="CRID" class ="form-control" value='@ViewData["CRID"]' />
             </div>
             <div class="form-group">
-                <label asp-for="ASID" class="control-label">地址</label>
+                <label asp-for="ASID" class="control-label">地址欄</label>
                 <select asp-for="ASID" class ="form-control" asp-items="ViewBag.CustomerAddresses"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="PCID" class="control-label"></label>
-                <select asp-for="PCID" class ="form-control" asp-items="ViewBag.PCID"></select>
+            <div class="form-group d-none">
+                <label asp-for="PCID" class="control-label">信用卡卡號</label>
+                <input asp-for="PCID" class="form-control" />
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="SRID" class="control-label"></label>
-                <select asp-for="SRID" class ="form-control" asp-items="ViewBag.SRID"></select>
+                <input asp-for="SRID" class="form-control" />
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="PMID" class="control-label"></label>
-                <select asp-for="PMID" class ="form-control" asp-items="ViewBag.PMID"></select>
+                <input asp-for="PMID" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="CNID" class="control-label"></label>
-                <select asp-for="CNID" class ="form-control" asp-items="ViewBag.CNID"></select>
+                <label asp-for="CNID" class="control-label">折價券代碼</label>
+                <select asp-for="CNID" class="form-control" asp-items="ViewBag.CustomerUseableCoupons"></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <input type="hidden" name="cartData" id="cartData">
+            <div class="form-group my-3">
+                <input type="submit" value="確認結帳，選擇付款與運送方式" class="btn btn-primary btn-lg" />
             </div>
         </form>
+        <div>
+            <a asp-action="Index">我還想逛逛，先不結帳</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        //要將購物車內商品二維陣列拋到GenerateOrdersBaseOnDifferentProducts Action
+        $('#cartData').val(localStorage.getItem("cartData"));
+    </script>
 }
