@@ -175,8 +175,14 @@ namespace OllieShop.Controllers
             string RequireAllProductInfoJsonType = JsonConvert.SerializeObject(RequireAllProductInfo);
             return RequireAllProductInfoJsonType;
         }
-
+        //配合getCartInfo action使用的功能
         private VMProductWithSpecification MakeAndCollectCartProductsObject(long productID,long specificationsID,int requireQuantities,VMProductWithSpecification SingleProdctRequiredInfo)
+        {
+            return MakeAndCollectCartProductsObject(productID, specificationsID, requireQuantities, SingleProdctRequiredInfo,null);
+        }
+
+        //配合GenerateOrdersBaseOnDifferentProducts action使用的多載最高引數版本
+        private VMProductWithSpecification MakeAndCollectCartProductsObject(long productID, long specificationsID, int requireQuantities, VMProductWithSpecification SingleProdctRequiredInfo,Orders orders)
         {
             //建構單一商品訂購物件，先尋得需要商品的相關資料行
             Products Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
@@ -269,9 +275,11 @@ namespace OllieShop.Controllers
                 g += 2;
             }
             //迴圈建構商品物件
+            
             for (int i = 0; i < ForloopTimes; i++)
             {
                 productID = cart2DArrayTo1D.ElementAt(i);
+
                 specificationsID = cart2DArrayTo1D.ElementAt(f + 1);
                 //資料表(OrderDetail)訂購數量欄位資料型態定義為INT，但是javascript物件會轉換為cartData物件，
                 //cartData嵌套陣列被設定為LONG資料型態，所以要轉換資料型態requireQuantities避免問題
@@ -279,18 +287,17 @@ namespace OllieShop.Controllers
                 f++;
                 g++;
                 //MakeAndCollectCartProductsObject鑄造購物車單一商品物件後加至List保存，為避免迴圈重複宣告將使用後的SingleProdctRequiredInfo作為參數傳遞
-                RequireAllProductInfo.Add(MakeAndCollectCartProductsObject(productID, specificationsID, requireQuantities, SingleProdctRequiredInfo));
+                //迴圈帶入Order物件，Order物件中有來自PlaceOrder頁面被消費者填入的屬性值(需要保留的有:地址編號、折價券編號、消費者編號)，
+                //迴圈內將會寫入【orders值、商品資料與數量、運送與付款方式的下拉式選單值、】至SingleProdctRequiredInfo物件
+                //如果消費者有信用卡且商家提供刷卡方式，就能選擇卡號結帳否則為空
+                RequireAllProductInfo.Add(MakeAndCollectCartProductsObject(productID, specificationsID, requireQuantities, SingleProdctRequiredInfo,orders));
             }
-            //透過迴圈複製物件，物件中有來自PlaceOrder頁面被消費者填入的屬性值(需要保留的有:地址編號、折價券編號、消費者編號)
-            //迴圈運轉的次數，取決於LocalStorage二維陣列的長度(ForloopTimes)
-            //for ()
-            //{
 
-            //}
-            //訂單需要的值仍缺少，將在這裡取出LocalStorage的值生成對應表單，讓消費者去選擇需要商品其個別的付款方式與結帳方式，
-            //如果有信用卡且商家提供刷卡方式，就能選擇卡號結帳
+            
+            
 
-            return View(ordersCombineRequireAllProductInfo);
+            return View();
+            //return View(RequireAllProductInfoCombineorders);
 
 
         }
