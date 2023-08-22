@@ -42,6 +42,8 @@ public partial class Sellers
 
     public virtual ICollection<SellerPaymentMethods> SellerPaymentMethods { get; set; } = new List<SellerPaymentMethods>();
 
+    public virtual ICollection<SellerShipVias> SellerShipVias { get; set; } = new List<SellerShipVias>();
+
     public virtual Users? UR { get; set; }
 
 }

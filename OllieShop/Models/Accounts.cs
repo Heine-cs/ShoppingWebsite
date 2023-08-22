@@ -29,5 +29,5 @@ public partial class Accounts
     public long? URID { get; set; }
 
     [Display(Name = "用戶編號")]
-    public virtual Users? UR { get; set; }
+    public virtual Users UR { get; set; }
 }

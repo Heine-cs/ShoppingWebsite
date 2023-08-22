@@ -1,7 +1,7 @@
-﻿@model OllieShop.Models.SellerPaymentMethods
+﻿@model OllieShop.Models.SellerShipVias
 
 @{
-    ViewData["Title"] = "付款方式綁定";
+    ViewData["Title"] = "運送方式綁定";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
@@ -13,10 +13,10 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="SRID" />
-            <input type="hidden" asp-for="PMID" />
-            <h3>方式 : @ViewData["PaymentMethodsName"]</h3>
+            <input type="hidden" asp-for="SVID" />
+            <h3>方式 : @ViewData["ShipViasName"]</h3>
             <div class="form-group form-check">
-                <label class="form-check-label" for="Canceled">
+                <label class="form-check-label">
                     <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
                 </label>
             </div>
@@ -28,7 +28,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-route-SRID="@Model.SRID">返回付款方式總覽</a>
+    <a class="my-3" asp-action="Index" asp-route-SRID="@Model.SRID">返回運送方式總覽</a>
 </div>
 
 @section Scripts {

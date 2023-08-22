@@ -1,14 +1,14 @@
-﻿@model OllieShop.Models.SellerPaymentMethods
+﻿@model OllieShop.Models.SellerShipVias
 
 @{
-    ViewData["Title"] = "綁定新付款方式";
+    ViewData["Title"] = "綁定新運送方式";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <hr />
-<div class="my-3">請在下方選單選擇您需要的付款方式並綁定</div>
+<div class="my-3">請在下方選單選擇您需要的運送方式並綁定</div>
 <span class="text-danger">@ViewData["ErrorMessage"]</span>
 <div class="row">
     <div class="col-md-4">
@@ -16,18 +16,18 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group d-none">
                 <label asp-for="SRID" class="control-label"></label>
-                <input asp-for="SRID" class ="form-control" value="@ViewBag.SRID"/>
+                <input asp-for="SRID" class="form-control" value="@ViewBag.SRID"/>
             </div>
             <div class="form-group">
-                <label asp-for="PM.Name" class="control-label"></label>
-                <select asp-for="PMID" class="form-control" asp-items="@ViewBag.PMInfo"></select>
+                <label asp-for="ShipVias.Name" class="control-label"></label>
+                <select asp-for="SVID" class="form-control" asp-items="@ViewBag.SVInfo"></select>
             </div>
             <div class="form-group form-check d-none">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
                 </label>
             </div>
-            <div class="my-4 form-group">
+            <div class="form-group">
                 <input type="submit" value="綁定" class="btn btn-primary my-3" />
             </div>
         </form>
@@ -35,7 +35,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-route-SRID="@ViewBag.SRID">返回付款方式總覽</a>
+    <a asp-action="Index" asp-route-SRID="@ViewBag.SRID">返回運送方式總覽</a>
 </div>
 
 @section Scripts {

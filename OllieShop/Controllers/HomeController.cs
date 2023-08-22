@@ -13,6 +13,7 @@ using System.Dynamic;
 using System.Drawing;
 using System.Net.Sockets;
 using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace OllieShop.Controllers
 {
@@ -133,7 +134,7 @@ namespace OllieShop.Controllers
 
         //顯示購物車畫面用的function
         [HttpPost]
-        public async Task<string> getCartInfo([FromBody] IEnumerable<IEnumerable<long>> cartData)
+        public string getCartInfo([FromBody] IEnumerable<IEnumerable<long>> cartData)
         {
             //cartData本來是一個2D陣列，經過下方程式碼轉換就會將2D陣列內所有1D陣列組合成一個集合
             //例如:[[1,2,3][4,5,6][66,50,2]]->[1,2,3,4,5,6,66,50,2]
@@ -215,8 +216,13 @@ namespace OllieShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult PlaceOrder(string CartTableWithChildNode)
+        public async Task<IActionResult> PlaceOrder(string CartTableWithChildNode,long CRID,long URID)
         {
+            //沒有CRID與URID就:導引註冊->登入->結帳
+            ViewData["CartTableWithChildNode"] = CartTableWithChildNode;
+            ViewData["OrderEstablishDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            ViewData["CRID"] = CRID;
+            ViewData["CustomerAddresses"] = new SelectList(_context.Addresses.Where(AS => AS.URID == URID), "ASID", "Street");
             return View();
         }
 

@@ -46,7 +46,7 @@ namespace OllieShop.Controllers
                     else
                     {
                         //從資料夾撈出所有檔名轉為檔名陣列
-                        string?[] fileNames = Directory.GetFiles(path)
+                        string[] fileNames = Directory.GetFiles(path)
                             .Select(Path.GetFileName)
                             .ToArray();
                         //提取檔名陣列長度+1作為新檔名

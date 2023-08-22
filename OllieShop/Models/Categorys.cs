@@ -17,7 +17,7 @@ public partial class Categorys
     public short? ADID { get; set; }
 
     [Display(Name = "管理員編號")]
-    public virtual Admins? AD { get; set; }
+    public virtual Admins AD { get; set; }
 
     public virtual ICollection<Products> Products { get; set; } = new List<Products>();
 }

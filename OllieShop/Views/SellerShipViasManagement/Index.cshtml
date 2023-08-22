@@ -1,22 +1,21 @@
-﻿@model IEnumerable<OllieShop.Models.SellerPaymentMethods>
+﻿@model IEnumerable<OllieShop.Models.SellerShipVias>
 
 @{
-    ViewData["Title"] = "商家付款方式總覽";
+    ViewData["Title"] = "賣家運送方式總覽";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create" asp-route-SRID="@ViewBag.SRID">新增付款方式</a>
+    <a asp-action="Create" asp-route-SRID="@ViewBag.SRID">新增運送方式</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PM.Name)
+                @Html.DisplayNameFor(model => model.ShipVias.Name)
             </th>
-
             <th>
                 @Html.DisplayNameFor(model => model.Canceled)
             </th>
@@ -26,15 +25,15 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-
             <td>
-                @Html.DisplayFor(modelItem => item.PM.Name)
+                @Html.DisplayFor(modelItem => item.ShipVias.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Canceled)
             </td>
+
             <td>
-                @Html.ActionLink("取消綁定", "Edit", new {SRID=item.SRID,PMID=item.PMID,PaymentMethodsName=item.PM.Name})
+                @Html.ActionLink("取消綁定", "Edit", new { SRID=item.SRID,SVID=item.SVID,ShipViasName=item.ShipVias.Name})
             </td>
         </tr>
 }

@@ -21,7 +21,7 @@ public partial class Announcements
     public short? ADID { get; set; }
 
     [Display(Name = "管理員編號")]
-    public virtual Admins? AD { get; set; }
+    public virtual Admins AD { get; set; }
 
     [Display(Name = "標題")]
     [Required(ErrorMessage = "必填欄位")]

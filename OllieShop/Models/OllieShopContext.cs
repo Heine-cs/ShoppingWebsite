@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using OllieShop.Models;
 
 namespace OllieShop.Models;
 
@@ -427,4 +428,6 @@ public partial class OllieShopContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<OllieShop.Models.SellerShipVias> SellerShipVias { get; set; }
 }

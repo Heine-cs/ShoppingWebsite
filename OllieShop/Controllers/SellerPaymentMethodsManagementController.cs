@@ -21,8 +21,16 @@ namespace OllieShop.Controllers
         // GET: SellerPaymentMethodsManagement
         public async Task<IActionResult> Index(long SRID)
         {
-            SRID = 2;//先寫死，要修改
+            if(SRID == 0)
+            {
+                return NotFound();
+            }
+
             var ollieShopContext = _context.SellerPaymentMethods.Include(s => s.PM).Include(s => s.SR).Where(s =>s.SRID == SRID);
+            if (ollieShopContext.Count() == 0)
+            {
+                return Problem("問題發生囉!!");
+            }
             ViewData["SRID"] = SRID;
             return View(await ollieShopContext.ToListAsync());
         }
@@ -30,6 +38,11 @@ namespace OllieShop.Controllers
         // GET: SellerPaymentMethodsManagement/Create
         public IActionResult Create(long SRID)
         {
+            if (SRID == 0)
+            {
+                return NotFound();
+            }
+
             ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name");
             ViewData["SRID"] = SRID;
             return View();
@@ -49,17 +62,17 @@ namespace OllieShop.Controllers
                 {
                     _context.Add(sellerPaymentMethods);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", new {sellerPaymentMethods.SRID});
                 }
             }
             ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name", sellerPaymentMethods.PMID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "SRID", sellerPaymentMethods.SRID);
-            ViewData["ErrorMessage"] = "已經綁定此種付款方式，不能再次綁定既存付款方式";
+            ViewData["SRID"] = sellerPaymentMethods.SRID;
+            ViewData["ErrorMessage"] = "已經擁有此種付款方式，不能再次新增既存付款方式";
             return View(sellerPaymentMethods);
         }
 
         // GET: SellerPaymentMethodsManagement/Edit/5
-        public async Task<IActionResult> Edit(long? SRID,string PMID)
+        public async Task<IActionResult> Edit(long? SRID,string PMID,string PaymentMethodsName)
         {
             if (SRID == null || PMID == null ||_context.SellerPaymentMethods == null)
             {
@@ -73,12 +86,11 @@ namespace OllieShop.Controllers
             }
             ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name", sellerPaymentMethods.PMID);
             ViewData["SRID"] = SRID;
+            ViewData["PaymentMethodsName"] =  PaymentMethodsName;
             return View(sellerPaymentMethods);
         }
 
         // POST: SellerPaymentMethodsManagement/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long SRID, string PMID, [Bind("SRID,PMID,Canceled")] SellerPaymentMethods sellerPaymentMethods)
@@ -106,9 +118,9 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { sellerPaymentMethods.SRID });
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new { sellerPaymentMethods.SRID });
         }
 
         private bool SellerPaymentMethodsExists(long id)

@@ -22,4 +22,6 @@ public partial class ShipVias
     public virtual Admins? AD { get; set; }
 
     public virtual ICollection<Orders> Orders { get; set; } = new List<Orders>();
+
+    public virtual ICollection<SellerShipVias> SellerShipVias { get; set; } = new List<SellerShipVias>();
 }

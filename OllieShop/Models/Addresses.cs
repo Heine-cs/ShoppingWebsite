@@ -32,5 +32,5 @@ public partial class Addresses
 
     public virtual ICollection<Orders> Orders { get; set; } = new List<Orders>();
 
-    public virtual Users? UR { get; set; }
+    public virtual Users UR { get; set; }
 }

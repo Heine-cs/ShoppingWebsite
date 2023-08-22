@@ -1,44 +1,43 @@
 ﻿@model OllieShop.Models.Orders
 
 @{
-    ViewData["Title"] = "PlaceOrder";
+    ViewData["Title"] = "商品結帳確認";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
 }
 
-<h1>PlaceOrderPage</h1>
-
-<h4>Orders</h4>
+<h1>@ViewData["Title"]</h1>
+@Html.Raw(@ViewData["CartTableWithChildNode"])
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="PlaceOrderPage">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
+                <input asp-for="OrderDate" class="form-control" value='@ViewData["OrderEstablishDate"]'/>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="PaymentDate" class="control-label"></label>
                 <input asp-for="PaymentDate" class="form-control" />
                 <span asp-validation-for="PaymentDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="ShippedDate" class="control-label"></label>
                 <input asp-for="ShippedDate" class="form-control" />
                 <span asp-validation-for="ShippedDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="ArrivalDate" class="control-label"></label>
                 <input asp-for="ArrivalDate" class="form-control" />
                 <span asp-validation-for="ArrivalDate" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            <div class="form-group form-check d-none">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
                 </label>
             </div>
-            <div class="form-group form-check">
+            <div class="form-group form-check d-none">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Locked" /> @Html.DisplayNameFor(model => model.Locked)
                 </label>
@@ -49,11 +48,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="CRID" class="control-label"></label>
-                <select asp-for="CRID" class ="form-control" asp-items="ViewBag.CRID"></select>
+                <input asp-for="CRID" class ="form-control" value='@ViewData["CRID"]' />
             </div>
             <div class="form-group">
-                <label asp-for="ASID" class="control-label"></label>
-                <select asp-for="ASID" class ="form-control" asp-items="ViewBag.ASID"></select>
+                <label asp-for="ASID" class="control-label">地址</label>
+                <select asp-for="ASID" class ="form-control" asp-items="ViewBag.CustomerAddresses"></select>
             </div>
             <div class="form-group">
                 <label asp-for="PCID" class="control-label"></label>
