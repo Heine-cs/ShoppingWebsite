@@ -1,0 +1,59 @@
+﻿@model List<OllieShop.ViewModels.VMGenerateOrdersByCartData>
+@{
+    ViewData["Title"] = "商品運送與付款確認";
+    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-8">
+        @Html.Raw(@ViewData["CartTableWithChildNode"])
+    </div>
+
+    <div class="col-md-4">
+        <form asp-action="processOrders">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- model => model.orders.SelectedPaymentMethod 是目標屬性，Model.sellerPaymentMethodOptions 是選項清單 -->
+@*            <div class="form-group">
+            <label for="PaymentMethod">運送方式</label>
+                @Html.DropDownListFor(model => model[0].sellerShipViaOptions, model.sellerShipViaOptions, "請選擇", new { @class = "form-control" })
+            </div>*@
+                
+            @foreach (var singleProductInfo in Model)
+            {
+                <div>@singleProductInfo.products.Name</div>
+                <div>
+                    <label>信用卡卡號</label>
+                    @Html.DropDownListFor(model => singleProductInfo.sellerPaymentCardOptions, singleProductInfo.sellerPaymentCardOptions,"Select an option", new { @class = "form-control" })
+                </div>
+                <div>
+                    <label>信用卡卡號</label>
+                    @Html.DropDownListFor(model => singleProductInfo.sellerPaymentCardOptions, singleProductInfo.sellerPaymentCardOptions,"Select an option", new { @class = "form-control" })
+                </div>
+            }
+
+
+
+@*            <div class="form-group d-none">
+                <label asp-for="SVID" class="control-label"></label>
+                <input asp-for="SVID" class="form-control" />
+            </div>
+
+            <div class="form-group d-none">
+                <label asp-for="PCID" class="control-label">信用卡卡號</label>
+                <input asp-for="PCID" class="form-control" />
+            </div>
+
+            <div class="form-group d-none">
+                <label asp-for="PMID" class="control-label"></label>
+                <input asp-for="PMID" class="form-control" />
+            </div>*@
+            <div class="form-group my-3">
+                <input type="submit" value="完成訂單" class="btn btn-primary btn-lg" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
