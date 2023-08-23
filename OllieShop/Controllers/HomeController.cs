@@ -378,7 +378,7 @@ namespace OllieShop.Controllers
                 sellerPaymentMethodOptions = sellerPaymentMethods.ToList(),
                 sellerShipViaOptions = sellerShipVias.ToList(),
                 //消費者信用卡卡號下拉式選單
-                sellerPaymentCardOptions = customerPaymentCards.ToList()
+                customerPaymentCardOptions = customerPaymentCards.ToList()
                 //至此每個物件都被加入三個下拉式選單
             };
             return billItemShell;
