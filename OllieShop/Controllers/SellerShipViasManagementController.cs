@@ -29,7 +29,7 @@ namespace OllieShop.Controllers
             var ollieShopContext = _context.SellerShipVias.Include(s => s.Sellers).Include(s => s.ShipVias).Where(s=>s.SRID == SRID);
             if (ollieShopContext.Count() == 0)
             {
-                return Problem("問題發生囉!!");
+                return RedirectToAction("Create",new { SRID });
             }
 
             ViewData["SRID"] = SRID;

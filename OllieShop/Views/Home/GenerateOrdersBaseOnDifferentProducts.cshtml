@@ -25,8 +25,9 @@
         </tr>
     </thead>
     <tbody>
-        <form asp-action="processOrders" method="post">
-            @for(var i=0;i <Model.Count();i++)
+        <form asp-controller="home" asp-action="processOrders" method="post">
+            @Html.AntiForgeryToken()
+            @for(int i=0;i <Model.Count();i++)
             {
                 <tr>
                     <td id="ProductInfoColumn" class="border-end">
@@ -34,33 +35,35 @@
                         <img class="w-100 h-100" src="@Model[i].specifications.Picture" />
                     </td>
                     <td class="border-end">
-                        <div class="sellerPaymentOptionsList">
-                            <select class="form-control" name="CartProductPayment_@i">
-                                <option value="">請選擇付款方式</option>
-                                @foreach(SelectListItem sellerPaymentOption in @Model[i].sellerPaymentMethodOptions){
-                                    <option value="@(sellerPaymentOption.Value)">@(sellerPaymentOption.Text)</option>
-                                }
+                        <div class="sellerPaymentOptionsList form-group">
+                        <select class="form-control" id="ordersRequireMaterial[@i].sellerPaymentMethodOptions" name="ordersRequireMaterial[@i].sellerPaymentMethodOptions">
+                                    <option value="">請選擇付款方式</option>
+                                    @foreach(SelectListItem sellerPaymentOption in @Model[i].sellerPaymentMethodOptions){
+                                        <option value="@(sellerPaymentOption.Value)">@(sellerPaymentOption.Text)</option>
+                                    }
                             </select>      
                         </div>
-                        <div class="customerPaymentCardOptionsList d-none">
+                        <div class="customerPaymentCardOptionsList d-none form-group">
                             <label>信用卡卡號</label>
-                            <select class="form-control" name="CartProductPaymentCard_@i">
-                                <option value="">請選擇信用卡卡號</option>
-                                @foreach(SelectListItem customerPaymentCardOptions in @Model[i].customerPaymentCardOptions)
-                                {
-                                    <option value="@(customerPaymentCardOptions.Value)">@(customerPaymentCardOptions.Text)</option>
-                                }
+                        <select class="form-control" id="ordersRequireMaterial[@i].customerPaymentCardOptions" name="ordersRequireMaterial[@i].customerPaymentCardOptions">
+                                    <option value="">請選擇信用卡卡號</option>
+                                    @foreach(SelectListItem customerPaymentCardOptions in @Model[i].customerPaymentCardOptions)
+                                    {
+                                        <option value="@(customerPaymentCardOptions.Value)">@(customerPaymentCardOptions.Text)</option>
+                                    }
                             </select>
                         </div>
                     </td>
                     <td>
-                        <select class="form-control" name="CartProductShipVia_@i">
-                            <option value="">請選擇運送方式</option>
-                            @foreach(SelectListItem sellerShipViaOptions in @Model[i].sellerShipViaOptions)
-                            {
-                                <option value="@(sellerShipViaOptions.Value)">@(sellerShipViaOptions.Text)</option>
-                            }
-                        </select>
+                        <div class="form-group">
+                        <select class="form-control" id="ordersRequireMaterial[@i].sellerShipViaOptions" name="ordersRequireMaterial[@i].sellerShipViaOptions">
+                                <option value="">請選擇運送方式</option>
+                                @foreach(SelectListItem sellerShipViaOptions in @Model[i].sellerShipViaOptions)
+                                {
+                                    <option value="@(sellerShipViaOptions.Value)">@(sellerShipViaOptions.Text)</option>
+                                }
+                            </select>
+                        </div>
                     </td>
                 </tr>
             }

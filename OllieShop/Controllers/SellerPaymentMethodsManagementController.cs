@@ -29,7 +29,7 @@ namespace OllieShop.Controllers
             var ollieShopContext = _context.SellerPaymentMethods.Include(s => s.PM).Include(s => s.SR).Where(s =>s.SRID == SRID);
             if (ollieShopContext.Count() == 0)
             {
-                return Problem("問題發生囉!!");
+                return RedirectToAction("Create", new { SRID });
             }
             ViewData["SRID"] = SRID;
             return View(await ollieShopContext.ToListAsync());

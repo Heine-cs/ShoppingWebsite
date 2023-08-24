@@ -386,6 +386,7 @@ namespace OllieShop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult processOrders(List<VMGenerateOrdersByCartData> ordersRequireMaterial)
         {
             var t1 = "t";
