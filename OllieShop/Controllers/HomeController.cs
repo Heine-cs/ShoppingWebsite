@@ -288,6 +288,7 @@ namespace OllieShop.Controllers
                 //如果消費者有信用卡且商家提供刷卡方式，就能選擇卡號結帳否則為空
                 RequireAllProductInfoCombineorders.Add(MakeBillItem(productID,specificationsID,requireQuantities,orders,billItemShell));
             }
+
             return View(RequireAllProductInfoCombineorders);
         }
         //配合GenerateOrdersBaseOnDifferentProducts action使用的功能
@@ -385,9 +386,10 @@ namespace OllieShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult processOrders(VMGenerateOrdersByCartData ordersRequireMaterial)
+        public IActionResult processOrders(List<VMGenerateOrdersByCartData> ordersRequireMaterial)
         {
-            return View();
+            var t1 = "t";
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
