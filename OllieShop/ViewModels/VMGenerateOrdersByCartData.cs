@@ -15,9 +15,8 @@ namespace OllieShop.ViewModels
         public int RequireQuantities { get; set; }
 
         //Store PaymentMethod&ShipVias dropdownlist for bill page
-        public List<SelectListItem> sellerPaymentMethodOptions { get; set; }
-        public List<SelectListItem> sellerShipViaOptions { get; set; }
-        public List<SelectListItem> customerPaymentCardOptions { get; set; }
-
+        public string sellerPaymentMethodOptions { get; set; }
+        public string sellerShipViaOptions { get; set; }
+        public SelectListItem customerPaymentCardOptions { get; set; }
     }
 }

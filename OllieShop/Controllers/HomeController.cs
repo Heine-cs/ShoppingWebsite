@@ -288,6 +288,9 @@ namespace OllieShop.Controllers
                 //如果消費者有信用卡且商家提供刷卡方式，就能選擇卡號結帳否則為空
                 RequireAllProductInfoCombineorders.Add(MakeBillItem(productID,specificationsID,requireQuantities,orders,billItemShell));
             }
+            //生成下拉式選單
+            for()
+            ViewData[""]
 
             return View(RequireAllProductInfoCombineorders);
         }
@@ -297,40 +300,40 @@ namespace OllieShop.Controllers
             //建構單一商品訂購物件，先尋得需要商品的相關資料行
             Products Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
             Specifications Specification = _context.Specifications.FirstOrDefault(p => p.SNID == specificationsID);
-            //找出Seller詳細的付款方式
-            var sellerPaymentMethods = from sp in _context.SellerPaymentMethods
-                                       join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
-                                       where sp.SRID == Product.SRID && sp.Canceled != true
-                                       select new SelectListItem
-                                       {
-                                           Value = sp.PMID,
-                                           Text = pm.Name
-                                       };
-            //找出Customer的信用卡，如果賣家存在刷卡的付款方式才去撈卡號，不存在卡號選單設為空值
-            var customerPaymentCards = Enumerable.Empty<SelectListItem>();
-            bool PayByCreditCardMethodExist = sellerPaymentMethods.Any(item => item.Text == "刷卡");
-            if(PayByCreditCardMethodExist != false)
-            {
-                 customerPaymentCards = from pc in _context.PaymentCards
-                                           where pc.CRID == orders.CRID
-                                           select new SelectListItem
-                                           {
-                                               Value = pc.PCID.ToString(),
-                                               Text = pc.Number
-                                           };
-            }
-            else { 
-                customerPaymentCards = Enumerable.Empty<SelectListItem>();
-            }
-            //找出Seller的運送方式
-            var sellerShipVias = from ssv in _context.SellerShipVias
-                                       join sv in _context.ShipVias on ssv.SVID equals sv.SVID
-                                       where ssv.SRID == Product.SRID && ssv.Canceled!= true
-                                       select new SelectListItem
-                                       {
-                                           Value = ssv.SVID,
-                                           Text = sv.Name
-                                       };
+            ////找出Seller詳細的付款方式
+            //var sellerPaymentMethods = from sp in _context.SellerPaymentMethods
+            //                           join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
+            //                           where sp.SRID == Product.SRID && sp.Canceled != true
+            //                           select new SelectListItem
+            //                           {
+            //                               Value = sp.PMID,
+            //                               Text = pm.Name
+            //                           };
+            ////找出Customer的信用卡，如果賣家存在刷卡的付款方式才去撈卡號，不存在卡號選單設為空值
+            //var customerPaymentCards = Enumerable.Empty<SelectListItem>();
+            //bool PayByCreditCardMethodExist = sellerPaymentMethods.Any(item => item.Text == "刷卡");
+            //if(PayByCreditCardMethodExist != false)
+            //{
+            //     customerPaymentCards = from pc in _context.PaymentCards
+            //                               where pc.CRID == orders.CRID
+            //                               select new SelectListItem
+            //                               {
+            //                                   Value = pc.PCID.ToString(),
+            //                                   Text = pc.Number
+            //                               };
+            //}
+            //else { 
+            //    customerPaymentCards = Enumerable.Empty<SelectListItem>();
+            //}
+            ////找出Seller的運送方式
+            //var sellerShipVias = from ssv in _context.SellerShipVias
+            //                           join sv in _context.ShipVias on ssv.SVID equals sv.SVID
+            //                           where ssv.SRID == Product.SRID && ssv.Canceled!= true
+            //                           select new SelectListItem
+            //                           {
+            //                               Value = ssv.SVID,
+            //                               Text = sv.Name
+            //                           };
 
 
             //寫入物件成員
@@ -374,22 +377,21 @@ namespace OllieShop.Controllers
                     SRID = Product.SRID
                     //PCID、SVID、PMID透過下拉式選單帶值
                 },
-                RequireQuantities = requireQuantities,
-                //將查詢到的運送方式集合與付款方式集合加入下拉式選單屬性
-                sellerPaymentMethodOptions = sellerPaymentMethods.ToList(),
-                sellerShipViaOptions = sellerShipVias.ToList(),
-                //消費者信用卡卡號下拉式選單
-                customerPaymentCardOptions = customerPaymentCards.ToList()
-                //至此每個物件都被加入三個下拉式選單
+                RequireQuantities = requireQuantities//,
+                ////將查詢到的運送方式集合與付款方式集合加入下拉式選單屬性
+                //sellerPaymentMethodOptions = sellerPaymentMethods.ToList(),
+                //sellerShipViaOptions = sellerShipVias.ToList(),
+                ////消費者信用卡卡號下拉式選單
+                //customerPaymentCardOptions = customerPaymentCards.ToList()
+                ////至此每個物件都被加入三個下拉式選單
             };
             return billItemShell;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult processOrders(List<VMGenerateOrdersByCartData> ordersRequireMaterial)
+        public IActionResult processOrders(VMGenerateOrdersByCartData ordersRequireMaterial)
         {
-            var t1 = "t";
             return RedirectToAction("Index");
         }
 
