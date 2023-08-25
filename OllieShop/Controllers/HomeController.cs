@@ -289,26 +289,20 @@ namespace OllieShop.Controllers
                 RequireAllProductInfoCombineorders.Add(MakeBillItem(productID,specificationsID,requireQuantities,orders,billItemShell));
             }
             //生成下拉式選單
-            for()
-            ViewData[""]
+            //找出Seller詳細的付款方式
+            var sellerPaymentMethods = from sp in _context.SellerPaymentMethods
+                                       join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
+                                       where sp.SRID == Product.SRID && sp.Canceled != true
+                                       select new SelectListItem
+                                       {
+                                           Value = sp.PMID,
+                                           Text = pm.Name
+                                       };
+            var i = 0;
+            //放到viewdata內給View asp-items做為選項使用
+            ViewData[$"sellerPaymentMethods{i}"] = sellerPaymentMethods;
 
-            return View(RequireAllProductInfoCombineorders);
-        }
-        //配合GenerateOrdersBaseOnDifferentProducts action使用的功能
-        private VMGenerateOrdersByCartData MakeBillItem(long productID, long specificationsID, int requireQuantities,Orders orders, VMGenerateOrdersByCartData billItemShell)
-        {
-            //建構單一商品訂購物件，先尋得需要商品的相關資料行
-            Products Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
-            Specifications Specification = _context.Specifications.FirstOrDefault(p => p.SNID == specificationsID);
-            ////找出Seller詳細的付款方式
-            //var sellerPaymentMethods = from sp in _context.SellerPaymentMethods
-            //                           join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
-            //                           where sp.SRID == Product.SRID && sp.Canceled != true
-            //                           select new SelectListItem
-            //                           {
-            //                               Value = sp.PMID,
-            //                               Text = pm.Name
-            //                           };
+
             ////找出Customer的信用卡，如果賣家存在刷卡的付款方式才去撈卡號，不存在卡號選單設為空值
             //var customerPaymentCards = Enumerable.Empty<SelectListItem>();
             //bool PayByCreditCardMethodExist = sellerPaymentMethods.Any(item => item.Text == "刷卡");
@@ -335,6 +329,14 @@ namespace OllieShop.Controllers
             //                               Text = sv.Name
             //                           };
 
+            return View(RequireAllProductInfoCombineorders);
+        }
+        //配合GenerateOrdersBaseOnDifferentProducts action使用的功能
+        private VMGenerateOrdersByCartData MakeBillItem(long productID, long specificationsID, int requireQuantities,Orders orders, VMGenerateOrdersByCartData billItemShell)
+        {
+            //建構單一商品訂購物件，先尋得需要商品的相關資料行
+            Products Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
+            Specifications Specification = _context.Specifications.FirstOrDefault(p => p.SNID == specificationsID);
 
             //寫入物件成員
             billItemShell = new VMGenerateOrdersByCartData()
@@ -377,13 +379,7 @@ namespace OllieShop.Controllers
                     SRID = Product.SRID
                     //PCID、SVID、PMID透過下拉式選單帶值
                 },
-                RequireQuantities = requireQuantities//,
-                ////將查詢到的運送方式集合與付款方式集合加入下拉式選單屬性
-                //sellerPaymentMethodOptions = sellerPaymentMethods.ToList(),
-                //sellerShipViaOptions = sellerShipVias.ToList(),
-                ////消費者信用卡卡號下拉式選單
-                //customerPaymentCardOptions = customerPaymentCards.ToList()
-                ////至此每個物件都被加入三個下拉式選單
+                RequireQuantities = requireQuantities
             };
             return billItemShell;
         }
