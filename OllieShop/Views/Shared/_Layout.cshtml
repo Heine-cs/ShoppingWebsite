@@ -157,7 +157,7 @@
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary-subtle">
-                    <h5 class="modal-title fs-4" id="exampleModalXlLabel" onclick="test()">購物車內容</h5>
+                    <h5 class="modal-title fs-4" id="exampleModalXlLabel">購物車內容</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"></span>
                     </button>
@@ -172,7 +172,7 @@
                         //productID
                         <input type="hidden" id="CartTableWithChildNode" name="CartTableWithChildNode" value=""/>
                         <input type="hidden" id="ProductFeeCount" name="ProductFeeCount" value="" />
-                        <input type="submit" class="btn btn-primary btn-lg" value="結帳去" />
+                        <input type="submit" class="btn btn-primary btn-lg" value="結帳去"/>
                     }
                     <!--BillForm End-->
                     <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">關閉</button>
@@ -189,14 +189,14 @@
     <script>
         function getCartItems() {
             let cartData = localStorage.getItem('cartData');
-            if(cartData == null){
+            if (cartData == null) {
                 $('.modal-body').html("<h3 class='text-center text-primary'>目前購物車尚未加入任何商品!!</p>");
                 //尚未有任何商品時不能將結帳去按鈕開放使用
-                $('.modal-footer form>input:first-child+input').prop( "disabled", true );
+                $('.modal-footer form>input:first-child+input+input').prop("disabled", true);
                 return "";
             }
             //有商品時將結帳去按鈕開放使用
-            $('.modal-footer form>input:first-child+input').prop( "disabled", false );
+            $('.modal-footer form>input:first-child+input+input').prop( "disabled", false );
             $.ajax({
                 url: '@Url.Action("getCartInfo","Home")',
                 type:"POST",
@@ -214,12 +214,14 @@
                                         <th>數量</th>
                                         <th>小計</th>
                                         <th colspan="2">贈品</th>
+                                        <th>取消<th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>`;
                     $('.modal-body').html(CartTable);
                     let ProductFeeCount = 0;
+                    let CartItemIndexValue = 0;
                     for (let singleProductInfo of ProductInfo) {
                         bodyRow =`
                         <tr class="border border-bottom-0 table-dark table-hover">
@@ -229,8 +231,10 @@
                             <td>${singleProductInfo.RequireQuantities}</td>
                             <td>NT$${singleProductInfo.UnitPrice * singleProductInfo.RequireQuantities}</td>
                             <td colspan="2">${singleProductInfo.Freebie}</td>
+                            <td><i class="bi bi-x-circle-fill" data-CartItemIndexValue="${CartItemIndexValue}" onclick="removeSpecifyCartProduct(${CartItemIndexValue})"></i></td>
                         </tr>
                         `
+                        CartItemIndexValue++;
                         $('.modal-body>table>tbody').append(bodyRow);
                         //加總所有產品小計
                         ProductFeeCount += (singleProductInfo.UnitPrice * singleProductInfo.RequireQuantities)
@@ -252,6 +256,29 @@
             $('.modal-body').empty();
             $('.modal-footer>.me-auto').empty();
         })
+
+        function removeSpecifyCartProduct(CartItemIndexValue) {
+            // 取得當前存在 localStorage 的商品資料
+            let cartData = localStorage.getItem('cartData');
+            let newCartData = [];
+
+            //從localStorage取出序列化後的2D ARRAY先轉回Javascript的陣列放入 newCartData 陣列儲存
+            newCartData = JSON.parse(cartData);
+            //將特定索引值位址的元素移除
+            newCartData[0].splice(CartItemIndexValue,1);
+            newCartData[1].splice(CartItemIndexValue,1);
+            newCartData[2].splice(CartItemIndexValue,1);
+            if (newCartData[0][0] === undefined) {
+                localStorage.removeItem("cartData");
+            }
+            else{
+                //存储到 localStorage
+                localStorage.setItem('cartData', JSON.stringify(newCartData));
+            }
+            $('.modal-body').empty();
+            $('.modal-footer>.me-auto').empty();
+            getCartItems();
+        }
     </script>
 </body>
 </html>

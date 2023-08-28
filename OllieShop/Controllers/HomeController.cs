@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Buffers.Text;
 using static NuGet.Packaging.PackagingConstants;
 using NuGet.Packaging;
+using System.Security.Policy;
 
 namespace OllieShop.Controllers
 {
@@ -37,6 +38,11 @@ namespace OllieShop.Controllers
             List<VMProductWithSpecification> allProductPlusSpec = new List<VMProductWithSpecification>();
             VMProductWithSpecification productPlusSpec;
             foreach (var singalDataLine in productsTable) {
+                //如果singalDataLine.ShelfQuantity == singalDataLine.SoldQuantity，跳過此筆
+                if(singalDataLine.ShelfQuantity == singalDataLine.SoldQuantity)
+                {
+                    continue;
+                }
                 //將商品與規格資料combine為單一物件並寫入物件集合中 start
                 productPlusSpec = new VMProductWithSpecification()
                 {
@@ -239,7 +245,18 @@ namespace OllieShop.Controllers
                     CODE = c.CODE
                 };
             ViewData["CustomerUseableCoupons"] = new SelectList(await CustomerUseableCouponsQuery.ToListAsync(), "CNID", "CODE");
-            ViewData["ProductFeeCount"] = ProductFeeCount;
+            
+            var CustomerCouponCODE = CustomerUseableCouponsQuery.Select(item => item.CODE).ToList();
+
+            //Contains對應SQL where In的語法，能將多個條件一次性透過where找出每個條件對應的值
+            IQueryable<double> CustomerCouponDiscount = from c in _context.Coupons
+                                                        where CustomerCouponCODE.Contains(c.CODE)
+                                                        select c.Discount;
+
+            //選中CustomerUseableCoupons的Select option中第幾個元素，就在CustomerCouponDiscount List透過索引值取到折扣比率
+            ViewData["CustomerCouponDiscount"] = await CustomerCouponDiscount.ToListAsync();
+            ViewData["ProductFeeCount"] = ProductFeeCount;//在View頁面要與CustomerCouponDiscount互相運算
+
             return View();
         }
 
@@ -257,9 +274,10 @@ namespace OllieShop.Controllers
             long productID = 0;
             long specificationsID = 0;
             int requireQuantities = 0;
-            //new 空殼能避免在迴圈內不斷宣告
+            //new 空殼能避免在迴圈內進入MakeBillItem action時不斷宣告
             VMGenerateOrdersByCartData billItemShell = new VMGenerateOrdersByCartData();
-
+            Products Product = new Products();
+            Specifications Specification = new Specifications();
             List<VMGenerateOrdersByCartData> RequireAllProductInfoCombineorders = new List<VMGenerateOrdersByCartData>();
             //先計算for迴圈運轉次數，等於或不等於1會是迴圈索引運作的關鍵，因為當商品數量增加時第一個商品對應索引值將會變動
             var ForloopTimes = (cart2DArrayTo1D.Count()) / 3;
@@ -271,7 +289,12 @@ namespace OllieShop.Controllers
                 f++;
                 g += 2;
             }
-            //迴圈建構商品物件
+            //迴圈建構商品物件與對應的下拉式選單
+            IEnumerable<SelectListItem> sellerPaymentMethods;
+            IEnumerable<SelectListItem> customerPaymentCards;
+            IEnumerable<SelectListItem> sellerShipVias;
+            bool PayByCreditCardMethodExist;
+            bool CustomerPaymentCardExist;
             for (int i = 0; i < ForloopTimes; i++)
             {
                 productID = cart2DArrayTo1D.ElementAt(i);
@@ -282,61 +305,77 @@ namespace OllieShop.Controllers
                 requireQuantities = Convert.ToInt32(cart2DArrayTo1D.ElementAt(g + 2));
                 f++;
                 g++;
-                //MakeAndCollectCartProductsObject鑄造購物車單一商品物件後加至List保存，為避免迴圈重複宣告將billItemShell作為參數傳遞
+                //MakeAndCollectCartProductsObject鑄造購物車單一商品物件後加至List保存，為避免迴圈重複宣告將Product、Specification、billItemShell作為參數傳遞
                 //迴圈帶入Order物件，Order物件中有來自PlaceOrder頁面被消費者填入的屬性值(需要保留的有:地址編號、折價券編號、消費者編號)，
-                //迴圈內將會寫入【orders值、商品資料與數量、運送與付款方式的下拉式選單值、】至VMGenerateOrdersByCartData物件
-                //如果消費者有信用卡且商家提供刷卡方式，就能選擇卡號結帳否則為空
-                RequireAllProductInfoCombineorders.Add(MakeBillItem(productID,specificationsID,requireQuantities,orders,billItemShell));
+                //MakeBillItem會寫入【orders值、商品資料與數量】至VMGenerateOrdersByCartData物件
+                billItemShell = MakeBillItem(productID, specificationsID, requireQuantities, orders, Product, Specification, billItemShell);
+                //生成下拉式選單
+                //找出Seller詳細的付款方式，如果消費者沒有註冊信用卡須排除select出刷卡的付款方式
+                CustomerPaymentCardExist = _context.PaymentCards.Any(item => item.CRID == orders.CRID);
+                if(CustomerPaymentCardExist != false) { 
+                    sellerPaymentMethods = from sp in _context.SellerPaymentMethods
+                                               join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
+                                               where sp.SRID == billItemShell.products.SRID && sp.Canceled != true
+                                               select new SelectListItem
+                                               {
+                                                   Value = sp.PMID,
+                                                   Text = pm.Name
+                                               };
+                }
+                else
+                {
+                    sellerPaymentMethods = from sp in _context.SellerPaymentMethods
+                                           join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
+                                           where sp.SRID == billItemShell.products.SRID && sp.Canceled != true && sp.PMID != "PM02"
+                                           select new SelectListItem
+                                           {
+                                               Value = sp.PMID,
+                                               Text = pm.Name
+                                           };
+                }
+
+                //找出Customer的信用卡，如果賣家存在刷卡的付款方式才去撈卡號，不存在就將卡號選單設為空值
+                PayByCreditCardMethodExist = sellerPaymentMethods.Any(item => item.Text == "刷卡");
+                if (PayByCreditCardMethodExist != false)
+                {
+                    customerPaymentCards = from pc in _context.PaymentCards
+                                           where pc.CRID == billItemShell.orders.CRID
+                                           select new SelectListItem
+                                           {
+                                               Value = pc.PCID.ToString(),
+                                               Text = pc.Number
+                                           };
+                }
+                else
+                {
+                    customerPaymentCards = Enumerable.Empty<SelectListItem>();
+                }
+                //找出Seller的運送方式
+                sellerShipVias = from ssv in _context.SellerShipVias
+                                     join sv in _context.ShipVias on ssv.SVID equals sv.SVID
+                                     where ssv.SRID == billItemShell.products.SRID && ssv.Canceled != true
+                                     select new SelectListItem
+                                     {
+                                         Value = ssv.SVID,
+                                         Text = sv.Name
+                                     };
+
+
+                //放到viewdata內給View asp-items做為選項使用
+                ViewData[$"sellerPaymentMethods{i}"] = sellerPaymentMethods;
+                ViewData[$"customerPaymentCards{i}"] = customerPaymentCards;
+                ViewData[$"sellerShipVias{i}"] = sellerShipVias;
+
+                RequireAllProductInfoCombineorders.Add(billItemShell);          
             }
-            //生成下拉式選單
-            //找出Seller詳細的付款方式
-            var sellerPaymentMethods = from sp in _context.SellerPaymentMethods
-                                       join pm in _context.PaymentMethods on sp.PMID equals pm.PMID
-                                       where sp.SRID == Product.SRID && sp.Canceled != true
-                                       select new SelectListItem
-                                       {
-                                           Value = sp.PMID,
-                                           Text = pm.Name
-                                       };
-            var i = 0;
-            //放到viewdata內給View asp-items做為選項使用
-            ViewData[$"sellerPaymentMethods{i}"] = sellerPaymentMethods;
-
-
-            ////找出Customer的信用卡，如果賣家存在刷卡的付款方式才去撈卡號，不存在卡號選單設為空值
-            //var customerPaymentCards = Enumerable.Empty<SelectListItem>();
-            //bool PayByCreditCardMethodExist = sellerPaymentMethods.Any(item => item.Text == "刷卡");
-            //if(PayByCreditCardMethodExist != false)
-            //{
-            //     customerPaymentCards = from pc in _context.PaymentCards
-            //                               where pc.CRID == orders.CRID
-            //                               select new SelectListItem
-            //                               {
-            //                                   Value = pc.PCID.ToString(),
-            //                                   Text = pc.Number
-            //                               };
-            //}
-            //else { 
-            //    customerPaymentCards = Enumerable.Empty<SelectListItem>();
-            //}
-            ////找出Seller的運送方式
-            //var sellerShipVias = from ssv in _context.SellerShipVias
-            //                           join sv in _context.ShipVias on ssv.SVID equals sv.SVID
-            //                           where ssv.SRID == Product.SRID && ssv.Canceled!= true
-            //                           select new SelectListItem
-            //                           {
-            //                               Value = ssv.SVID,
-            //                               Text = sv.Name
-            //                           };
-
             return View(RequireAllProductInfoCombineorders);
         }
         //配合GenerateOrdersBaseOnDifferentProducts action使用的功能
-        private VMGenerateOrdersByCartData MakeBillItem(long productID, long specificationsID, int requireQuantities,Orders orders, VMGenerateOrdersByCartData billItemShell)
+        private VMGenerateOrdersByCartData MakeBillItem(long productID, long specificationsID, int requireQuantities,Orders orders,Products Product, Specifications Specification, VMGenerateOrdersByCartData billItemShell)
         {
             //建構單一商品訂購物件，先尋得需要商品的相關資料行
-            Products Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
-            Specifications Specification = _context.Specifications.FirstOrDefault(p => p.SNID == specificationsID);
+            Product = _context.Products.FirstOrDefault(p => p.PTID == productID);
+            Specification = _context.Specifications.FirstOrDefault(p => p.SNID == specificationsID);
 
             //寫入物件成員
             billItemShell = new VMGenerateOrdersByCartData()
@@ -375,8 +414,7 @@ namespace OllieShop.Controllers
                     OrderDate = orders.OrderDate,
                     CRID = orders.CRID,
                     ASID = orders.ASID,
-                    CNID = orders.CNID,
-                    SRID = Product.SRID
+                    CNID = orders.CNID
                     //PCID、SVID、PMID透過下拉式選單帶值
                 },
                 RequireQuantities = requireQuantities
@@ -386,9 +424,68 @@ namespace OllieShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult processOrders(VMGenerateOrdersByCartData ordersRequireMaterial)
+        public async Task<IActionResult> processOrders(List<VMReceiveUnhandleOrders> ordersRequireMaterial)
         {
-            return RedirectToAction("Index");
+            Orders orders = null;
+            OrderDetails orderDetails = null;
+            Products productDataLineGetFromTable = null;
+            CustomerCoupons customerCouponDataLineGetFromTable = null;
+            foreach (VMReceiveUnhandleOrders item in ordersRequireMaterial)
+            {
+                //如果發現找到沒有填必填欄位的物件(付款方式、信用卡卡號、運送方式三者之一)，這代表這張訂單有著同一商家不同商品的情境，需要對還沒寫入必填欄位的物件處理後再寫入資料庫
+                if (item.sellerShipViaOptions == null)
+                {
+                    //找出同樣SRID且sellerShipViaOptions值不為空的物件，物件中有三個屬性需要提取出來，付款方式、信用卡卡號、運送方式，塞到當前迴圈處理的物件當中
+                    foreach(var allOrderFieldsCompleteProductItem in ordersRequireMaterial)
+                    {
+                        if(item.products.SRID == allOrderFieldsCompleteProductItem.products.SRID && allOrderFieldsCompleteProductItem.sellerShipViaOptions != "")
+                        {
+                            item.sellerPaymentMethodOptions = allOrderFieldsCompleteProductItem.sellerPaymentMethodOptions;
+                            item.customerPaymentCardOptions = allOrderFieldsCompleteProductItem.customerPaymentCardOptions;
+                            item.sellerShipViaOptions = allOrderFieldsCompleteProductItem.sellerShipViaOptions;              
+                        };
+                    }
+                }
+                orders = new Orders()
+                {
+                    OrderDate = item.orders.OrderDate,
+                    SVID = item.sellerShipViaOptions,
+                    CRID = item.orders.CRID,
+                    ASID = item.orders.ASID,
+                    PCID = string.IsNullOrEmpty(item.customerPaymentCardOptions) ? (short?)null : short.Parse(item.customerPaymentCardOptions),
+                    SRID = item.products.SRID,
+                    PMID = item.sellerPaymentMethodOptions,
+                    CNID = item.orders.CNID
+                };
+                await _context.Orders.AddAsync(orders);
+                await _context.SaveChangesAsync();
+                //Orders資料表新增後，取出identity生成的主鍵，再填到OrderDetails資料表當外鍵用
+                orderDetails = new OrderDetails()
+                {
+                    ORID = orders.ORID,
+                    PTID = item.products.PTID,
+                    SNID = item.specifications.SNID,
+                    Quantity = item.RequireQuantities
+                };
+                await _context.OrderDetails.AddAsync(orderDetails);
+                await _context.SaveChangesAsync();
+
+                //在Products資料表將當前迴圈處理商品的已售數量加計需求數量
+                productDataLineGetFromTable = await _context.Products.FirstOrDefaultAsync(p => p.PTID == orderDetails.PTID);
+                productDataLineGetFromTable.SoldQuantity += item.RequireQuantities;
+                _context.Products.Update(productDataLineGetFromTable);
+                await _context.SaveChangesAsync();
+                if(orders.CNID != null)
+                {
+                    //在CustomerCoupons資料表訂單將使用掉的消費者折價券押上使用日期
+                    customerCouponDataLineGetFromTable = await _context.CustomerCoupons.FirstOrDefaultAsync(c => c.CNID == orders.CNID && c.CRID == orders.CRID);
+                    customerCouponDataLineGetFromTable.AppliedDate = orders.OrderDate;
+                    _context.CustomerCoupons.Update(customerCouponDataLineGetFromTable);
+                    await _context.SaveChangesAsync();
+                }
+
+            }
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

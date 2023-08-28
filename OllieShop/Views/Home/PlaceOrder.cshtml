@@ -13,7 +13,6 @@
        height:150px;
     }
 </style>
-
 <h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col-8">
@@ -21,42 +20,16 @@
     </div>
 
     <div class="col-md-4">
-        <h2>訂單總金額 : <span class="text-primary">NT$@ViewData["ProductFeeCount"]</span></h2>
+        <div>
+            <a asp-action="Index">我還想逛逛，先不結帳</a>
+        </div>
+        <h2>訂單總金額 : <span class="text-primary">NT$<span id="ProductFeeCount">@ViewData["ProductFeeCount"]</span></span>(未折抵前)</h2>
         <form asp-action="GenerateOrdersBaseOnDifferentProducts">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group d-none">
                 <label asp-for="OrderDate" class="control-label"></label>
                 <input asp-for="OrderDate" class="form-control" value='@ViewData["OrderEstablishDate"]'/>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group d-none">
-                <label asp-for="PaymentDate" class="control-label"></label>
-                <input asp-for="PaymentDate" class="form-control" />
-                <span asp-validation-for="PaymentDate" class="text-danger"></span>
-            </div>
-            <div class="form-group d-none">
-                <label asp-for="ShippedDate" class="control-label"></label>
-                <input asp-for="ShippedDate" class="form-control" />
-                <span asp-validation-for="ShippedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group d-none">
-                <label asp-for="ArrivalDate" class="control-label"></label>
-                <input asp-for="ArrivalDate" class="form-control" />
-                <span asp-validation-for="ArrivalDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check d-none">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
-                </label>
-            </div>
-            <div class="form-group form-check d-none">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Locked" /> @Html.DisplayNameFor(model => model.Locked)
-                </label>
-            </div>
-            <div class="form-group d-none">
-                <label asp-for="SVID" class="control-label"></label>
-                <input asp-for="SVID" class ="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="CRID" class="control-label"></label>
@@ -66,39 +39,77 @@
                 <label asp-for="ASID" class="control-label">地址欄</label>
                 <select asp-for="ASID" class="form-control" asp-items="ViewBag.CustomerAddresses"></select>
             </div>
-            <div class="form-group d-none">
-                <label asp-for="PCID" class="control-label">信用卡卡號</label>
-                <input asp-for="PCID" class="form-control" />
+            <hr>
+            <h5>訂單折價券選用</h5>
+            <div id="CustomerCouponRadioButton">
+                <div class="d-flex">
+                    <span class="me-3">使用折價券 :</span>@Html.RadioButton("CustomerCoupon","true")
+                </div>
+                <div class="d-flex">
+                    <span class="me-3">不使用折價券 :</span>@Html.RadioButton("CustomerCoupon","false")
+                </div>
             </div>
-            <div class="form-group d-none">
-                <label asp-for="SRID" class="control-label"></label>
-                <input asp-for="SRID" class="form-control" />
-            </div>
-            <div class="form-group d-none">
-                <label asp-for="PMID" class="control-label"></label>
-                <input asp-for="PMID" class="form-control" />
-            </div>
-            <div class="form-group">
+
+            <div class="form-group CouponInputBlock d-none">
                 <label asp-for="CNID" class="control-label">折價券代碼</label>
-                <select asp-for="CNID" class="form-control" asp-items="ViewBag.CustomerUseableCoupons"></select>
+                <select asp-for="CNID" class="form-control" asp-items="ViewBag.CustomerUseableCoupons">
+                    <option value="">請選擇折價券</option>
+                </select>
+                <h3 class="mt-2 d-none text-end">套用折價後訂單總金額 :<span class="text-secondary"></span></h3>
             </div>
+            @*要將購物車內商品二維陣列拋到GenerateOrdersBaseOnDifferentProducts Action*@
             <input type="hidden" name="cartData" id="cartData">
-            <div class="form-group my-3">
+            <div class="form-group my-3  text-end">
                 <input type="submit" value="確認結帳，選擇付款與運送方式" class="btn btn-primary btn-lg" />
             </div>
         </form>
-        <div>
-            <a asp-action="Index">我還想逛逛，先不結帳</a>
-        </div>
     </div>
 </div>
-
-
-
+@*折扣比率取出後放到隱藏div中data屬性*@
+@foreach (var discount in ViewData["CustomerCouponDiscount"] as List<double>)
+{
+    <div class="coupon-item" data-discount="@discount"></div>
+}
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         //要將購物車內商品二維陣列拋到GenerateOrdersBaseOnDifferentProducts Action
         $('#cartData').val(localStorage.getItem("cartData"));
+
+        $('#CustomerCouponRadioButton').on("click","input[type='radio']",function(event){
+            if ($(this).val() === "true") {
+                $('.CouponInputBlock').removeClass("d-none");
+            }
+            else{
+                $('.CouponInputBlock').removeClass("d-none");
+                $('.CouponInputBlock').addClass("d-none");
+                $('select[name="CNID"]').val("");
+                //不顯示:折價後金額套用折價後訂單總金額 :NT$xx的訊息
+                $('.CouponInputBlock h3').removeClass("d-none");
+                $('.CouponInputBlock h3').addClass("d-none");
+            }
+        });
+
+        //下拉式選單切換折價券選項時對應計算折扣後總金額並顯示在畫面中
+        $('#CNID').on('change',function(){
+            //切換到某個選項時取出選項索引值
+            let selectedOptionIndex = $('#CNID').prop('selectedIndex');
+            //索引值 - 1在class為coupon-item找出折價比率
+            let selectedCouponDiscount= $('.coupon-item').eq(selectedOptionIndex - 1).data('discount');
+            //計算折價後金額
+            //取出訂單總金額
+            let ProductFeeCount = parseInt($('#ProductFeeCount').text(),10);
+            //折價後金額 = 訂單總金額 * 折扣比率
+            let discountPrice = Math.round(ProductFeeCount * selectedCouponDiscount);
+            //將折價後金額寫入畫面
+            $('.CouponInputBlock h3>span').text('NT$'+ discountPrice);
+            
+            //切換"請選擇折價券"選項時不顯示:折價後金額套用折價後訂單總金額 :NT$xx的訊息
+            $('.CouponInputBlock h3').removeClass("d-none");
+            $('.CouponInputBlock h3').addClass("d-none");
+            if (selectedOptionIndex !=0){
+                $('.CouponInputBlock h3').removeClass("d-none");
+            }
+        });
     </script>
 }

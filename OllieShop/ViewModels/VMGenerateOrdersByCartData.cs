@@ -14,9 +14,5 @@ namespace OllieShop.ViewModels
         //Store Product requireQuantities for shopping cart page
         public int RequireQuantities { get; set; }
 
-        //Store PaymentMethod&ShipVias dropdownlist for bill page
-        public string sellerPaymentMethodOptions { get; set; }
-        public string sellerShipViaOptions { get; set; }
-        public SelectListItem customerPaymentCardOptions { get; set; }
     }
 }

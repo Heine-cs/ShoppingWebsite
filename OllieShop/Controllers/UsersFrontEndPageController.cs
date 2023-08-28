@@ -58,6 +58,7 @@ namespace OllieShop.Controllers
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
                 //Users資料表新增後，取出identity生成的主鍵，再填到Accounts、Addresses資料表當外鍵用
+                
 
                 Accounts account = new Accounts();
                 account.Account = registerViewmodel.Account;

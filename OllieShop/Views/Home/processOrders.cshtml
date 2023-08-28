@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "訂單已完成，感謝使用本賣場服務!!";
+    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+}
+
+<h1 class="mb-3">@ViewData["Title"]</h1>
+<a asp-action="Index">返回首頁</a>
+<script>
+    localStorage.removeItem("cartData");
+</script>
