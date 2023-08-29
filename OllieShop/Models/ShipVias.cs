@@ -9,7 +9,7 @@ public partial class ShipVias
     [Display(Name="編號")]
     public string SVID { get; set; } = null!;
 
-    [Display(Name = "名稱")]
+    [Display(Name = "運送方式")]
     [StringLength(50, ErrorMessage ="名稱不得超過50個字")]
     [Required(ErrorMessage = "必填欄位")]
     public string Name { get; set; } = null!;

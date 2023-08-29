@@ -29,7 +29,7 @@ public partial class Orders
     [DataType(DataType.DateTime)]
     public DateTime? ArrivalDate { get; set; }
 
-    [Display(Name = "已取消")]
+    [Display(Name = "訂單已取消")]
     public bool Canceled { get; set; }
 
     [Display(Name = "已鎖定")]

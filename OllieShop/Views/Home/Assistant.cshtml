@@ -1,12 +1,14 @@
 ﻿@{
     ViewData["Title"] = "協助中心";
 }
-<h1>@ViewData["Title"]</h1>
+<div class="d-flex flex-column container-fluid">
+    <h1>@ViewData["Title"]</h1>
 
-@foreach (string item in ViewBag.Question_With_Answer){
-    @Html.Raw(item);
-}
+    @foreach (string item in ViewBag.Question_With_Answer){
+        @Html.Raw(item);
+    }
 
-<div>
-    <a asp-action="Index">回首頁</a>
+    <div>
+        <a asp-action="Index">回首頁</a>
+    </div>
 </div>

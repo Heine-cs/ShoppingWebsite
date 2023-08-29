@@ -1,0 +1,54 @@
+﻿@model OllieShop.Models.Orders
+
+@{
+    ViewData["Title"] = "訂單詳情";
+    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class = "col-sm-2">
+            送達地
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AS.City)@Html.DisplayFor(model => model.AS.District)@Html.DisplayFor(model => model.AS.Street)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PM.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PM.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SR.ShopNAME)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SR.ShopNAME)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SV.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SV.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Canceled)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Canceled)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ORID">取消訂單</a> |
+    <a asp-action="Index">返回訂單總覽</a>
+</div>

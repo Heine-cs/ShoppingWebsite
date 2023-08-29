@@ -111,5 +111,84 @@
                 $('.CouponInputBlock h3').removeClass("d-none");
             }
         });
+
+
+        function removeSpecifyCartProduct(CartItemIndexValue) {
+            // 取得當前存在 localStorage 的商品資料
+            let cartData = localStorage.getItem('cartData');
+            let newCartData = [];
+
+            //從localStorage取出序列化後的2D ARRAY先轉回Javascript的陣列放入 newCartData 陣列儲存
+            newCartData = JSON.parse(cartData);
+            //將特定索引值位址的元素移除
+            newCartData[0].splice(CartItemIndexValue, 1);
+            newCartData[1].splice(CartItemIndexValue, 1);
+            newCartData[2].splice(CartItemIndexValue, 1);
+            if (newCartData[0][0] === undefined) {
+                localStorage.removeItem("cartData");
+            }
+            else {
+                //存储到 localStorage
+                localStorage.setItem('cartData', JSON.stringify(newCartData));
+            }
+            $('.col-8').empty();
+            getCartItems();
+        }
+
+
+        function getCartItems() {
+            let cartData = localStorage.getItem('cartData');
+            if (cartData == null) {
+                alert('已無任何商品供結帳，將回到首頁')
+                    window.location.href = '@Url.Action("Index","Home")';
+                return "";
+            }
+
+            $.ajax({
+                url: '@Url.Action("getCartInfo","Home")',
+                type: "POST",
+                data: cartData,
+                contentType: 'application/json',
+                success: function (response) {
+                    ProductInfo = JSON.parse(response);
+                    let CartTable = `
+                                    <table class="w-100 text-center table table-borderless table-striped table-hover fs-3 align-middle" id="CartTable">
+                                        <thead>
+                                            <tr>
+                                                <th>圖片</th>
+                                                <th>品名</th>
+                                                <th>售價</th>
+                                                <th>數量</th>
+                                                <th>小計</th>
+                                                <th colspan="2">贈品</th>
+                                                <th>取消</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>`;
+                    $('.col-8').html(CartTable);
+                    let ProductFeeCount = 0;
+                    let CartItemIndexValue = 0;
+                    for (let singleProductInfo of ProductInfo) {
+                        bodyRow = `
+                                <tr class="border border-bottom-0 table-dark table-hover">
+                                    <td><img class="w-100 h-100 object-fit-fill" src="${singleProductInfo.Picture}" /></td>
+                                    <td>${singleProductInfo.SpecName}</td>
+                                    <td>NT$${singleProductInfo.UnitPrice}</td>
+                                    <td>${singleProductInfo.RequireQuantities}</td>
+                                    <td>NT$${singleProductInfo.UnitPrice * singleProductInfo.RequireQuantities}</td>
+                                    <td colspan="2">${singleProductInfo.Freebie}</td>
+                                    <td><i class="bi bi-x-circle-fill" data-CartItemIndexValue="${CartItemIndexValue}" onclick="removeSpecifyCartProduct(${CartItemIndexValue})"></i></td>
+                                </tr>
+                                `
+                        CartItemIndexValue++;
+                        $('.col-8>table>tbody').append(bodyRow);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("some error");
+                }
+            });
+        }
     </script>
 }

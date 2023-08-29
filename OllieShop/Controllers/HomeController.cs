@@ -432,20 +432,37 @@ namespace OllieShop.Controllers
             CustomerCoupons customerCouponDataLineGetFromTable = null;
             foreach (VMReceiveUnhandleOrders item in ordersRequireMaterial)
             {
-                //如果發現找到沒有填必填欄位的物件(付款方式、信用卡卡號、運送方式三者之一)，這代表這張訂單有著同一商家不同商品的情境，需要對還沒寫入必填欄位的物件處理後再寫入資料庫
+                //如果發現找到沒有填必填欄位的物件(付款方式、信用卡卡號、運送方式三者之一)，這代表這張訂單有著同一商家不同商品的情境，
+                //此種情形不需新增Orders資料表資料行，新增時僅需新增到OrderDetail資料表
                 if (item.sellerShipViaOptions == null)
-                {
-                    //找出同樣SRID且sellerShipViaOptions值不為空的物件，物件中有三個屬性需要提取出來，付款方式、信用卡卡號、運送方式，塞到當前迴圈處理的物件當中
+                {             
+                    //找出同樣SRID且sellerShipViaOptions值不為空的物件，物件中有一個屬性需要提取出來(ORID)，塞到當前迴圈處理的物件當中
                     foreach(var allOrderFieldsCompleteProductItem in ordersRequireMaterial)
                     {
-                        if(item.products.SRID == allOrderFieldsCompleteProductItem.products.SRID && allOrderFieldsCompleteProductItem.sellerShipViaOptions != "")
+                        if(item.products.SRID == allOrderFieldsCompleteProductItem.products.SRID && allOrderFieldsCompleteProductItem.orders.ORID != 0 && item.products.PTID != allOrderFieldsCompleteProductItem.products.PTID)
                         {
-                            item.sellerPaymentMethodOptions = allOrderFieldsCompleteProductItem.sellerPaymentMethodOptions;
-                            item.customerPaymentCardOptions = allOrderFieldsCompleteProductItem.customerPaymentCardOptions;
-                            item.sellerShipViaOptions = allOrderFieldsCompleteProductItem.sellerShipViaOptions;              
-                        };
+                            //直接新增一筆包含ORID、PTID、數量三個欄位的資料行到OrderDetail資料表
+                            item.orders.ORID = allOrderFieldsCompleteProductItem.orders.ORID;
+                            orderDetails = new OrderDetails()
+                            {
+                                ORID = item.orders.ORID,
+                                PTID = item.products.PTID,
+                                SNID = item.specifications.SNID,
+                                Quantity = item.RequireQuantities
+                            };
+                            await _context.OrderDetails.AddAsync(orderDetails);
+                            await _context.SaveChangesAsync();
+
+                            //在Products資料表將當前迴圈處理商品的已售數量加計需求數量
+                            productDataLineGetFromTable = await _context.Products.FirstOrDefaultAsync(p => p.PTID == orderDetails.PTID);
+                            productDataLineGetFromTable.SoldQuantity += item.RequireQuantities;
+                            _context.Products.Update(productDataLineGetFromTable);
+                            await _context.SaveChangesAsync();
+                        }
                     }
+                    continue;
                 }
+
                 orders = new Orders()
                 {
                     OrderDate = item.orders.OrderDate,
@@ -459,6 +476,9 @@ namespace OllieShop.Controllers
                 };
                 await _context.Orders.AddAsync(orders);
                 await _context.SaveChangesAsync();
+                //這個值將會在同一商家不同商品的情境中，使用到
+                item.orders.ORID = orders.ORID;
+
                 //Orders資料表新增後，取出identity生成的主鍵，再填到OrderDetails資料表當外鍵用
                 orderDetails = new OrderDetails()
                 {

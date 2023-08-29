@@ -52,6 +52,9 @@
             right: 2%;
         }
 
+        i {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="position-relative">
@@ -190,7 +193,7 @@
         function getCartItems() {
             let cartData = localStorage.getItem('cartData');
             if (cartData == null) {
-                $('.modal-body').html("<h3 class='text-center text-primary'>目前購物車尚未加入任何商品!!</p>");
+                $('.modal-body').html("<h3 class='text-center text-primary'>目前購物車尚未加入任何商品!!</h3>");
                 //尚未有任何商品時不能將結帳去按鈕開放使用
                 $('.modal-footer form>input:first-child+input+input').prop("disabled", true);
                 return "";
@@ -214,7 +217,7 @@
                                         <th>數量</th>
                                         <th>小計</th>
                                         <th colspan="2">贈品</th>
-                                        <th>取消<th>
+                                        <th>取消</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>

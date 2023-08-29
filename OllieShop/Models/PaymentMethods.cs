@@ -9,7 +9,7 @@ public partial class PaymentMethods
     [Display(Name ="編號")]
     public string PMID { get; set; } = null!;
 
-    [Display(Name = "名稱")]
+    [Display(Name = "付款方式")]
     [Required(ErrorMessage = "必填欄位")]
     [StringLength(50,ErrorMessage ="名稱不能超過50個字")]
     public string Name { get; set; } = null!;
