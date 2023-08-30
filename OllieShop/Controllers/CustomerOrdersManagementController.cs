@@ -142,7 +142,9 @@ namespace OllieShop.Controllers
             ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID", orders.CRID);
             ViewData["PCID"] = new SelectList(_context.PaymentCards, "PCID", "BillAddress", orders.PCID);
             ViewData["PMID"] = new SelectList(_context.PaymentMethods, "PMID", "PMID", orders.PMID);
+
             ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", orders.SRID);
+
             ViewData["SVID"] = new SelectList(_context.ShipVias, "SVID", "SVID", orders.SVID);
             return View(orders);
         }
