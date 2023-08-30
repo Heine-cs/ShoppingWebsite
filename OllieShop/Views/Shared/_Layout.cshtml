@@ -115,7 +115,7 @@
                         </form>
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-nowrap" asp-controller="home" asp-action="Assistant">我的訂單</a>
+                                <a class="nav-link text-nowrap" asp-controller="CustomerOrdersManagement" asp-action="Index">我的訂單</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-nowrap" asp-controller="home" asp-action="Assistant">協助中心</a>
@@ -175,6 +175,7 @@
                         //productID
                         <input type="hidden" id="CartTableWithChildNode" name="CartTableWithChildNode" value=""/>
                         <input type="hidden" id="ProductFeeCount" name="ProductFeeCount" value="" />
+                        <input type="hidden" id="DeliveryFeeCount" name="DeliveryFeeCount" value="" />
                         <input type="submit" class="btn btn-primary btn-lg" value="結帳去"/>
                     }
                     <!--BillForm End-->
@@ -224,6 +225,7 @@
                             </table>`;
                     $('.modal-body').html(CartTable);
                     let ProductFeeCount = 0;
+                    let DeliveryFeeCount = 0;
                     let CartItemIndexValue = 0;
                     for (let singleProductInfo of ProductInfo) {
                         bodyRow =`
@@ -241,11 +243,14 @@
                         $('.modal-body>table>tbody').append(bodyRow);
                         //加總所有產品小計
                         ProductFeeCount += (singleProductInfo.UnitPrice * singleProductInfo.RequireQuantities)
+                        //加總所有產品運費
+                        DeliveryFeeCount += singleProductInfo.DeliveryFee
                     }
-                    $('.modal-footer>.me-auto').append(`商品共計: <span class="text-success">NT$${ProductFeeCount}</span>`);
+                    $('.modal-footer>.me-auto').append(`商品共計: <span class="text-success me-2">NT$${ProductFeeCount}</span>運費共計: <span class="text-success">NT$${DeliveryFeeCount}</span>`);
                     //取出整個CartTable節點(含子節點)填入轉向結帳頁面需要的Form表單，用意是將此table顯示在結帳頁面上
                     $('#CartTableWithChildNode').val($('#CartTable').prop("outerHTML"));
                     $('#ProductFeeCount').val(ProductFeeCount);
+                    $('#DeliveryFeeCount').val(DeliveryFeeCount);
 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {

@@ -19,9 +19,23 @@ namespace OllieShop.Controllers
         }
 
         // GET: CustomerOrdersManagement
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long CRID)
         {
-            var ollieShopContext = _context.Orders.Include(o => o.AS).Include(o => o.CN).Include(o => o.CR).Include(o => o.PC).Include(o => o.PM).Include(o => o.SR).Include(o => o.SV).OrderByDescending(o => o.OrderDate);
+            if(CRID == 0)
+            {
+                return NotFound();
+            }
+
+            var ollieShopContext = _context.Orders
+                .Include(o => o.AS)
+                .Include(o => o.CN)
+                .Include(o => o.CR)
+                .Include(o => o.PC)
+                .Include(o => o.PM)
+                .Include(o => o.SR)
+                .Include(o => o.SV)
+                .Where(o=>o.CRID == CRID)
+                .OrderByDescending(o => o.OrderDate);
             return View(await ollieShopContext.ToListAsync());
         }
 
@@ -41,12 +55,28 @@ namespace OllieShop.Controllers
                 .Include(o => o.PM)
                 .Include(o => o.SR)
                 .Include(o => o.SV)
-                .Include(o => o.OrderDetails).Where(o => o.ORID == id).ToListAsync();
+                .Include(o => o.OrderDetails)
+                .Where(o => o.ORID == id)
+                .FirstOrDefaultAsync();
             if (orders == null)
             {
                 return NotFound();
             }
 
+            Products product = new Products();
+            List<Products> purchaseProductsInfo = new List<Products>();
+            Specifications Specification = new Specifications();
+            List<Specifications> purchaseProductsSpecificationInfo = new List<Specifications>();
+
+            foreach(var item in orders.OrderDetails)
+            {
+                product = _context.Products.FirstOrDefault(p => p.PTID == item.PTID);
+                purchaseProductsInfo.Add(product);
+                Specification = _context.Specifications.FirstOrDefault(p => p.SNID == item.SNID);
+                purchaseProductsSpecificationInfo.Add(Specification);
+            }
+            ViewData["purchaseProductsInfo"] = purchaseProductsInfo;
+            ViewData["purchaseProductsSpecificationInfo"] = purchaseProductsSpecificationInfo;
             return View(orders);
         }
 

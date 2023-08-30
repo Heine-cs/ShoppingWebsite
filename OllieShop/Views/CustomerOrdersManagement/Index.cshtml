@@ -6,64 +6,64 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                送達地
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CR.CRID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PM.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SR.ShopNAME)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SV.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Canceled)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.AS.City)@Html.DisplayFor(modelItem => item.AS.District)@Html.DisplayFor(modelItem => item.AS.Street)
-            </td> 
-            <td>
-                @Html.DisplayFor(modelItem => item.CR.CRID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PM.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SR.ShopNAME)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SV.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Canceled)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ORID">取消訂單</a> |
-                <a asp-action="Details" asp-route-id="@item.ORID">訂單詳情</a>
-            </td>
-        </tr>
+@if (Model.FirstOrDefault() == null)
+{
+    <h3>尚未下過任何訂單</h3>
+    <a asp-action="Index" asp-controller="Home">馬上逛逛</a>
 }
-    </tbody>
-</table>
+else{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDate)
+                </th>
+                <th>
+                    送達地
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PM.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SR.ShopNAME)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SV.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Canceled)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+            
+                <td>
+                    @Html.DisplayFor(modelItem => item.AS.City)@Html.DisplayFor(modelItem => item.AS.District)@Html.DisplayFor(modelItem => item.AS.Street)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PM.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SR.ShopNAME)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SV.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Canceled)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ORID">取消訂單</a> |
+                    <a asp-action="Details" asp-route-id="@item.ORID">訂單詳情</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}

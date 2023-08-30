@@ -1,13 +1,12 @@
 ﻿@model OllieShop.Models.Orders
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "取消訂單頁";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Orders</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,50 +15,30 @@
             <input type="hidden" asp-for="ORID" />
             <div class="form-group">
                 <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
+                <input asp-for="OrderDate" class="form-control" readonly/>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentDate" class="control-label"></label>
-                <input asp-for="PaymentDate" class="form-control" />
-                <span asp-validation-for="PaymentDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShippedDate" class="control-label"></label>
-                <input asp-for="ShippedDate" class="form-control" />
-                <span asp-validation-for="ShippedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArrivalDate" class="control-label"></label>
-                <input asp-for="ArrivalDate" class="form-control" />
-                <span asp-validation-for="ArrivalDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Canceled" /> @Html.DisplayNameFor(model => model.Canceled)
                 </label>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Locked" /> @Html.DisplayNameFor(model => model.Locked)
-                </label>
-            </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="SVID" class="control-label"></label>
                 <select asp-for="SVID" class="form-control" asp-items="ViewBag.SVID"></select>
                 <span asp-validation-for="SVID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="CRID" class="control-label"></label>
                 <select asp-for="CRID" class="form-control" asp-items="ViewBag.CRID"></select>
                 <span asp-validation-for="CRID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="ASID" class="control-label"></label>
                 <select asp-for="ASID" class="form-control" asp-items="ViewBag.ASID"></select>
                 <span asp-validation-for="ASID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="PCID" class="control-label"></label>
                 <select asp-for="PCID" class="form-control" asp-items="ViewBag.PCID"></select>
                 <span asp-validation-for="PCID" class="text-danger"></span>
@@ -69,24 +48,24 @@
                 <select asp-for="SRID" class="form-control" asp-items="ViewBag.SRID"></select>
                 <span asp-validation-for="SRID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="PMID" class="control-label"></label>
                 <select asp-for="PMID" class="form-control" asp-items="ViewBag.PMID"></select>
                 <span asp-validation-for="PMID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="CNID" class="control-label"></label>
                 <select asp-for="CNID" class="form-control" asp-items="ViewBag.CNID"></select>
                 <span asp-validation-for="CNID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="儲存變更" class="btn btn-primary my-3" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-CRID="@Model.CRID">不取消，返回我的訂單總覽</a>
 </div>
 

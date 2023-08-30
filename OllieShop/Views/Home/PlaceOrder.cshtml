@@ -23,7 +23,8 @@
         <div>
             <a asp-action="Index">我還想逛逛，先不結帳</a>
         </div>
-        <h2>訂單總金額 : <span class="text-primary">NT$<span id="ProductFeeCount">@ViewData["ProductFeeCount"]</span></span>(未折抵前)</h2>
+        <h2>訂單商品總金額 : <span class="text-primary">NT$<span id="ProductFeeCount">@ViewData["ProductFeeCount"]</span></span>(未折抵前)</h2>
+        <h3>運費 : <span class="text-primary">NT$<span id="DeliveryFeeCount">@ViewData["DeliveryFeeCount"]</span></span></h3>
         <form asp-action="GenerateOrdersBaseOnDifferentProducts">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group d-none">
@@ -55,7 +56,7 @@
                 <select asp-for="CNID" class="form-control" asp-items="ViewBag.CustomerUseableCoupons">
                     <option value="">請選擇折價券</option>
                 </select>
-                <h3 class="mt-2 d-none text-end">套用折價後訂單總金額 :<span class="text-secondary"></span></h3>
+                <h3 class="mt-2 d-none text-end">套用折價後商品總金額 :<span class="text-secondary"></span></h3>
             </div>
             @*要將購物車內商品二維陣列拋到GenerateOrdersBaseOnDifferentProducts Action*@
             <input type="hidden" name="cartData" id="cartData">

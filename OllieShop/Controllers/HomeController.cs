@@ -225,7 +225,7 @@ namespace OllieShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PlaceOrder(string CartTableWithChildNode,long CRID,long URID,int ProductFeeCount)
+        public async Task<IActionResult> PlaceOrder(string CartTableWithChildNode,long CRID,long URID,int ProductFeeCount,decimal DeliveryFeeCount)
         {
             //沒有CRID與URID就:導引註冊->登入->結帳(還沒寫)
             ViewData["CartTableWithChildNode"] = CartTableWithChildNode;
@@ -256,7 +256,7 @@ namespace OllieShop.Controllers
             //選中CustomerUseableCoupons的Select option中第幾個元素，就在CustomerCouponDiscount List透過索引值取到折扣比率
             ViewData["CustomerCouponDiscount"] = await CustomerCouponDiscount.ToListAsync();
             ViewData["ProductFeeCount"] = ProductFeeCount;//在View頁面要與CustomerCouponDiscount互相運算
-
+            ViewData["DeliveryFeeCount"] = DeliveryFeeCount;
             return View();
         }
 
