@@ -2,11 +2,11 @@
 
 @{
     ViewData["Title"] = "訂單詳情";
-    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+    Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 <style>
-    .col-md-4{
-        height:250px;
+    .col-md-4 {
+        height: 250px;
     }
 </style>
 <h1>@ViewData["Title"]</h1>
@@ -23,11 +23,23 @@
                     <dd class = "col-sm-8">
                         @Html.DisplayFor(model => model.OrderDate)
                     </dd>
+                    <dt class="col-sm-4 d-none">
+                        @Html.DisplayNameFor(model => model.Canceled)
+                    </dt>
+                    <dd class = "col-sm-8 d-none">
+                        @Html.DisplayFor(model => model.Canceled)
+                    </dd>
                     <dt class = "col-sm-4">
                         送達地
                     </dt>
                     <dd class = "col-sm-8">
                         @Html.DisplayFor(model => model.AS.City)@Html.DisplayFor(model => model.AS.District)@Html.DisplayFor(model => model.AS.Street)
+                    </dd>
+                    <dt class = "col-sm-4">
+                        買家名稱
+                    </dt>
+                    <dd class = "col-sm-8">
+                        @ViewData["customerName"]
                     </dd>
                     <dt class = "col-sm-4">
                         @Html.DisplayNameFor(model => model.PM.Name)
@@ -36,27 +48,15 @@
                         @Html.DisplayFor(model => model.PM.Name)
                     </dd>
                     <dt class = "col-sm-4">
-                        @Html.DisplayNameFor(model => model.SR.ShopNAME)
-                    </dt>
-                    <dd class = "col-sm-8">
-                        @Html.DisplayFor(model => model.SR.ShopNAME)
-                    </dd>
-                    <dt class = "col-sm-4">
                         @Html.DisplayNameFor(model => model.SV.Name)
                     </dt>
                     <dd class = "col-sm-8">
                         @Html.DisplayFor(model => model.SV.Name)
                     </dd>
-                    <dt class="col-sm-4 d-none">
-                        @Html.DisplayNameFor(model => model.Canceled)
-                    </dt>
-                    <dd class="col-sm-8 d-none">
-                        @Html.DisplayFor(model => model.Canceled)
-                    </dd>
                 </dl>
                 <div>
-                    @*<a asp-action="Edit" asp-route-id="@Model?.ORID">取消訂單</a> |*@
-                    <a asp-action="Index" asp-route-CRID="@Model.CRID">返回訂單總覽</a>
+                    @*<a asp-action="Edit" asp-route-id="@Model?.ORID">Edit</a> |*@
+                    <a asp-action="Index" asp-route-SRID="@Model.SRID">返回訂單總覽</a>
                 </div>
             </div>
             <div class="col-8">
@@ -82,11 +82,11 @@
                     }
                 }
                 <div class="d-flex align-items-center">
-                    <div class="fs-4 fw-bold me-auto">購買品項</div>
+                    <div class="fs-4 fw-bold me-auto">訂單品項</div>
                     <div>訂單總額:<strong class="text-primary">NT$@subtotal.ToString("0")</strong></div>
                 </div>
                 <div class="d-flex flex-column">
-                    @for (int i = 0; i < purchaseProductsInfo.Count();i++)
+                    @for (int i = 0; i < purchaseProductsInfo.Count(); i++)
                     {
                         <div class="card mb-3">
                             <div class="row g-0">
@@ -110,3 +110,4 @@
         </div>
     </div>
 </div>
+

@@ -46,7 +46,7 @@
             height:150px;
         }
 
-        .Cartfixed {
+        .CartFixed {
             position: fixed;
             bottom: 15%;
             right: 2%;
@@ -153,7 +153,7 @@
     </div>
     <!--Shopping Cart Start-->
     <!--Shopping Cart Modal Trigger-->
-    <div class="Cartfixed">
+    <div class="CartFixed">
         <i class="bi bi-cart4 fs-1 text-info text-end z-2" data-bs-toggle="modal" data-bs-target="#CartModal" onclick="getCartItems()"></i>
     </div>
     <div class="modal fade" id="CartModal" tabindex="-1" aria-modal="true" role="dialog">
@@ -184,7 +184,6 @@
             </div>
         </div>
     </div>
-
     <!--Shopping Cart END-->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -196,11 +195,11 @@
             if (cartData == null) {
                 $('.modal-body').html("<h3 class='text-center text-primary'>目前購物車尚未加入任何商品!!</h3>");
                 //尚未有任何商品時不能將結帳去按鈕開放使用
-                $('.modal-footer form>input:first-child+input+input').prop("disabled", true);
+                $('.modal-footer form>input:first-child+input+input+input').prop("disabled", true);
                 return "";
             }
             //有商品時將結帳去按鈕開放使用
-            $('.modal-footer form>input:first-child+input+input').prop( "disabled", false );
+            $('.modal-footer form>input:first-child+input+input+input').prop( "disabled", false );
             $.ajax({
                 url: '@Url.Action("getCartInfo","Home")',
                 type:"POST",

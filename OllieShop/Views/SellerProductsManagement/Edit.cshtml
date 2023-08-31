@@ -89,7 +89,7 @@
     </div>
     <div class="col-8">
         <div class="text-end">
-            <a asp-action="Index">不編輯，返回商品總覽</a>
+            <a asp-action="Index" asp-route-SRID="@Model.SRID">不編輯，返回商品總覽</a>
         </div>
         <a class="btn btn-outline-primary" asp-controller="SellerSpecificationsManagement" asp-action="Create" 
         asp-route-SRID="@Model.SRID" asp-route-PTID="@Model.PTID" asp-route-productName="@Model.Name">新增規格</a>

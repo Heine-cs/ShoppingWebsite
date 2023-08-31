@@ -19,9 +19,13 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long SRID)
         {
-            var productsTable =  await _context.Products.Include(c => c.CY).Include(s => s.SR).ToListAsync();
+            if(SRID == 0)
+            {
+                return NotFound();
+            }
+            var productsTable =  await _context.Products.Include(c => c.CY).Include(s => s.SR).Where(p => p.SRID == SRID).ToListAsync();
             var specificationsTable = await _context.Specifications.ToListAsync();
 
             List<VMSellerProductsManagement> allProductPlusSpec = new List<VMSellerProductsManagement>();

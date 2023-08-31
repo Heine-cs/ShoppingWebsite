@@ -10,10 +10,12 @@ public partial class Accounts
 
     [Display(Name = "帳號")]
     [Required(ErrorMessage = "必填欄位")]
+    [StringLength(20,ErrorMessage ="帳號不得超過20個字")]
     public string Account { get; set; } = null!;
 
     [Display(Name = "密碼")]
     [Required(ErrorMessage = "必填欄位")]
+    [StringLength(20, ErrorMessage = "帳號不得超過20個字")]
     [DataType(DataType.Password)]
     public string Password { get; set; } = null!;
     //呼叫方法後輸入字串參數就可以替換整段字串
@@ -24,6 +26,7 @@ public partial class Accounts
     }
 
     [Display(Name = "階級")]
+    [StringLength(1)]
     public string Level { get; set; } = null!;
 
     public long? URID { get; set; }

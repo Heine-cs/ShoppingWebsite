@@ -10,12 +10,27 @@
     .carousel-item{
         height:600px;
     }
+
+    .BannerCarouselfixed {
+        position: fixed;
+        bottom: 23%;
+        right: 0%;
+    }
+
+    .fontBorder{
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        font-family: cursive;
+    }
 </style>
-<div class="row flex-grow-1">
-    <div class="col-1">
-        <i class="me-2 bi bi-funnel-fill"></i><span>進階篩選</span>
-        <p>本日促銷</p>
-        <p>其他</p>
+<div class="row flex-grow-1 justify-content-center">
+    <div class="col-1 border border-2 border-secondary-subtle rounded-end h-50 bg-info">
+        <i class="me-2 bi bi-funnel-fill fs-3 text-black"></i><span class="fs-5 fontBorder text-secondary"><strong>進階篩選</strong></span>
+        <div class="form-check  border-top border-2 pt-2">
+            <label class="form-check-label text-light fs-5" for="flexCheckChecked">
+                篩選 啟動!!
+            </label>
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" >
+        </div>
     </div>
     <div class="col-9 container" id="container">
         <!--CardComponentPlacePosition-->
@@ -35,31 +50,35 @@
     <div class="col-2 d-flex flex-column p-0">
         <div class="flex-grow-1">
             <!--carouseforBanner-->
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <div class="container-fluid position-relative">
+                <div class="BannerCarouselfixed col-2">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" data-bs-interval="6000">
+                                <img class="h-100 w-100" src="~/img/banner1.png" />
+                            </div>
+                            <div class="carousel-item" data-bs-interval="6000">
+                                <img class="h-100 w-100" src="~/img/banner2.png" />
+                            </div>
+                            <div class="carousel-item" data-bs-interval="6000">
+                                <img class="h-100 w-100" src="~/img/banner3.png" />
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="6000">
-                        <img class="h-100 w-100" src="~/img/banner1.png" />
-                    </div>
-                    <div class="carousel-item" data-bs-interval="6000">
-                        <img class="h-100 w-100" src="~/img/banner2.png" />
-                    </div>
-                    <div class="carousel-item" data-bs-interval="6000">
-                        <img class="h-100 w-100" src="~/img/banner3.png" />
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
             <!--carouse-->
         </div>

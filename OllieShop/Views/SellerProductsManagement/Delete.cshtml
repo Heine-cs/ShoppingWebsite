@@ -97,6 +97,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="PTID" />
         <input type="submit" value="刪除" class="btn btn-danger" /> |
-        <a asp-action="Index">返回商品總覽</a>
+        <a asp-action="Index" asp-route-SRID="@Model.SRID">返回商品總覽</a>
     </form>
 </div>

@@ -56,8 +56,7 @@ namespace OllieShop.Controllers
                 .Include(o => o.SR)
                 .Include(o => o.SV)
                 .Include(o => o.OrderDetails)
-                .Where(o => o.ORID == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(o => o.ORID == id);
             if (orders == null)
             {
                 return NotFound();
@@ -95,13 +94,6 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["ASID"] = new SelectList(_context.Addresses, "ASID", "City", orders.ASID);
-            ViewData["CNID"] = new SelectList(_context.Coupons, "CNID", "CODE", orders.CNID);
-            ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID", orders.CRID);
-            ViewData["PCID"] = new SelectList(_context.PaymentCards, "PCID", "BillAddress", orders.PCID);
-            ViewData["PMID"] = new SelectList(_context.PaymentMethods, "PMID", "PMID", orders.PMID);
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", orders.SRID);
-            ViewData["SVID"] = new SelectList(_context.ShipVias, "SVID", "SVID", orders.SVID);
             return View(orders);
         }
 
@@ -135,17 +127,8 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new {CRID= orders.CRID});
             }
-            ViewData["ASID"] = new SelectList(_context.Addresses, "ASID", "City", orders.ASID);
-            ViewData["CNID"] = new SelectList(_context.Coupons, "CNID", "CODE", orders.CNID);
-            ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID", orders.CRID);
-            ViewData["PCID"] = new SelectList(_context.PaymentCards, "PCID", "BillAddress", orders.PCID);
-            ViewData["PMID"] = new SelectList(_context.PaymentMethods, "PMID", "PMID", orders.PMID);
-
-            ViewData["SRID"] = new SelectList(_context.Sellers, "SRID", "BankAccount", orders.SRID);
-
-            ViewData["SVID"] = new SelectList(_context.ShipVias, "SVID", "SVID", orders.SVID);
             return View(orders);
         }
 
