@@ -5,6 +5,13 @@ namespace OllieShop.Controllers
 {
     public class AccountsController : Controller
     {
+        private readonly OllieShopContext _context;
+
+        public AccountsController(OllieShopContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult UserLogin()
         {
             return View();
@@ -14,6 +21,11 @@ namespace OllieShop.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UserLogin(Accounts accounts)
         {
+            if(accounts == null)
+            {
+                return View();
+            }
+
             return View();
         }
     }
