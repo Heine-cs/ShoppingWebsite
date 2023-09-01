@@ -59,7 +59,10 @@ else{
                     @Html.DisplayFor(modelItem => item.Canceled)
                 </td>*@
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.ORID">訂單詳情</a>
+                    <form asp-action="Details">
+                        <input type="hidden" name="id" id="id" value="@item.ORID" />
+                        <input class="btn btn-link" type="submit" value="我的訂單" />
+                    </form>
                 </td>
             </tr>
     }

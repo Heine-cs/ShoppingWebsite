@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,5 +21,6 @@ public partial class Customers
 
     public virtual ICollection<PaymentCards> PaymentCards { get; set; } = new List<PaymentCards>();
 
+    [JsonIgnore]
     public virtual Users? UR { get; set; }
 }

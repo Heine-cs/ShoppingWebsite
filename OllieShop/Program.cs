@@ -2,6 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using OllieShop.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential= true;
+});
 
 builder.Services.AddDbContext<OllieShopContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("OllieShopConnection"))
@@ -17,6 +24,9 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
+app.UseSession();
+
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -3,40 +3,43 @@
 @{
     ViewData["Title"] = "個人資料";
 }
-
-<h1>@ViewData["Title"]</h1>
-
-<div>
-    <hr />
-    <div class="text-primary">@TempData["editSuccessMessage"]</div>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.Gender ? "男性" : "女性")
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDay)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthDay)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.URID">修改內容</a> |
-    <a asp-action="Index">返回用戶後台</a>
+<div class="d-flex flex-column container-fluid">
+    <h1>@ViewData["Title"]</h1>
+    <div>
+        <hr />
+        <div class="text-primary">@TempData["editSuccessMessage"]</div>
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Gender)
+            </dt>
+            <dd class="col-sm-10">
+                @(Model.Gender ? "男性" : "女性")
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.BirthDay)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.BirthDay)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <form asp-action="WriteEditFormPage" asp-controller="UsersFrontEndPage">
+            <input type="hidden" name="urid" id="urid" value="@Model.URID" />
+            <input class="my-3 btn btn-outline-dark" type="submit" value="修改內容" />
+        </form>
+        <a asp-action="Index" asp-controller="Home">返回商城首頁</a>
+    </div>
 </div>

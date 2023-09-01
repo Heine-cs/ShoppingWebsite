@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var UserInfomation = Context.Session.GetString("UserInfomation");
+    var CustomerInfomation = Context.Session.GetString("CustomerInfomation");
+    Customers customerFullInfo = new Customers();
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -115,13 +120,50 @@
                         </form>
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link text-nowrap" asp-controller="CustomerOrdersManagement" asp-action="Index">我的訂單</a>
+                                @if (UserInfomation == null)
+                                {
+                                    <div class="nav-link text-nowrap" onclick="RedirectToLogin()">我的訂單</div>
+                                }
+                                else
+                                {
+                                    customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(CustomerInfomation);
+                                    <form asp-action="Index" asp-controller="CustomerOrdersManagement">
+                                        <input type="hidden" name="CRID" id="CRID" value="@customerFullInfo.CRID" />
+                                        <input class="nav-link text-nowrap" type="submit" value="我的訂單" />
+                                    </form>
+                                }
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-nowrap" asp-controller="home" asp-action="Assistant">協助中心</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-nowrap" asp-controller="Accounts" asp-action="UserLogin">登入/註冊</a>
+                                @if (UserInfomation == null)
+                                {
+                                    <a class="nav-link text-nowrap" asp-controller="Accounts" asp-action="UserLogin">登入/註冊</a>
+                                }
+                                else{
+                                    var userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
+                                    <div class="btn-group navbar-nav">
+                                        <a class="dropdown-toggle nav-item nav-link" data-bs-toggle="dropdown" aria-expanded="false" asp-controller="" asp-action="">
+                                            歡迎 <span class="fw-medium">@(userFullInfo.Name)</span>貴賓!!
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end bg-white border-info">
+                                            <li>
+                                                <form asp-action="Details" asp-controller="UsersFrontEndPage">
+                                                    <input type="hidden" name="URID" id="URID" value="@userFullInfo.URID" />
+                                                    <input class="dropdown-item" type="submit" value="查看個人資料" />
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form asp-action="WriteEditFormPage" asp-controller="UsersFrontEndPage">
+                                                    <input type="hidden" name="urid" id="urid" value="@userFullInfo.URID" />
+                                                    <input class="dropdown-item" type="submit" value="修改個人資料" />
+                                                </form>
+                                            </li>
+                                            <li><a class="dropdown-item" asp-controller="Accounts" asp-action="Logout">登出</a></li>
+                                        </ul>
+                                    </div>
+                                }
                             </li>
                         </ul>
                     </div>
@@ -176,7 +218,15 @@
                         <input type="hidden" id="CartTableWithChildNode" name="CartTableWithChildNode" value=""/>
                         <input type="hidden" id="ProductFeeCount" name="ProductFeeCount" value="" />
                         <input type="hidden" id="DeliveryFeeCount" name="DeliveryFeeCount" value="" />
-                        <input type="submit" class="btn btn-primary btn-lg" value="結帳去"/>
+                        @if(CustomerInfomation == null)
+                        {
+                            <div class="btn btn-primary btn-lg" onclick="RedirectToLogin()">結帳去</div>
+                        }
+                        else{
+                            <input type="hidden" id="CRID" name="CRID" value="@customerFullInfo.CRID" />
+                            <input type="hidden" id="URID" name="URID" value="@customerFullInfo.URID" />
+                            <input type="submit" class="btn btn-primary btn-lg" value="結帳去"/>
+                        }
                     }
                     <!--BillForm End-->
                     <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">關閉</button>
@@ -195,11 +245,11 @@
             if (cartData == null) {
                 $('.modal-body').html("<h3 class='text-center text-primary'>目前購物車尚未加入任何商品!!</h3>");
                 //尚未有任何商品時不能將結帳去按鈕開放使用
-                $('.modal-footer form>input:first-child+input+input+input').prop("disabled", true);
+                $('.modal-footer form>input:nth-last-child(2)').prop("disabled", true);
                 return "";
             }
             //有商品時將結帳去按鈕開放使用
-            $('.modal-footer form>input:first-child+input+input+input').prop( "disabled", false );
+            $('.modal-footer form>input:nth-last-child(2)').prop("disabled", false);
             $.ajax({
                 url: '@Url.Action("getCartInfo","Home")',
                 type:"POST",
@@ -285,6 +335,11 @@
             $('.modal-body').empty();
             $('.modal-footer>.me-auto').empty();
             getCartItems();
+        }
+
+        function RedirectToLogin() {
+            alert("請先完成會員登入喔!!");
+            window.location = ("/Accounts/UserLogin");
         }
     </script>
 </body>

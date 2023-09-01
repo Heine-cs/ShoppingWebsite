@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 using OllieShop.Models;
 using OllieShop.ViewModels;
 
@@ -20,16 +21,17 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
-
-        public async Task<IActionResult> Details(long? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(long URID)
         {
-            if (id == null || _context.Users == null)
+            if (URID == null || _context.Users == null)
             {
                 return NotFound();
             }
 
             var users = await _context.Users
-                .FirstOrDefaultAsync(m => m.URID == id);
+                .FirstOrDefaultAsync(m => m.URID == URID);
             if (users == null)
             {
                 return NotFound();
@@ -86,31 +88,27 @@ namespace OllieShop.Controllers
             return View(registerViewmodel);
         }
 
-        // GET: UsersFrontEndPage/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> WriteEditFormPage(long urid)
         {
-            if (id == null || _context.Users == null)
+            if (urid == null || _context.Users == null)
             {
                 return NotFound();
             }
 
-            var users = await _context.Users.FindAsync(id);
+            var users = await _context.Users.FindAsync(urid);
             if (users == null)
             {
                 return NotFound();
             }
-            return View(users);
+            return View(nameof(Edit),users);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("URID,Name,Gender,Email,BirthDay")] Users users)
+        public async Task<IActionResult> Edit([Bind("URID,Name,Gender,Email,BirthDay")] Users users)
         {
-            if (id != users.URID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -130,8 +128,7 @@ namespace OllieShop.Controllers
                     }
                 }
                 TempData["editSuccessMessage"] = "本次修改成功! 您可再次確認是否符合預期";
-                return RedirectToAction("Details", new {id = users.URID});
-
+                return View(nameof(Details),users);
             }
             return View(users);
         }

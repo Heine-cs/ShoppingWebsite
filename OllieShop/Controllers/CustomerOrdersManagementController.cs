@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,7 +19,9 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
-        // GET: CustomerOrdersManagement
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(long CRID)
         {
             if(CRID == 0)
@@ -39,7 +42,8 @@ namespace OllieShop.Controllers
             return View(await ollieShopContext.ToListAsync());
         }
 
-        // GET: CustomerOrdersManagement/Details/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Orders == null)

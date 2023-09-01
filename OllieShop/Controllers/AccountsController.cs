@@ -24,16 +24,40 @@ namespace OllieShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                //資料庫查無對應帳號密碼
                 var result = _context.Accounts.FirstOrDefault(a => a.Account == accounts.Account && a.Password == accounts.Password);
                 if (result == null)
                 {
                     ViewData["ErrorMessage"] = "帳號或密碼錯誤";
                     return View(accounts);
                 }
-				HttpContext.Session.SetString("User", JsonConvert.SerializeObject(result));
+                var userInfo = _context.Users.FirstOrDefault(u => u.URID == result.URID);
+                if (userInfo != null)
+                {
+                    HttpContext.Session.SetString("UserInfomation", JsonConvert.SerializeObject(userInfo));
+                }
+                //判斷登入用戶具有消費者與業者何種身分，並將其具有所有的身分資料儲存至Session
+                var customerInfo= _context.Customers.FirstOrDefault(c => c.URID == result.URID);
+                if(customerInfo != null)
+                {
+                    HttpContext.Session.SetString("CustomerInfomation", JsonConvert.SerializeObject(customerInfo));
+                }
+                
+                var sellerInfo= _context.Sellers.FirstOrDefault(s=>s.URID == result.URID);
+                if(sellerInfo != null)
+                {
+                    HttpContext.Session.SetString("SellerInfomation", JsonConvert.SerializeObject(sellerInfo));
+                }
 				return RedirectToAction("Index", "Home");
 			}
 			return View(accounts);
 		}
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("UserInfomation");
+            HttpContext.Session.Remove("CustomerInfomation");
+            HttpContext.Session.Remove("SellerInfomation");
+            return RedirectToAction("Index","Home");
+        }
     }
 }

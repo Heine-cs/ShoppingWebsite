@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -32,5 +33,7 @@ public partial class Accounts
     public long? URID { get; set; }
 
     [Display(Name = "用戶編號")]
+    //avoid Self referencing loop detected for property
+    [JsonIgnore]
     public virtual Users UR { get; set; }
 }

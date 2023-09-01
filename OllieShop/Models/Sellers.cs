@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -44,6 +45,7 @@ public partial class Sellers
 
     public virtual ICollection<SellerShipVias> SellerShipVias { get; set; } = new List<SellerShipVias>();
 
+    [JsonIgnore]
     public virtual Users? UR { get; set; }
 
 }

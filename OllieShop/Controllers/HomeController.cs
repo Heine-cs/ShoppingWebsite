@@ -227,13 +227,12 @@ namespace OllieShop.Controllers
         [HttpPost]
         public async Task<IActionResult> PlaceOrder(string CartTableWithChildNode,long CRID,long URID,int ProductFeeCount,decimal DeliveryFeeCount)
         {
-            //沒有CRID與URID就:導引註冊->登入->結帳(還沒寫)
             ViewData["CartTableWithChildNode"] = CartTableWithChildNode;
             ViewData["OrderEstablishDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-            //先寫死
-            ViewData["CRID"] = 1;
+
+            ViewData["CRID"] = CRID;
             //URID與CRID寫死
-            ViewData["CustomerAddresses"] = new SelectList(_context.Addresses.Where(A => A.URID == 3), "ASID", "Street");
+            ViewData["CustomerAddresses"] = new SelectList(_context.Addresses.Where(A => A.URID == URID), "ASID", "Street");
             //取出消費者折價券
             var CustomerUseableCouponsQuery =
                 from cc in _context.CustomerCoupons
