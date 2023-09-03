@@ -28,7 +28,7 @@ namespace OllieShop.Controllers
                 var result = _context.Accounts.FirstOrDefault(a => a.Account == accounts.Account && a.Password == accounts.Password);
                 if (result == null)
                 {
-                    ViewData["ErrorMessage"] = "帳號或密碼錯誤";
+                    ViewData["ErrorMessage"] = "查無此帳號";
                     return View(accounts);
                 }
                 var userInfo = _context.Users.FirstOrDefault(u => u.URID == result.URID);
@@ -54,10 +54,20 @@ namespace OllieShop.Controllers
 		}
         public IActionResult Logout()
         {
+            CleanLoginSession();
+            return RedirectToAction("Index","Home");
+        }
+
+        private void CleanLoginSession()
+        {
             HttpContext.Session.Remove("UserInfomation");
             HttpContext.Session.Remove("CustomerInfomation");
             HttpContext.Session.Remove("SellerInfomation");
-            return RedirectToAction("Index","Home");
+        }
+        public IActionResult ReLogin()
+        {
+            CleanLoginSession();
+            return RedirectToAction(nameof(UserLogin));
         }
     }
 }

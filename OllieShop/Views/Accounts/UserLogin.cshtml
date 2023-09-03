@@ -1,6 +1,6 @@
 ﻿@model OllieShop.Models.Accounts
 @{
-    ViewData["Title"] = "使用者登入畫面";
+    ViewData["Title"] = "使用者登入";
     Layout = null;
 }
 <!DOCTYPE html>
@@ -187,6 +187,10 @@
 								<i class="button__icon bi bi-caret-right-fill"></i>
 							</button>
 						</div>
+						<a class="link-underline link-underline-opacity-0 login__submit" asp-action="Create" asp-controller="UsersFrontEndPage">
+							<span class="button__text">點擊註冊</span>
+							<i class="button__icon bi bi-caret-right-fill"></i>
+						</a>
 						<a class="link-underline link-underline-opacity-0 login__submit" asp-action="Index" asp-controller="Home">
 							<span class="button__text">不登入，返回首頁</span>
 							<i class="button__icon bi bi-caret-right-fill"></i>

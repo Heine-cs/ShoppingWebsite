@@ -231,18 +231,21 @@ namespace OllieShop.Controllers
             ViewData["OrderEstablishDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
 
             ViewData["CRID"] = CRID;
-            //URID與CRID寫死
             ViewData["CustomerAddresses"] = new SelectList(_context.Addresses.Where(A => A.URID == URID), "ASID", "Street");
             //取出消費者折價券
             var CustomerUseableCouponsQuery =
                 from cc in _context.CustomerCoupons
                 join c in _context.Coupons on cc.CNID equals c.CNID
-                where cc.CRID == 1 && cc.AppliedDate == null && c.ExpiryDate > DateTime.Now
+                where cc.CRID == CRID && cc.AppliedDate == null && c.ExpiryDate > DateTime.Now
                 select new
                 {
                     CNID = cc.CNID,
                     CODE = c.CODE
                 };
+            if(CustomerUseableCouponsQuery.Any() == false)
+            {
+                ViewData["CustomerUseableCouponsNotFound"] = "目前尚無可使用的折價券，您可再次關注賣場活動，多多領券!!";
+            }
             ViewData["CustomerUseableCoupons"] = new SelectList(await CustomerUseableCouponsQuery.ToListAsync(), "CNID", "CODE");
             
             var CustomerCouponCODE = CustomerUseableCouponsQuery.Select(item => item.CODE).ToList();

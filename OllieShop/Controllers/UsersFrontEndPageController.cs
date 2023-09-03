@@ -25,7 +25,7 @@ namespace OllieShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(long URID)
         {
-            if (URID == null || _context.Users == null)
+            if (URID == 0 || _context.Users == null)
             {
                 return NotFound();
             }
@@ -82,7 +82,6 @@ namespace OllieShop.Controllers
 
                 TempData["forUserIdentity"] = user.URID.ToString();//註冊後將用戶ID提取，要給用戶註冊身分頁面使用
                 return RedirectToAction("Create", "CustomersFrontEndPage");
-                //return Redirect登入action
             }
             ModelState.AddModelError(string.Empty, "檢查輸入資料是否正確?");
             return View(registerViewmodel);
@@ -92,7 +91,7 @@ namespace OllieShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> WriteEditFormPage(long urid)
         {
-            if (urid == null || _context.Users == null)
+            if (urid == 0 || _context.Users == null)
             {
                 return NotFound();
             }
@@ -127,7 +126,7 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                TempData["editSuccessMessage"] = "本次修改成功! 您可再次確認是否符合預期";
+                TempData["editSuccessMessage"] = "本次修改成功! 您可再次確認是否符合預期，名稱更改後須重新登入才能正確顯示";
                 return View(nameof(Details),users);
             }
             return View(users);

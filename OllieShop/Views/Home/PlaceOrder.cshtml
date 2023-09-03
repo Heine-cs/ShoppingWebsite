@@ -32,7 +32,7 @@
                 <input asp-for="OrderDate" class="form-control" value='@ViewData["OrderEstablishDate"]'/>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group d-none">
                 <label asp-for="CRID" class="control-label"></label>
                 <input asp-for="CRID" class ="form-control" value='@ViewData["CRID"]' />
             </div>
@@ -42,22 +42,29 @@
             </div>
             <hr>
             <h5>訂單折價券選用</h5>
-            <div id="CustomerCouponRadioButton">
-                <div class="d-flex">
-                    <span class="me-3">使用折價券 :</span>@Html.RadioButton("CustomerCoupon","true")
+            @if (ViewData["CustomerUseableCouponsNotFound"] == "")
+            {
+                <div id="CustomerCouponRadioButton">
+                    <div class="d-flex">
+                        <span class="me-3">使用折價券 :</span>@Html.RadioButton("CustomerCoupon","true")
+                    </div>
+                    <div class="d-flex">
+                        <span class="me-3">不使用折價券 :</span>@Html.RadioButton("CustomerCoupon","false")
+                    </div>
                 </div>
-                <div class="d-flex">
-                    <span class="me-3">不使用折價券 :</span>@Html.RadioButton("CustomerCoupon","false")
+                
+                <div class="form-group CouponInputBlock d-none">
+                    <label asp-for="CNID" class="control-label">折價券代碼</label>
+                    <select asp-for="CNID" class="form-control" asp-items="ViewBag.CustomerUseableCoupons">
+                        <option value="">請選擇折價券</option>
+                    </select>
+                    <h3 class="mt-2 d-none text-end">套用折價後商品總金額 :<span class="text-secondary"></span>(不包含運費)</h3>
                 </div>
-            </div>
-
-            <div class="form-group CouponInputBlock d-none">
-                <label asp-for="CNID" class="control-label">折價券代碼</label>
-                <select asp-for="CNID" class="form-control" asp-items="ViewBag.CustomerUseableCoupons">
-                    <option value="">請選擇折價券</option>
-                </select>
-                <h3 class="mt-2 d-none text-end">套用折價後商品總金額 :<span class="text-secondary"></span>(不包含運費)</h3>
-            </div>
+            }
+            else
+            {
+                <div class="text-warning fw-bold">@ViewData["CustomerUseableCouponsNotFound"]</div>
+            }
             @*要將購物車內商品二維陣列拋到GenerateOrdersBaseOnDifferentProducts Action*@
             <input type="hidden" name="cartData" id="cartData">
             <div class="form-group my-3  text-end">

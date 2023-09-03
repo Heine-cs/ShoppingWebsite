@@ -1,7 +1,9 @@
 ﻿@{
     var UserInfomation = Context.Session.GetString("UserInfomation");
+
     var CustomerInfomation = Context.Session.GetString("CustomerInfomation");
-    Customers customerFullInfo = new Customers();
+
+    var SellerInfomation = Context.Session.GetString("SellerInfomation");
 }
 <!DOCTYPE html>
 <html>
@@ -71,13 +73,39 @@
                         <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
                             <img src="~/img/logo.png" class="ShopLogo" />
                         </a>
-
+                        <!--所有功能選單-->
                         <ul class="nav nav-pills">
                             <li class="nav-item dropdown mx-auto">
                                 <div class="nav-link dropdown-toggle fs-5 text-primary bg-warning" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="bi bi-menu-button-wide"></i>所有功能</div>
                                 <div class="dropdown-menu bg-warning" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 42px);" data-popper-placement="bottom-start">
-                                    <a class="dropdown-item">Action</a>
-                                    <a class="dropdown-item">Another action</a>
+                                    @*判斷用戶是否具有消費者身分*@
+                                    @if(UserInfomation == null)
+                                    {
+                                        <div class="dropdown-item" onclick="RedirectToLogin()">消費者功能選單</div>
+                                    }
+                                    else if(CustomerInfomation == null)
+                                    {
+                                        var userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
+                                        <a class="dropdown-item" asp-action="CustomersAgreeTerms" asp-controller="CustomersFrontEndPage" asp-route-URID="@userFullInfo.URID" asp-route-purpose="BecomeCustomer" onclick="alert('目前暫無法使用此功能，因為您尚未領取賣場消費者身分，立即為您導向領取身分頁面');">消費者功能選單</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item" asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">消費者功能選單</a>
+                                    }
+                                    @*判斷用戶是否具有業者身分*@
+                                    @if (UserInfomation == null)
+                                    {
+                                        <div class="dropdown-item" onclick="RedirectToLogin()">業者功能選單</div>
+                                    }
+                                    else if (SellerInfomation == null)
+                                    {
+                                        var userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
+                                        <a class="dropdown-item" asp-action="SellersAgreeTerms" asp-controller="SellersFrontEndPage" asp-route-URID="@userFullInfo.URID" onclick="alert('目前暫無法使用此功能，因為您尚未領取賣場業者身分，立即為您導向領取身分頁面');">業者功能選單</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item" asp-action="OptionsMenu" asp-controller="SellersBackEndPage">業者功能選單</a>
+                                    }
                                     <a class="dropdown-item" asp-controller="DisplayAnnouncementsForUser" asp-action="Index">商城公告</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item">預留</a>
@@ -85,7 +113,7 @@
                             </li>
                         </ul>
                     </div>
-
+                    <!--所有功能選單End-->
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -124,9 +152,14 @@
                                 {
                                     <div class="nav-link text-nowrap" onclick="RedirectToLogin()">我的訂單</div>
                                 }
+                                else if (CustomerInfomation == null)
+                                {
+                                    var userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
+                                    <a class="nav-link text-nowrap" asp-action="CustomersAgreeTerms" asp-controller="CustomersFrontEndPage" asp-route-URID="@userFullInfo.URID" asp-route-purpose="BecomeCustomer" onclick="alert('目前暫無法使用此功能，因為您尚未領取賣場消費者身分，立即為您導向領取身分頁面');">我的訂單</a>
+                                }
                                 else
                                 {
-                                    customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(CustomerInfomation);
+                                    var customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(CustomerInfomation);
                                     <form asp-action="Index" asp-controller="CustomerOrdersManagement">
                                         <input type="hidden" name="CRID" id="CRID" value="@customerFullInfo.CRID" />
                                         <input class="nav-link text-nowrap" type="submit" value="我的訂單" />
@@ -134,14 +167,15 @@
                                 }
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-nowrap" asp-controller="home" asp-action="Assistant">協助中心</a>
+                                <a class="nav-link text-nowrap" asp-controller="Home" asp-action="Assistant">協助中心</a>
                             </li>
                             <li class="nav-item">
                                 @if (UserInfomation == null)
                                 {
                                     <a class="nav-link text-nowrap" asp-controller="Accounts" asp-action="UserLogin">登入/註冊</a>
                                 }
-                                else{
+                                else
+                                {
                                     var userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
                                     <div class="btn-group navbar-nav">
                                         <a class="dropdown-toggle nav-item nav-link" data-bs-toggle="dropdown" aria-expanded="false" asp-controller="" asp-action="">
@@ -218,13 +252,20 @@
                         <input type="hidden" id="CartTableWithChildNode" name="CartTableWithChildNode" value=""/>
                         <input type="hidden" id="ProductFeeCount" name="ProductFeeCount" value="" />
                         <input type="hidden" id="DeliveryFeeCount" name="DeliveryFeeCount" value="" />
-                        @if(CustomerInfomation == null)
+                        @if(UserInfomation == null)
                         {
                             <div class="btn btn-primary btn-lg" onclick="RedirectToLogin()">結帳去</div>
                         }
-                        else{
-                            <input type="hidden" id="CRID" name="CRID" value="@customerFullInfo.CRID" />
-                            <input type="hidden" id="URID" name="URID" value="@customerFullInfo.URID" />
+                        else if(CustomerInfomation == null)
+                        {
+                            var userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
+                            <a class="btn btn-primary btn-lg" asp-action="CustomersAgreeTerms" asp-controller="CustomersFrontEndPage" asp-route-URID="@userFullInfo.URID" asp-route-purpose="BecomeCustomer" onclick="alert('目前暫無法使用此功能，因為您尚未領取賣場消費者身分，立即為您導向領取身分頁面');">結帳去</a>
+                        }
+                        else
+                        {
+                            var customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(CustomerInfomation);
+                            <input type="hidden" id="CRIDForPlaceOrder" name="CRID" value="@customerFullInfo.CRID" />
+                            <input type="hidden" id="URIDForPlaceOrder" name="URID" value="@customerFullInfo.URID" />
                             <input type="submit" class="btn btn-primary btn-lg" value="結帳去"/>
                         }
                     }

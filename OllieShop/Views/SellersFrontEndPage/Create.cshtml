@@ -3,65 +3,64 @@
 @{
     ViewData["Title"] = "領取業者身分頁";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    long URID = Convert.ToInt64(TempData["forUserIdentity"]);//源頭取自User註冊action傳遞的參數並將其強制轉型
 }
+<div class="d-flex flex-column container-fluid">
+    <h1>@ViewData["Title"]</h1>
 
-<h1>@ViewData["Title"]</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ShopNAME" class="control-label"></label>
-                <input asp-for="ShopNAME" class="form-control" />
-                <span asp-validation-for="ShopNAME" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label>是否為具有統一編號之業者？</label>
-                <div class="form-check">
-                    <input type="radio" name="HasTaxID" value="true" id="taxIdOption1" />
-                    <label class="form-check-label" for="taxIdOption">有統一編號之業者</label>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ShopNAME" class="control-label"></label>
+                    <input asp-for="ShopNAME" class="form-control" />
+                    <span asp-validation-for="ShopNAME" class="text-danger"></span>
                 </div>
-                <div class="form-check">
-                    <input type="radio" name="HasTaxID" value="false" id="taxIdOption2" />
-                    <label class="form-check-label">無統一編號之業者</label>
+                <div class="form-group">
+                    <label>是否為具有統一編號之業者？</label>
+                    <div class="form-check">
+                        <input type="radio" name="HasTaxID" value="true" id="taxIdOption1" />
+                        <label class="form-check-label" for="taxIdOption">有統一編號之業者</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="HasTaxID" value="false" id="taxIdOption2" />
+                        <label class="form-check-label">無統一編號之業者</label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="TaxID" class="control-label"></label>
-                <input asp-for="TaxID" class="form-control" id="taxIdInput" readonly />
-                <span asp-validation-for="TaxID" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="TaxID" class="control-label"></label>
+                    <input asp-for="TaxID" class="form-control" id="taxIdInput" readonly />
+                    <span asp-validation-for="TaxID" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="BankCode" class="control-label"></label>
-                <input asp-for="BankCode" class="form-control" />
-                <span asp-validation-for="BankCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BankAccount" class="control-label"></label>
-                <input asp-for="BankAccount" class="form-control" />
-                <span asp-validation-for="BankAccount" class="text-danger"></span>
-            </div>
-            <div class="form-group ">
-                <label asp-for="URID" class="control-label"></label>
-                <input asp-for="URID" class="form-control" value="@URID" />
-                <span asp-validation-for="URID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="輸入完資料後請點我領取業者身分" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <label asp-for="BankCode" class="control-label"></label>
+                    <input asp-for="BankCode" class="form-control" />
+                    <span asp-validation-for="BankCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BankAccount" class="control-label"></label>
+                    <input asp-for="BankAccount" class="form-control" />
+                    <span asp-validation-for="BankAccount" class="text-danger"></span>
+                </div>
+                <div class="form-group d-none">
+                    <label asp-for="URID" class="control-label"></label>
+                    <input asp-for="URID" class="form-control" value="@ViewBag.URID" />
+                    <span asp-validation-for="URID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="輸入完資料後請點我領取業者身分" class="btn btn-primary" onclick="alert('領取業者身分完成，登入帳號後即可使用業者功能')"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-5">暫時不領取業者身分，請點我回賣場首頁</a>
     </div>
 </div>
-
-<div>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-5">暫時不領取業者身分，請點我回賣場首頁</a>
-</div>
-
 <script>
 
         //統一編號的Radio選項

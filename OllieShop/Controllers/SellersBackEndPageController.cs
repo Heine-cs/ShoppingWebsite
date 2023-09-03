@@ -95,5 +95,10 @@ namespace OllieShop.Controllers
         {
           return (_context.Sellers?.Any(e => e.SRID == id)).GetValueOrDefault();
         }
+
+        public IActionResult OptionsMenu()
+        {
+            return View();
+        }
     }
 }
