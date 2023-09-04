@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var SellerInfomation = Context.Session.GetString("SellerInfomation");
+    if (SellerInfomation == null)
+    {
+        Context.Response.Redirect("/Home/Index");
+    }
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />

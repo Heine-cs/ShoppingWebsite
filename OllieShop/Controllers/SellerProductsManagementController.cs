@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,18 +14,22 @@ namespace OllieShop.Controllers
     public class SellerProductsManagementController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public SellerProductsManagementController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public SellerProductsManagementController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         public async Task<IActionResult> Index(long SRID)
         {
-            if(SRID == 0)
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
+
             var productsTable =  await _context.Products.Include(c => c.CY).Include(s => s.SR).Where(p => p.SRID == SRID).ToListAsync();
             var specificationsTable = await _context.Specifications.ToListAsync();
 
@@ -77,6 +82,13 @@ namespace OllieShop.Controllers
                 return NotFound();
             }
 
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(products.SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
             return View(products);
         }
 
@@ -84,7 +96,6 @@ namespace OllieShop.Controllers
         {
             ViewData["LaunchDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name");
-            ViewData["SRID"] = "2"; //寫死
             return View();
         }
 
@@ -128,7 +139,7 @@ namespace OllieShop.Controllers
 
                 await _context.Specifications.AddAsync(specifications);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new {products.SRID});
             }
             ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name", sellerProduct.CYID);
             return View(sellerProduct);
@@ -143,6 +154,12 @@ namespace OllieShop.Controllers
 
             var products = await _context.Products.FindAsync(id);
             if (products == null)
+            {
+                return NotFound();
+            }
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(products.SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -178,7 +195,7 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { products.SRID });
             }
             ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name", products.CYID);
             return View(products);
@@ -196,6 +213,13 @@ namespace OllieShop.Controllers
                 .Include(p => p.SR)
                 .FirstOrDefaultAsync(m => m.PTID == id);
             if (products == null)
+            {
+                return NotFound();
+            }
+
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(products.SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }

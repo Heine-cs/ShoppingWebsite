@@ -12,16 +12,24 @@ namespace OllieShop.Controllers
     public class SellerSpecificationsManagementController : Controller
     {
         private readonly OllieShopContext _context;
+        private readonly IdentityCheck _identityCheck;
 
-        public SellerSpecificationsManagementController(OllieShopContext context)
+        public SellerSpecificationsManagementController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
-        public IActionResult Create(long SRID,long PTID,string productName)
+        public async Task<IActionResult> Create(long SRID,long PTID,string productName)
         {
-            ViewData["SRID"] = SRID;//上傳圖片到業者個人圖庫會用到此參數
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
 
+            ViewData["SRID"] = SRID;//上傳圖片到業者個人圖庫會用到此參數
             ViewData["PTID"] = PTID;//存規格資料表會需要此作為外鍵
             ViewData["productName"] = productName;//在新增規格頁顯示產品名稱，data來源自SellerProducts Create頁
             return View();
@@ -56,13 +64,21 @@ namespace OllieShop.Controllers
             }
             //撈出SRID用意是要傳給Edit頁面上傳圖片時要存入對應業者的資料夾，會需要用到這個SRID組合路徑，
             //其程式碼為 url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
-            var productInfo = await _context.Products.Where(p => p.PTID == specifications.PTID).ToListAsync();
+            var productInfo = await _context.Products.FirstOrDefaultAsync(p => p.PTID == specifications.PTID);
             if (productInfo == null)
             {
                 return NotFound();
             }
-            
-            ViewData["SRID"] = productInfo[0].SRID;
+
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(productInfo.SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+
+            ViewData["SRID"] = productInfo.SRID;
 
             ViewData["PTID"] = specifications.PTID;
             return View(specifications);
@@ -117,7 +133,12 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(specifications.PT.SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
             return View(specifications);
         }
 

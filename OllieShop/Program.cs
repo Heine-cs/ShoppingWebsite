@@ -14,6 +14,10 @@ builder.Services.AddDbContext<OllieShopContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("OllieShopConnection"))
 );
 
+//註冊IHttpContextAccessor，與identityCheck Class配合使用
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IdentityCheck>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

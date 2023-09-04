@@ -39,7 +39,7 @@ namespace OllieShop.Controllers
             VMProductWithSpecification productPlusSpec;
             foreach (var singalDataLine in productsTable) {
                 //如果singalDataLine.ShelfQuantity == singalDataLine.SoldQuantity，跳過此筆
-                if(singalDataLine.ShelfQuantity == singalDataLine.SoldQuantity)
+                if(singalDataLine.ShelfQuantity == singalDataLine.SoldQuantity || singalDataLine.Hidden == true)
                 {
                     continue;
                 }

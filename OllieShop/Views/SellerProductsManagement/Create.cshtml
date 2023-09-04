@@ -3,8 +3,11 @@
 @{
     ViewData["Title"] = "新增商品頁";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
-}
 
+    //提供給表單與返回商品管理頁a標籤的參數使用
+    var SellerInfomation = Context.Session.GetString("SellerInfomation");
+    Sellers sellerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Sellers>(SellerInfomation);
+}
 <h1>@ViewData["Title"]</h1>
 
 <hr />
@@ -19,6 +22,7 @@
             <img id="afterUploadShow" class="w-100 my-2"/>
         </div>
         <form class="col-8 row" asp-action="Create" id="productSpecForm">
+            <input type="hidden" asp-for="SRID" value="@sellerFullInfo.SRID" />
             <div class="col">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
@@ -81,10 +85,6 @@
                     <select asp-for="CYID" class="form-control" asp-items="ViewBag.CategorysSelectList"></select>
                     <span asp-validation-for="CYID" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="SRID" class="control-label"></label>
-                    <input asp-for="SRID" class ="form-control" />
-                </div>
             </div>
             @*要送到規格資料表的欄位*@
             <div class="col">
@@ -131,10 +131,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="form-group">
-                    <label asp-for="Picture" class="control-label"></label>
-                    <input asp-for="Picture" class="form-control" id="pictureAddressInput"/>
-                </div>
+                <input asp-for="Picture" type="hidden" id="pictureAddressInput" />
                 <div class="form-group">
                     <label>是否加入商品描述?</label>
                     <div class="form-check">
@@ -160,7 +157,7 @@
 
 
 <div>
-    <a asp-action="Index">不新增，返回商品總覽</a>
+    <a asp-action="Index" asp-route-SRID="@sellerFullInfo.SRID">不新增，返回商品總覽</a>
 </div>
 
 
@@ -235,7 +232,7 @@
                 var formData = new FormData(this);
                 // 使用AJAX向Controller的Action發送POST請求
                 $.ajax({
-                    url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@ViewBag.SRID})",
+                    url: "@Url.Action("photoUpload", "FileUpload",new {SRID=@sellerFullInfo.SRID})",
                     type: "POST",
                     data: formData, // 把Form中的數據序列化作為請求參數
                     processData: false, // 不要處理data
