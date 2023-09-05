@@ -12,23 +12,31 @@ namespace OllieShop.Controllers
     public class SellersBackEndPageController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public SellersBackEndPageController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public SellersBackEndPageController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: SellersBackEndPage/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(long? SRID)
         {
-            if (id == null || _context.Sellers == null)
+            if (SRID == null || _context.Sellers == null)
+            {
+                return NotFound();
+            }
+
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
 
             var sellers = await _context.Sellers
                 .Include(s => s.UR)
-                .FirstOrDefaultAsync(m => m.SRID == id);
+                .FirstOrDefaultAsync(m => m.SRID == SRID);
             if (sellers == null)
             {
                 return NotFound();

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<OllieShop.Models.PaymentCards>
+
+@{
+    ViewData["Title"] = "消費者信用卡總覽";
+    Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" asp-route-CRID="@ViewBag.CRID">新增結帳用信用卡</a>
+</p>
+@if(TempData["createSuccessMessage"] != "")
+{
+    <h2 class="text-success">@TempData["createSuccessMessage"]</h2>
+}
+@if(TempData["editSuccessMessage"] != "")
+{
+    <h2 class="text-success">@TempData["editSuccessMessage"]</h2>
+}
+@if(Model.Count() == 0)
+{
+    <h2 class="text-primary">@ViewData["CustomerPaymentCardNotFound"]</h2>
+    return;
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BillAddress)
+            </th>            
+            <th>
+                @Html.DisplayNameFor(model => model.SecurityCode)
+            </th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpiryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillAddress)
+            </td>            
+            <td>
+                @Html.DisplayFor(modelItem => item.SecurityCode)
+            </td>
+            <td>
+                @Html.ActionLink("編輯卡片內容", "Edit", new {id = item.PCID})
+                @*|@Html.ActionLink("刪除卡片", "Delete", new {id = item.PCID})*@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

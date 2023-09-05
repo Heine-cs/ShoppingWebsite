@@ -12,6 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CRID" value="@ViewBag.CRID" />
             <input type="hidden" asp-for="PCID" />
             <div class="form-group">
                 <label asp-for="ExpiryDate" class="control-label"></label>
@@ -33,12 +34,7 @@
                 <input asp-for="BillAddress" class="form-control" />
                 <span asp-validation-for="BillAddress" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CRID" class="control-label"></label>
-                <select asp-for="CRID" class="form-control" asp-items="ViewBag.CRID"></select>
-                <span asp-validation-for="CRID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group my-3">
                 <input type="submit" value="編輯" class="btn btn-primary" />
             </div>
         </form>
@@ -46,7 +42,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">回到信用卡總覽</a>
+    <a asp-action="Index" asp-route-CRID="@ViewBag.CRID">回到信用卡總覽</a>
 </div>
 
 @section Scripts {

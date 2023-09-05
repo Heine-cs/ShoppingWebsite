@@ -12,10 +12,30 @@ namespace OllieShop.Controllers
     public class PaymentCardsFrontEndPageController : Controller
     {
         private readonly OllieShopContext _context;
+        private readonly IdentityCheck _identityCheck;
 
-        public PaymentCardsFrontEndPageController(OllieShopContext context)
+        public PaymentCardsFrontEndPageController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
+        }
+
+        public async Task<IActionResult> Index(long CRID)
+        {
+            //驗證使用此action對象之買家身分是否與session資料相符
+            IActionResult result = await _identityCheck.CustomerIdentityCheckAsync(CRID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+            var ollieShopContext = _context.PaymentCards.Where(s => s.CRID == CRID);
+            if (ollieShopContext.Count() == 0)
+            {
+                ViewData["CustomerPaymentCardNotFound"] = "您尚未新增信用卡供商品結帳";
+            }
+            ViewData["CRID"] = CRID;
+            return View(await ollieShopContext.ToListAsync());
         }
 
         // GET: PaymentCardsFrontEndPage/Details/5
@@ -38,9 +58,16 @@ namespace OllieShop.Controllers
         }
 
         // GET: PaymentCardsFrontEndPage/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(long CRID)
         {
-            ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID");
+            //驗證使用此action對象之買家身分是否與session資料相符
+            IActionResult result = await _identityCheck.CustomerIdentityCheckAsync(CRID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+            ViewData["CRID"] = CRID;
             return View();
         }
 
@@ -55,9 +82,10 @@ namespace OllieShop.Controllers
             {
                 _context.Add(paymentCards);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Details), new { id = paymentCards.PCID});
+                TempData["createSuccessMessage"] = "新增信用卡成功!! 您可再次確認是否符合預期";
+                return RedirectToAction(nameof(Index), new {paymentCards.CRID});
             }
-            ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID", paymentCards.CRID);
+            ViewData["CRID"] = paymentCards.CRID;
             return View(paymentCards);
         }
 
@@ -74,7 +102,15 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID", paymentCards.CRID);
+
+            //驗證使用此action對象之買家身分是否與session資料相符
+            IActionResult result = await _identityCheck.CustomerIdentityCheckAsync(paymentCards.CRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+            ViewData["CRID"] = paymentCards.CRID;
             return View(paymentCards);
         }
 
@@ -108,7 +144,8 @@ namespace OllieShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Details), new { id = paymentCards.PCID });
+                TempData["editSuccessMessage"] = "信用卡資料編輯成功!! 您可再次確認是否符合預期";
+                return RedirectToAction(nameof(Index), new { paymentCards.CRID });
             }
             ViewData["CRID"] = new SelectList(_context.Customers, "CRID", "CRID", paymentCards.CRID);
             return View(paymentCards);
@@ -126,6 +163,13 @@ namespace OllieShop.Controllers
                 .Include(p => p.CR)
                 .FirstOrDefaultAsync(m => m.PCID == id);
             if (paymentCards == null)
+            {
+                return NotFound();
+            }
+
+            //驗證使用此action對象之買家身分是否與session資料相符
+            IActionResult result = await _identityCheck.CustomerIdentityCheckAsync(paymentCards.CRID.GetValueOrDefault());
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
