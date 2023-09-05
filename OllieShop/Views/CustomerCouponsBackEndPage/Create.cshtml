@@ -18,17 +18,12 @@
             <div class="form-group">
                 <label for="CODE" class="control-label">請輸入折價券代碼</label>
                 <input name="CODE" id="CODE" class="form-control" value="@ViewBag.CODE" />
-                <span class="text-secondary" id="ErrorMessageColumn">@ViewData["ErrorMessage"]</span>
+                <span class="text-secondary fontBorder fs-3" id="ErrorMessageColumn">@ViewData["RepeatCoupon"]@ViewData["ExpiredCoupon"]@ViewData["InvalidCoupon"]</span>
             </div>
             <div class="form-group d-none">
                 <label asp-for="DateAdded" class="control-label"></label>
                 <input asp-for="DateAdded" class="form-control" value='@ViewData["DateAdded"]' />
                 <span asp-validation-for="DateAdded" class="text-danger"></span>
-            </div>
-            <div class="form-group d-none">
-                <label asp-for="AppliedDate" class="control-label"></label>
-                <input asp-for="AppliedDate" class="form-control" />
-                <span asp-validation-for="AppliedDate" class="text-danger"></span>
             </div>
             <div class="form-group d-none">
                 <label asp-for="AppliedDate" class="control-label"></label>

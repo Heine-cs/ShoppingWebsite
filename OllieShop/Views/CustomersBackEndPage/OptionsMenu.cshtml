@@ -1,7 +1,9 @@
 ﻿@{
     ViewData["Title"] = "消費者功能選單";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+    var customerInfomation = Context.Session.GetString("CustomerInfomation");
+    var customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(customerInfomation);
 }
 
 <h1>@ViewData["Title"]</h1>
-
+<a asp-action="Index" asp-controller="CustomerCouponsBackEndPage" asp-route-CRID="@customerFullInfo.CRID">我的折價券管理</a>

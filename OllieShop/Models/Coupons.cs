@@ -14,7 +14,7 @@ public partial class Coupons
     [StringLength(50,ErrorMessage ="代碼不能超過50個字")]
     public string CODE { get; set; } = null!;
 
-    [Display(Name = "截止日")]
+    [Display(Name = "折價券截止日")]
     [Required(ErrorMessage = "必填欄位")]
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日 hh時:mm分:ss秒}")]

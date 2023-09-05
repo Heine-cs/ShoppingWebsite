@@ -42,7 +42,7 @@
             </div>
             <hr>
             <h5>訂單折價券選用</h5>
-            @if (ViewData["CustomerUseableCouponsNotFound"] == "")
+            @if (ViewData["CustomerUseableCouponsNotFound"].ToString() == "")
             {
                 <div id="CustomerCouponRadioButton">
                     <div class="d-flex">
@@ -63,7 +63,7 @@
             }
             else
             {
-                <div class="text-warning fw-bold">@ViewData["CustomerUseableCouponsNotFound"]</div>
+                <div class="fontBorder text-warning fs-4">@ViewData["CustomerUseableCouponsNotFound"]</div>
             }
             @*要將購物車內商品二維陣列拋到GenerateOrdersBaseOnDifferentProducts Action*@
             <input type="hidden" name="cartData" id="cartData">
