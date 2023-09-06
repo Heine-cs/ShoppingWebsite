@@ -12,19 +12,24 @@ namespace OllieShop.Controllers
     public class SellerOrdersManagementController : Controller
     {
         private readonly OllieShopContext _context;
+        private readonly IdentityCheck _identityCheck;
 
-        public SellerOrdersManagementController(OllieShopContext context)
+        public SellerOrdersManagementController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: SellerOrdersManagement
         public async Task<IActionResult> Index(long SRID)
         {
-            if(SRID == 0)
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
+
             var ollieShopContext = await _context.Orders
                 .Include(o => o.AS)
                 .Include(o => o.CN)
@@ -71,6 +76,13 @@ namespace OllieShop.Controllers
                 return NotFound();
             }
 
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(orders.SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
             Products product = new Products();
             List<Products> purchaseProductsInfo = new List<Products>();
             Specifications Specification = new Specifications();
@@ -92,7 +104,7 @@ namespace OllieShop.Controllers
             ViewData["customerName"] = customerName;
             return View(orders);
         }
-
+        //取消訂單功能
         // GET: SellerOrdersManagement/Edit/5
         //public async Task<IActionResult> Edit(long? id)
         //{

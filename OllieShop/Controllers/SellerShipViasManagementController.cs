@@ -12,16 +12,19 @@ namespace OllieShop.Controllers
     public class SellerShipViasManagementController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public SellerShipViasManagementController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public SellerShipViasManagementController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: SellerShipViasManagement
         public async Task<IActionResult> Index(long SRID)
         {
-            if (SRID == 0)
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -29,7 +32,7 @@ namespace OllieShop.Controllers
             var ollieShopContext = _context.SellerShipVias.Include(s => s.Sellers).Include(s => s.ShipVias).Where(s=>s.SRID == SRID);
             if (ollieShopContext.Count() == 0)
             {
-                return RedirectToAction("Create",new { SRID });
+                ViewData["SellerShipViasNotBind"] = "尚未綁定任何運送方式";
             }
 
             ViewData["SRID"] = SRID;
@@ -37,9 +40,11 @@ namespace OllieShop.Controllers
         }
 
         // GET: SellerShipViasManagement/Create
-        public IActionResult Create(long SRID)
+        public async Task<IActionResult> Create(long SRID)
         {
-            if (SRID == 0)
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -75,6 +80,13 @@ namespace OllieShop.Controllers
         // GET: SellerShipViasManagement/Edit/5
         public async Task<IActionResult> Edit(long? SRID,string SVID,string ShipViasName)
         {
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
             if (SRID == null || SVID == null|| _context.SellerShipVias == null)
             {
                 return NotFound();

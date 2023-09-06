@@ -9,7 +9,7 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="SRID" />
@@ -53,7 +53,7 @@
                 <input asp-for="URID" class="form-control" value="@Model.URID"></input>
                 <span asp-validation-for="URID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group my-3">
                 <input type="submit" value="儲存修改" class="btn btn-primary" />
             </div>
         </form>
@@ -61,7 +61,7 @@
 </div>
 
 <div>
-    <a asp-action="Details">不修改，返回商鋪後台</a>
+    <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">不修改，返回業者後台</a>
 </div>
 
 <script>

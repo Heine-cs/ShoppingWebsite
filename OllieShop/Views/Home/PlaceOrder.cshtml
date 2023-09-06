@@ -42,7 +42,7 @@
             </div>
             <hr>
             <h5>訂單折價券選用</h5>
-            @if (ViewData["CustomerUseableCouponsNotFound"].ToString() == "")
+            @if (ViewData["CustomerUseableCouponsNotFound"] == null)
             {
                 <div id="CustomerCouponRadioButton">
                     <div class="d-flex">

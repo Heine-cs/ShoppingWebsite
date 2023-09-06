@@ -68,6 +68,8 @@ namespace OllieShop.Controllers
                 allProductPlusSpec.Add(productPlusSpec);
                 //將商品與規格資料combine為單一物件並寫入物件集合中 end
             }
+
+            ViewData["AllCategorys"]= _context.Categorys.Select(c=> new{ c.CYID,c.Name}).ToList();
             return View(allProductPlusSpec);
         }
 
@@ -242,7 +244,7 @@ namespace OllieShop.Controllers
                     CNID = cc.CNID,
                     CODE = c.CODE
                 };
-            if(CustomerUseableCouponsQuery.Any() == false)
+            if (CustomerUseableCouponsQuery.Any() == false)
             {
                 ViewData["CustomerUseableCouponsNotFound"] = "目前尚無可使用的折價券，您可再次關注賣場活動，多多領券!!";
             }

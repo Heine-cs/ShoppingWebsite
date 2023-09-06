@@ -10,4 +10,10 @@
 <h1>@ViewData["Title"]</h1>
 <a asp-action="Index" asp-controller="SellerProductsManagement" asp-route-SRID="@sellerFullInfo.SRID">商品管理</a>
 <hr>
-<a asp-action="Details" asp-controller="SellersBackEndPage" asp-route-SRID="@sellerFullInfo.SRID">我的商鋪管理</a>
+<a asp-action="Index" asp-controller="SellerOrdersManagement" asp-route-SRID="@sellerFullInfo.SRID">訂單管理</a>
+<hr>
+<a asp-action="Details" asp-controller="SellersBackEndPage" asp-route-SRID="@sellerFullInfo.SRID">我的店鋪資料</a>
+<hr>
+<a asp-action="Index" asp-controller="SellerPaymentMethodsManagement" asp-route-SRID="@sellerFullInfo.SRID">付款方式管理</a>
+<hr>
+<a asp-action="Index" asp-controller="SellerShipViasManagement" asp-route-SRID="@sellerFullInfo.SRID">運送方式管理</a>

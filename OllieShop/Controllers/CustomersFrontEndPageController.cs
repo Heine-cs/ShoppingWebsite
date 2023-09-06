@@ -28,12 +28,10 @@ namespace OllieShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CRID,URID")] Customers customers,bool roadSwitch)
+        public IActionResult Create([Bind("CRID,URID")] Customers customers,bool roadSwitch)
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(customers);
-                //await _context.SaveChangesAsync();
                 if (roadSwitch == true) { //roadSwitch是源自用戶初次註冊的action而來，初次註冊時能選擇身分，身分選擇分歧時就要走到不同的action
                                           //如果選擇只需要註冊用戶身分，就會走到這條路
                     return RedirectToAction(nameof(CustomersAgreeTerms), new { URID = customers.URID, purpose = "BecomeCustomer" });

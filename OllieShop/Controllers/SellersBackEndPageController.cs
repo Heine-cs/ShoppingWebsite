@@ -45,19 +45,24 @@ namespace OllieShop.Controllers
             return View(sellers);
         }
 
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? SRID)
         {
-            if (id == null || _context.Sellers == null)
+            if (SRID == null || _context.Sellers == null)
             {
                 return NotFound();
             }
-
-            var sellers = await _context.Sellers.FindAsync(id);
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+            var sellers = await _context.Sellers.FindAsync(SRID);
             if (sellers == null)
             {
                 return NotFound();
             }
-            ViewData["URID"] = new SelectList(_context.Users, "URID", "Email", sellers.URID);
+            ViewData["URID"] = sellers.URID;
             return View(sellers);
         }
 
@@ -66,13 +71,8 @@ namespace OllieShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID")] Sellers sellers)
+        public async Task<IActionResult> Edit([Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID")] Sellers sellers)
         {
-            if (id != sellers.SRID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -92,7 +92,7 @@ namespace OllieShop.Controllers
                     }
                 }
                 TempData["editSuccessMessage"] = "本次修改成功! 您可再次確認是否符合預期";
-                return RedirectToAction(nameof(Details), new { id = sellers.SRID });
+                return RedirectToAction(nameof(Details), new {sellers.SRID});
             }
 
             return View(sellers);

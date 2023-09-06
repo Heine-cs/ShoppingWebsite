@@ -6,6 +6,8 @@
 }
 
 <h1>@ViewData["Title"]</h1>
+<a asp-action="Index" asp-controller="CustomerOrdersManagement" asp-route-CRID="@customerFullInfo.CRID">我的訂單管理</a>
+<hr>
 <a asp-action="Index" asp-controller="CustomerCouponsBackEndPage" asp-route-CRID="@customerFullInfo.CRID">我的折價券管理</a>
 <hr>
 <a asp-action="Index" asp-controller="PaymentCardsFrontEndPage" asp-route-CRID="@customerFullInfo.CRID">我的信用卡管理</a>

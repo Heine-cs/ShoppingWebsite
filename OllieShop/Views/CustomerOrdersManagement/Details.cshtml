@@ -56,10 +56,7 @@
                 </dl>
                 <div>
                     @*<a asp-action="Edit" asp-route-id="@Model?.ORID">取消訂單</a> |*@
-                    <form asp-action="Index" asp-controller="CustomerOrdersManagement">
-                        <input type="hidden" name="CRID" id="CRID" value="@Model.CRID" />
-                        <input class="btn btn-link" type="submit" value="返回我的訂單總覽" />
-                    </form>
+                    <a asp-action="Index" asp-route-CRID="@Model?.CRID">返回我的訂單總覽</a>
                 </div>
             </div>
             <div class="col-8">

@@ -4,38 +4,58 @@
 }
 <head>
     <style>
+        .FilterSticky {
+            position: sticky;
+            top:10px;
+        }
+
         .card {
             height: 400px;
+            cursor:pointer;
         }
 
         .carousel-item {
             height: 600px;
         }
 
-        .BannerCarouselfixed {
-            position: fixed;
-            bottom: 21%;
-            right: 0%;
+        .BannerCarouselSticky {
+            position: sticky;
+            top: 10px;
         }
+
+
     </style>
 </head>
-
 <div class="row flex-grow-1 justify-content-center">
-    <div class="col-1 border border-2 border-secondary-subtle rounded-end h-50 bg-info">
-        <i class="me-2 bi bi-funnel-fill fs-3 text-black"></i><span class="fs-5 fontBorder text-secondary"><strong>進階篩選</strong></span>
-        <div class="form-check  border-top border-2 pt-2">
-            <label class="form-check-label text-light fs-5" for="flexCheckChecked">
-                篩選 啟動!!
-            </label>
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" >
+    @*篩選功能*@
+    <div class="col-1 p-0">
+        <div class="FilterSticky bg-info border border-2 border-secondary-subtle rounded-end p-1">
+            <i class="me-2 bi bi-funnel-fill fs-3 text-black"></i><span class="fs-5 fontBorder text-secondary"><strong>進階篩選</strong></span>
+            <div class="form-check border-top border-2 pt-2">
+                @{
+                    var AllCategorys = ViewData["AllCategorys"] as IEnumerable<dynamic>;
+                    int Caculactor = 0;
+                    foreach (var item in AllCategorys)
+                    {
+                        <div class="border-bottom border-secondary">
+                            <label class="form-check-label text-light fs-5 container-fluid" for="flexCheckChecked@(Caculactor)">
+                                @item.Name
+                            </label>
+                            <input class="form-check-input" type="checkbox" value="@(item.CYID)" id="flexCheckChecked@(Caculactor)">
+                        </div>
+                        Caculactor++;
+                    }
+                }
+            </div>
         </div>
     </div>
+
     <div class="col-9 container" id="container">
         <!--CardComponentPlacePosition-->
         <div class="row p-0 d-flex justify-content-between">
             @foreach (var productInfo in Model)
             {
-                <div class="col-2 card m-2 p-0 d-flex flex-column" onclick="RedirectToProductPage(@productInfo.PTID)">
+                <div class="col-2 card m-2 p-0 d-flex flex-column PreHiddenItemForCategoryFilter @productInfo.CYID" onclick="RedirectToProductPage(@productInfo.PTID)">
                     <img src="@productInfo.Picture" class="card-img-top flex-grow-1 img-fluid">
                     <div class="card-body flex-grow-0">
                         <h5 class="card-title"><strong>@productInfo.Name</strong></h5>
@@ -48,8 +68,7 @@
     <div class="col-2 d-flex flex-column p-0">
         <div class="flex-grow-1">
             <!--carouseforBanner-->
-            <div class="container-fluid position-relative">
-                <div class="BannerCarouselfixed col-2">
+                <div class="BannerCarouselSticky">
                     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -77,7 +96,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
             <!--carouse-->
         </div>
     </div>
@@ -96,5 +114,36 @@
                 }
             });
         }
+        //進階篩選功能
+        $(document).ready(function (){
+            $('.form-check-input').on('change', function () {
+                //將所有卡片隱藏，之後再解除篩選到的種類隱藏狀態
+                $('.PreHiddenItemForCategoryFilter').each(function(){
+                    $(this).addClass('d-none');
+                }); 
+                //被選中的checkbox要將value存入的容器
+                var selectedCategories = [];
+            
+                //遍歷所有checkbox，找出checked的目標
+                $('.form-check-input').each(function(){
+                    if($(this).prop('checked')){
+                        selectedCategories.push($(this).val());
+                    }
+                });
+                //有篩選種類的情況才需要局部移除d-none屬性
+                if (selectedCategories.length != 0){
+                    selectedCategories.forEach(function (item) {
+                        $('.' + item).each(function () {
+                            $(this).removeClass('d-none');
+                        });
+                    });
+                    return;
+                }
+                //取消篩選所有選項時，將所有卡片恢復顯示
+                $('.PreHiddenItemForCategoryFilter').each(function () {
+                    $(this).removeClass('d-none');
+                });
+            });
+        });
     </script>
 }

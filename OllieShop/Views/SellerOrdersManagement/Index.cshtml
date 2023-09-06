@@ -5,12 +5,16 @@
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="d-flex align-items-center">
+    <h1 class="me-auto">@ViewData["Title"]</h1>
+    <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">返回業者功能選單</a>
+</div>
 @if (Model.FirstOrDefault() == null)
 {
+    string sellerFullInfo = Context.Session.GetString("SellerInfomation");
+    Sellers SellerInfomation = Newtonsoft.Json.JsonConvert.DeserializeObject<Sellers>(sellerFullInfo);
     <h3>尚未收到訂單</h3>
-    <a asp-action="Index" asp-controller="SellerProductsManagement" asp-route-SRID="">管理商品去</a>
-
+    <a asp-action="Index" asp-controller="SellerProductsManagement" asp-route-SRID="@SellerInfomation.SRID">管理商品去</a>
 }
 else{
 

@@ -12,16 +12,19 @@ namespace OllieShop.Controllers
     public class SellerPaymentMethodsManagementController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public SellerPaymentMethodsManagementController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public SellerPaymentMethodsManagementController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: SellerPaymentMethodsManagement
         public async Task<IActionResult> Index(long SRID)
         {
-            if(SRID == 0)
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -29,16 +32,18 @@ namespace OllieShop.Controllers
             var ollieShopContext = _context.SellerPaymentMethods.Include(s => s.PM).Include(s => s.SR).Where(s =>s.SRID == SRID);
             if (ollieShopContext.Count() == 0)
             {
-                return RedirectToAction("Create", new { SRID });
+                ViewData["SellerPaymentMethodsNotBind"] = "尚未綁定任何付款方式";
             }
             ViewData["SRID"] = SRID;
             return View(await ollieShopContext.ToListAsync());
         }
 
         // GET: SellerPaymentMethodsManagement/Create
-        public IActionResult Create(long SRID)
+        public async Task<IActionResult> Create(long SRID)
         {
-            if (SRID == 0)
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -78,7 +83,12 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
             var sellerPaymentMethods = await _context.SellerPaymentMethods.FindAsync(SRID,PMID);
             if (sellerPaymentMethods == null)
             {

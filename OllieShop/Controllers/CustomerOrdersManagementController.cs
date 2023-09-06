@@ -13,18 +13,18 @@ namespace OllieShop.Controllers
     public class CustomerOrdersManagementController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public CustomerOrdersManagementController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public CustomerOrdersManagementController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(long CRID)
         {
-            if(CRID == 0)
+            //驗證使用此action對象之買家身分是否與session資料相符
+            IActionResult result = await _identityCheck.CustomerIdentityCheckAsync(CRID);
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -42,8 +42,6 @@ namespace OllieShop.Controllers
             return View(await ollieShopContext.ToListAsync());
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Orders == null)
@@ -62,6 +60,13 @@ namespace OllieShop.Controllers
                 .Include(o => o.OrderDetails)
                 .FirstOrDefaultAsync(o => o.ORID == id);
             if (orders == null)
+            {
+                return NotFound();
+            }
+
+            //驗證使用此action對象之買家身分是否與session資料相符
+            IActionResult result = await _identityCheck.CustomerIdentityCheckAsync(orders.CRID.GetValueOrDefault());
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }

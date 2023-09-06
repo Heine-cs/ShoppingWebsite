@@ -9,7 +9,7 @@
 
 <div>
     <hr />
-    <div class="text-primary">@TempData["editSuccessMessage"]</div>
+    <h2 class="text-primary">@TempData["editSuccessMessage"]</h2>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ShopNAME)
@@ -38,6 +38,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.SRID">修改內容</a> |
-    <a asp-action="Index">返回商鋪後台</a>
+    <a asp-action="Edit" asp-route-SRID="@Model?.SRID">修改內容</a> |
+    <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">返回業者後台</a>
 </div>

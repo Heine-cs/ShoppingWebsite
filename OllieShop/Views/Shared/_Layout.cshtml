@@ -160,10 +160,7 @@
                                 else
                                 {
                                     var customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(CustomerInfomation);
-                                    <form asp-action="Index" asp-controller="CustomerOrdersManagement">
-                                        <input type="hidden" name="CRID" id="CRID" value="@customerFullInfo.CRID" />
-                                        <input class="nav-link text-nowrap" type="submit" value="我的訂單" />
-                                    </form>
+                                    <a class="nav-link text-nowrap" asp-action="Index" asp-controller="CustomerOrdersManagement" asp-route-CRID="@customerFullInfo.CRID">我的訂單</a>
                                 }
                             </li>
                             <li class="nav-item">
