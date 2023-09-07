@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    var adminInfomation = Context.Session.GetString("AdminInfomation");
+    var adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
+    ViewData["Title"] = $"管理員【{adminFullInfo.Account}】降肉成功";
+}
+<div class="container h-100 d-flex flex-column align-items-center justify-content-center">
+    <h1 class="text-primary text-center">@ViewData["Title"]</h1>
+    @*載入成功的打勾動畫*@
+    <div class="success-checkmark">
+        <div class="check-icon">
+            <span class="icon-line line-tip"></span>
+            <span class="icon-line line-long"></span>
+            <div class="icon-circle"></div>
+            <div class="icon-fix"></div>
+        </div>
+    </div>
+    @*載入成功的打勾動畫*@
+</div>

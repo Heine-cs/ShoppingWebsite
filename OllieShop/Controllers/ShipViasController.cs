@@ -12,10 +12,11 @@ namespace OllieShop.Controllers
     public class ShipViasController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public ShipViasController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public ShipViasController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: ShipVias
@@ -26,9 +27,16 @@ namespace OllieShop.Controllers
         }
 
         // GET: ShipVias/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(short ADID)
         {
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "Account");
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(ADID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+            ViewData["ADID"] = ADID;
             return View();
         }
 
@@ -45,7 +53,7 @@ namespace OllieShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "Account", shipVias.ADID);
+            ViewData["ADID"] = shipVias.ADID;
             return View(shipVias);
         }
 
@@ -64,7 +72,12 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(shipVias.ADID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
             return View(shipVias);
         }
 

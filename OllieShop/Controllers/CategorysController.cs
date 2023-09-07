@@ -12,10 +12,11 @@ namespace OllieShop.Controllers
     public class CategorysController : Controller
     {
         private readonly OllieShopContext _context;
-
-        public CategorysController(OllieShopContext context)
+        private readonly IdentityCheck _identityCheck;
+        public CategorysController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: Categorys
@@ -26,9 +27,15 @@ namespace OllieShop.Controllers
         }
 
         // GET: Categorys/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(short ADID)
         {
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID");
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(ADID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+            ViewData["ADID"] = ADID;
             return View();
         }
 
@@ -45,7 +52,7 @@ namespace OllieShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID", categorys.ADID);
+            ViewData["ADID"] = categorys.ADID;
             return View(categorys);
         }
 
@@ -64,7 +71,12 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(categorys.ADID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
             return View(categorys);
         }
 

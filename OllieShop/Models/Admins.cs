@@ -9,7 +9,7 @@ public partial class Admins
     [Display(Name ="編號")]
     public short ADID { get; set; }
 
-    [Display(Name = "帳號")]
+    [Display(Name = "管理員帳號")]
     [Required(ErrorMessage ="必填欄位")]
     public string Account { get; set; } = null!;
 

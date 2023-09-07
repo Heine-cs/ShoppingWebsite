@@ -1,6 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "消費者功能選單";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
+    ViewData["Title"] = "消費者功能選單";
     var customerInfomation = Context.Session.GetString("CustomerInfomation");
     var customerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(customerInfomation);
 }
@@ -11,3 +11,4 @@
 <a asp-action="Index" asp-controller="CustomerCouponsBackEndPage" asp-route-CRID="@customerFullInfo.CRID">我的折價券管理</a>
 <hr>
 <a asp-action="Index" asp-controller="PaymentCardsFrontEndPage" asp-route-CRID="@customerFullInfo.CRID">我的信用卡管理</a>
+

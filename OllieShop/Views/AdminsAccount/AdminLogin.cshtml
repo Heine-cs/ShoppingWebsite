@@ -1,0 +1,391 @@
+﻿@model OllieShop.Models.Admins
+
+@{
+    ViewData["Title"] = "管理員登入";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>@ViewData["Title"]</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
+        <style>
+        @*圈圈叉叉小遊戲*@
+        body {
+            // background-image: url("http://www.madtomatoe.com/wp-content/uploads/2010/11/matrix-animated-image.gif");
+            background-size: cover;
+            background-color: #000000;
+            text-align: center;
+            color: white;
+            font: 20px "Arial Black", Gadget, sans-serif;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        form,
+        form * {
+            margin: 5px;
+            font: 16px "Arial Black", Gadget, sans-serif;
+        }
+
+        #grid {
+            display: inline-block;
+            margin: 25px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        #result {
+            margin: 10px;
+        }
+
+        .cell {
+            cursor: pointer;
+            width: 80px;
+            height: 80px;
+            float: left;
+            border: 1px solid white;
+            background-color: black;
+            color: white;
+            font: 50px sans-serif;
+            line-height: 80px;
+            text-align: center;
+        }
+
+        .left {
+            clear: both;
+            border-left-style: none;
+        }
+
+        .right {
+            border-right-style: none;
+        }
+
+        .top {
+            border-top-style: none;
+        }
+
+        .bottom {
+            border-bottom-style: none;
+        }
+        @*圈圈叉叉小遊戲*@
+
+        </style>
+    </head>
+    <body>
+        @*登入表單*@
+        <div class="container d-flex align-items-center justify-content-center vh-100">
+            <div class="w-50 p-0">
+                <div class="row">
+                    <div class="bg-primary-subtle border border-5 rounded-3">
+
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h1 class="text-center">@ViewData["Title"]</h1>
+                                <form asp-action="AdminLogin">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <input asp-for="Account" class="form-control" placeholder="帳號" />
+                                        <span asp-validation-for="Account" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" asp-for="Password" class="form-control" placeholder="密碼" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                    @if(ViewData["ErrorMessage"] != null){
+                                        <span class="text-danger">@ViewData["ErrorMessage"]</span>
+                                    }
+                                    <div class="form-group">
+                                        <input type="submit" value="點擊登入" class="btn btn-primary" />
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col">
+                                <img class="w-100" src="~/img/user-gear.png" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @*圈圈叉叉小遊戲*@
+            <div class="w-25">
+                <h1>上班前來一局</h1>
+                <div id="grid">
+                    <div class="cell left top" id="0"></div>
+                    <div class="cell top" id="1"></div>
+                    <div class="cell right top" id="2"></div>
+                    <div class="cell left" id="3"></div>
+                    <div class="cell" id="4"></div>
+                    <div class="cell right" id="5"></div>
+                    <div class="cell left bottom" id="6"></div>
+                    <div class="cell bottom" id="7"></div>
+                    <div class="cell right bottom" id="8"></div>
+                </div>
+                <form>
+                    <input class="players" type="radio" name="players" value=2 checked="checked" />雙人對戰
+                    <br />
+                    <input class="players" type="radio" name="players" value=1 />挑戰電腦
+                    <br />
+                    <button class="btn btn-outline-warning" id="reset" type="button">輸了意難平，再來一局!!</button>
+                </form>
+                <div id="result"></div>
+            </div>
+            @*圈圈叉叉小遊戲*@
+        </div>
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-umd-min.js"></script>
+        <script>
+            //圈圈叉叉小遊戲
+            // potential wins:
+            // [top, middle, bottom, left, center, right, topleft-bottomRight, topRight-bottomLeft]
+            var counters = [
+              [0, 0, 0, 0, 0, 0, 0, 0],
+              [0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+            var player = 0;
+            var moves = 0;
+            var end = false;
+
+            function updateCounters(row, column) {
+
+              // increase the row/column counters for the players move
+              counters[player][row]++;
+              counters[player][column + 3]++;
+
+              // check if move is on a diagonal
+              if (row == column) {
+                counters[player][6]++;
+              }
+              if (row + column == 2) {
+                counters[player][7]++;
+              }
+            }
+
+            function checkWinner() {
+
+              // check if player has won (line of 3)
+              var win = counters[player].indexOf(3);
+              if (win != -1) {
+                end = true;
+                $("#result").html(["圈圈玩家", "叉叉玩家"][player] + " 勝利!");
+
+                if (win < 3) {
+                  // row win
+                  _(3).times(function(n) {
+      	            cellNo = (win * 3) + n;
+				            $("#" + cellNo).css("color", "#22ff00");
+                    $("#" + cellNo).css("background-color", "#0b4f00");
+                  });
+                } else if (win < 6) {
+			            // column win
+                  _(3).times(function(n) {
+      	            cellNo = (n * 3) + win - 3;
+				            $("#" + cellNo).css("color", "#22ff00");
+                    $("#" + cellNo).css("background-color", "#0b4f00");
+                  });
+                } else if (win == 6) {
+			            // diagonal TL-BR win
+                  _(3).times(function(n) {
+      	            cellNo = 4*n;
+				            $("#" + cellNo).css("color", "#22ff00");
+                    $("#" + cellNo).css("background-color", "#0b4f00");
+                  });
+                } else {
+    	            // diagonal TR-BL win
+                  _(3).times(function(n) {
+      	            cellNo = 2*(n+1);
+				            $("#" + cellNo).css("color", "#22ff00");
+                    $("#" + cellNo).css("background-color", "#0b4f00");
+                  });
+                }
+              }
+
+              // check if board full
+              if (moves >= 9) {
+                end = true;
+                $("#result").html("平手!");
+              }
+            }
+
+            function computerMove() {
+              // board for best potential places
+              var board = [
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0]
+              ];
+
+              // goes through each win counter
+              _(3).times(function(i) {
+                _(3).times(function(j) {
+			
+                  // checks if cell full
+                  var cellNo = 3 * i + j;
+                  if ($("#" + cellNo).html() != "") {
+                    board[i][j] = -50;
+                  }
+
+                  // rows/columns
+                  // computers counters
+                  board[i][j] += 2 * Math.pow(counters[player][i], 3);
+                  board[j][i] += 2 * Math.pow(counters[player][i + 3], 3);
+
+                  // players counters
+                  board[i][j] += Math.pow(counters[(player + 1) % 2][i], 3);
+                  board[j][i] += Math.pow(counters[(player + 1) % 2][i + 3], 3);
+
+                  // different counters on the same row
+                  if (counters[0][i] > 0 && counters[1][i] > 0) {
+                    board[i][j] -= 3;
+                  }
+
+                  // different counters on the same column
+                  if (counters[0][i + 3] > 0 && counters[1][i + 3] > 0) {
+                    board[j][i] -= 3;
+                  }
+                });
+
+                // diagonals
+                // computers counters
+                board[i][i] += 2 * Math.pow(counters[player][6], 3);
+                board[i][2 - i] += 2 * Math.pow(counters[player][7], 3);
+
+                // players counters
+                board[i][i] += Math.pow(counters[(player + 1) % 2][6], 3);
+                board[i][2 - i] += Math.pow(counters[(player + 1) % 2][7], 3);
+
+                // different counters on the diagonals
+                if (counters[0][6] > 0 && counters[1][6] > 0) {
+                  board[i][i] -= 3;
+                }
+                if (counters[0][7] > 0 && counters[1][7] > 0) {
+                  board[i][2 - i] -= 3;
+                }
+              });
+  
+              var max = 0;
+              var maxList = [];
+              // get an array of all occurences of the 'best' position
+              _.each(_.flatten(board), function(n, ind) {
+                // new maximum or add to old maximum
+                if (n > max) {
+                  max = n;
+                  maxList = [ind];
+                } else if (n == max) {
+                  maxList.push(ind);
+                }
+              });
+
+              // randomly pick from list
+              var cell = _.shuffle(maxList)[0];
+
+              // display
+              $("#" + cell).html("OX" [player]);
+
+              return [Math.floor(cell / 3), cell % 3];
+            }
+
+            function reset() {
+
+              // remove O/X from each cell, reset color
+              $(".cell").each(function() {
+                $(this).html("");
+                $(this).css("color", "white");
+                $(this).css("background-color", "black");
+              });
+
+              // reset result
+              $("#result").html("");
+
+              // reset variables
+              counters = [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0]
+              ];
+              player = 0;
+              moves = 0;
+              end = false;
+            }
+
+            $(function() {
+
+              // when a cell is clicked
+              $(".cell").on(
+                "click",
+                function(eventObject) {
+
+                  // no winner/draw yet
+                  if (!end) {
+                    // get cell div
+                    var cell = eventObject.target;
+
+                    // row and column of cell
+                    var cellRow = Math.floor(cell.id / 3);
+                    var cellCol = cell.id % 3;
+
+                    // check position is empty
+                    if (cell.innerHTML == "") {
+
+                      // display O/X
+                      cell.innerHTML = "OX" [player];
+
+                      // increase moves taken
+                      moves++;
+
+                      // update the counters for the potential wins
+                      updateCounters(cellRow, cellCol);
+
+                      // check for a winner/draw
+                      checkWinner();
+
+                      // next player
+                      player = (player + 1) % 2;
+
+                      if ($(".players:checked").val() == 1 && !end) {
+                        // computers turn
+                        var compCell = computerMove();
+
+                        // update the counters for potential wins
+                        updateCounters(compCell[0], compCell[1]);
+
+                        // increase moves taken
+                        moves++;
+
+                        // check for a winner/draw
+                        checkWinner();
+
+                        // next player
+                        player = (player + 1) % 2;
+                      }
+                    }
+                  }
+                });
+
+              // reset button
+              $("#reset").on(
+                "click",
+                reset);
+
+              // change number of players
+              $(".players").on(
+                "change",
+                reset);
+            });
+            //圈圈叉叉小遊戲
+        </script>
+    </body>
+</html>
+

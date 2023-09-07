@@ -3,12 +3,14 @@
 @{
     ViewData["Title"] = "運送方式總覽";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    var adminInfomation = Context.Session.GetString("AdminInfomation");
+    var adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">新增運送方式</a>
+    <a asp-action="Create" asp-route-ADID="@adminFullInfo.ADID">新增運送方式</a>
 </p>
 <table class="table">
     <thead>
@@ -20,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AD)
+                @Html.DisplayNameFor(model => model.AD.Account)
             </th>
             <th></th>
         </tr>
@@ -38,7 +40,10 @@
                 @Html.DisplayFor(modelItem => item.AD.Account)
             </td>
             <td>
-                <a asp-action="Delete" asp-route-id="@item.SVID">刪除</a>
+                @if (item.ADID == adminFullInfo.ADID)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.SVID">刪除</a>
+                }
             </td>
         </tr>
 }

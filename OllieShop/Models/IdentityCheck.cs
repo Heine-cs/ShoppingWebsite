@@ -31,6 +31,16 @@ namespace OllieShop.Models
                 return new NotFoundResult();
             }
             return new OkResult();
+        }        
+        public async Task<IActionResult> AdminCheckAsync(short ADID)
+        {
+            string adminAccountInfo = _httpContextAccessor.HttpContext.Session.GetString("AdminInfomation");
+            Admins adminAccountInfoToOBject = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminAccountInfo);
+            if (adminAccountInfoToOBject.ADID != ADID)
+            {
+                return new NotFoundResult();
+            }
+            return new OkResult();
         }
     }
 }

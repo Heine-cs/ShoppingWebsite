@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var adminInfomation = Context.Session.GetString("AdminInfomation");
+    Admins adminFullInfo = new Admins();
+    if(adminInfomation == null)
+    {
+        Context.Response.Redirect("/AdminsAccount/AdminLogin");
+    }
+    else{
+        adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
+    }
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -75,7 +86,7 @@
                                 <a class="nav-link">尚未發布</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link"  asp-controller="Announcements" asp-action="Create">點我發布</a>
+                                <a class="nav-link" asp-controller="Announcements" asp-action="Create" asp-route-ADID="@adminFullInfo.ADID">點我發布</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Announcements" asp-action="Index">總紀錄</a>
@@ -158,9 +169,15 @@
                 <div class="me-auto">
                     <div class="btn-group">
                         <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle"></i><span class="ms-2">當前登入 : 管理員9527</span>
+                            <i class="bi bi-person-circle"></i><span class="ms-2">當前登入 : 管理員【@(adminFullInfo.Account)】 歡迎!!</span>
                         </button>
                         <ul class="dropdown-menu text-center">
+                            <li>
+                                <a class="dropdown-item p-0" asp-action="Logout" asp-controller="AdminsAccount">
+                                    <i class="me-2 bi bi-door-open"></i>
+                                    <span>登出</span>
+                                </a>
+                            </li>
                             <li>
                                 <a class="dropdown-item p-0">
                                     <i class="me-2 bi bi-sliders"></i>

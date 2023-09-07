@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "公告內容";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    var adminInfomation = Context.Session.GetString("AdminInfomation");
+    var adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -29,14 +31,17 @@
             @Html.Raw(@Model.ATContent.ToString().Replace("\r\n","<br>"))
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AD)
+            @Html.DisplayNameFor(model => model.AD.Account)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AD.ADID)
+            @Html.DisplayFor(model => model.AD.Account)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ATID">編輯</a> |
+    @if (Model?.ADID == adminFullInfo.ADID)
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.ATID">編輯</a><span>|</span>
+    }
     <a asp-action="Index">回公告欄</a>
 </div>

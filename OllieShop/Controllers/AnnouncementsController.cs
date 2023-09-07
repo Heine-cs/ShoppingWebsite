@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OllieShop.Models;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace OllieShop.Controllers
 {
     public class AnnouncementsController : Controller
     {
         private readonly OllieShopContext _context;
+        private readonly IdentityCheck _identityCheck;
 
-        public AnnouncementsController(OllieShopContext context)
+        public AnnouncementsController(OllieShopContext context, IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         // GET: Announcements
@@ -47,9 +50,16 @@ namespace OllieShop.Controllers
         }
 
         // GET: Announcements/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(short ADID)
         {
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID");
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(ADID);
+            if(result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+            ViewData["ADID"] = ADID;
             return View();
         }
 
@@ -83,7 +93,14 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID", announcements.ADID);
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(announcements.ADID.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+
+            ViewData["ADID"] = announcements.ADID;
             return View(announcements);
         }
 
@@ -119,7 +136,7 @@ namespace OllieShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "ADID", announcements.ADID);
+            ViewData["ADID"] = announcements.ADID;
             return View(announcements);
         }
 
@@ -135,6 +152,12 @@ namespace OllieShop.Controllers
                 .Include(a => a.AD)
                 .FirstOrDefaultAsync(m => m.ATID == id);
             if (announcements == null)
+            {
+                return NotFound();
+            }
+            //驗證使用此Action的對象是否與session儲存帳戶資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(announcements.ADID.GetValueOrDefault());
+            if (result is NotFoundResult)
             {
                 return NotFound();
             }

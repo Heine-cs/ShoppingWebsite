@@ -3,12 +3,14 @@
 @{
     ViewData["Title"] = "商城公告欄";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    var adminInfomation = Context.Session.GetString("AdminInfomation");
+    var adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">新增公告</a>
+    <a asp-action="Create" asp-route-ADID="@adminFullInfo.ADID">新增公告</a>
 </p>
 <table class="table">
     <thead>
@@ -22,13 +24,14 @@
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.AD)
+                @Html.DisplayNameFor(model => model.AD.Account)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    if (item.ADID==@adminFullInfo.ADID){
         <tr>
 
             <td>
@@ -39,7 +42,7 @@
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.AD.ADID)
+                @Html.DisplayFor(modelItem => item.AD.Account)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ATID">編輯</a> |
@@ -47,6 +50,26 @@
                 <a asp-action="Delete" asp-route-id="@item.ATID">刪除</a>
             </td>
         </tr>
+    }
+    else
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublicDate)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.AD.Account)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ATID">完整內容</a>
+            </td>
+        </tr>
+    }
 }
     </tbody>
 </table>

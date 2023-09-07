@@ -40,7 +40,7 @@ namespace OllieShop.Controllers
             return View(sellers);
         }
 
-        public async Task<IActionResult> SellersAgreeTerms(long URID)
+        public IActionResult SellersAgreeTerms(long URID)
         {
             ViewData["URID"] = URID;
             return View();
