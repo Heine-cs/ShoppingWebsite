@@ -25,43 +25,43 @@
     </p>
     return;
 }
-    <p>
-        <a asp-action="Create">新增商品</a>
-    </p>
-    <table class="table table-hover align-middle text-center table-striped">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Picture)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Hidden)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UnitPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DeliveryFee)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShelfQuantity)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SoldQuantity)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LaunchDate)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model) {
-        if(item.Locked != true)
-            {  
+<p>
+    <a asp-action="Create">新增商品</a>
+</p>
+<table class="table table-hover align-middle text-center table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hidden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShelfQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoldQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaunchDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    if(item.Locked != true)
+        {  
             <tr>
                 <td>
                     <img class="w-100 h-100" src="@Html.DisplayFor(modelItem => item.Picture)"/>
@@ -94,44 +94,43 @@
                     <a asp-action="Delete" asp-route-id="@item.PTID">刪除</a>
                 </td>
             </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td class="bg-danger">
-                            <img src="@Html.DisplayFor(modelItem => item.Picture)" width="200" height="200" />
-                        </td>
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.Hidden)
-                        </td class="bg-danger">
+        }
+        else
+        {
+            <tr>
+                <td class="bg-danger">
+                    <img src="@Html.DisplayFor(modelItem => item.Picture)" width="200" height="200" />
+                </td>
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.Hidden)
+                </td class="bg-danger">
 
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.UnitPrice)
-                        </td>
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.DeliveryFee)
-                        </td>
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.ShelfQuantity)
-                        </td class="bg-danger">
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.SoldQuantity)
-                        </td>
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.SRID)
-                        </td>
-                        <td class="bg-danger">
-                            @Html.DisplayFor(modelItem => item.LaunchDate)
-                        </td>
-                        <td class="bg-danger">
-                            <a asp-action="Details" asp-route-id="@item.PTID">完整內容</a>
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-}
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.DeliveryFee)
+                </td>
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.ShelfQuantity)
+                </td class="bg-danger">
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.SoldQuantity)
+                </td>
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.SRID)
+                </td>
+                <td class="bg-danger">
+                    @Html.DisplayFor(modelItem => item.LaunchDate)
+                </td>
+                <td class="bg-danger">
+                    <a asp-action="Details" asp-route-id="@item.PTID">完整內容</a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

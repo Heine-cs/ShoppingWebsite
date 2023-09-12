@@ -9,9 +9,11 @@
 
     <hr />
     <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Create">
+        <div class="col-4">
+            <form asp-action="Create" id="sellerForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="URID" class="form-control" value="@ViewBag.URID" />
+                <input type="hidden" asp-for="Picture" class="form-control" />
                 <div class="form-group">
                     <label asp-for="ShopNAME" class="control-label"></label>
                     <input asp-for="ShopNAME" class="form-control" />
@@ -45,24 +47,32 @@
                     <input asp-for="BankAccount" class="form-control" />
                     <span asp-validation-for="BankAccount" class="text-danger"></span>
                 </div>
-                <div class="form-group d-none">
-                    <label asp-for="URID" class="control-label"></label>
-                    <input asp-for="URID" class="form-control" value="@ViewBag.URID" />
-                    <span asp-validation-for="URID" class="text-danger"></span>
-                </div>
                 <div class="form-group">
-                    <input type="submit" value="輸入完資料後請點我領取業者身分" class="btn btn-primary" onclick="alert('領取業者身分完成，登入帳號後即可使用業者功能')"/>
+                    <input type="submit" value="輸入完資料後請點我領取業者身分" class="btn btn-primary"/>
                 </div>
             </form>
+            <div>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-5">暫時不領取業者身分，請點我回賣場首頁</a>
+            </div>
+        </div>
+        @*上傳商店概述圖*@
+        <div class="col-8">
+            <label asp-for="Picture" class="control-label"></label>
+            <form class="d-flex justify-content-between" asp-controller="FileUpload" asp-action="sellerOverviewPhotoUpload" enctype="multipart/form-data" id="pictureForm">
+                <input type="file" name="photo" id="photoInput" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳圖片" />
+            </form>
+            <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
+            <img id="afterUploadShow" class="w-100 my-2" />
         </div>
     </div>
-
-    <div>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-5">暫時不領取業者身分，請點我回賣場首頁</a>
-    </div>
 </div>
-<script>
 
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
         //統一編號的Radio選項
         const taxIdOption1 = document.getElementById("taxIdOption1");
         const taxIdOption2 = document.getElementById("taxIdOption2");
@@ -70,7 +80,7 @@
 
         taxIdOption1.addEventListener("change", function () {
             if (taxIdOption1.checked) {
-                taxIdInput.value ="";
+                taxIdInput.value = "";
                 taxIdInput.removeAttribute("readonly");
             }
         });
@@ -79,18 +89,65 @@
             if (taxIdOption2.checked) {
 
                 taxIdInput.value = "無統一編號之業者";
-                taxIdInput.setAttribute("readonly" , "readonly");
+                taxIdInput.setAttribute("readonly", "readonly");
             }
         });
 
+        //預覽上傳圖片
+        $('#photoInput').change(function () {
+            let file = this.files[0];
+            let reader = new FileReader();
 
+            reader.onload = event => {
+                $("#afterUploadShow").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
 
-</script>
+        // 使用jQuery的方式綁定Form的submit事件
+        $("#pictureForm").submit(function (e) {
+            e.preventDefault(); // 阻止Form的默認提交行為
+            if (photoInput.value != "") {
+                // 使用FormData來構建請求數據，包括文字數據和檔案
+                var formData = new FormData(this);
+                // 使用AJAX向Controller的Action發送POST請求
+                $.ajax({
+                    url: "@Url.Action("sellerOverviewPhotoUpload", "FileUpload",new {URID=@ViewBag.URID})",
+                    type: "POST",
+                    data: formData, // 把Form中的數據序列化作為請求參數
+                    processData: false, // 不要處理data
+                    contentType: false, // 不要設置contentType，因為FormData已經處理了
+                    success: function (response) {
+                        // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
+                        if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
+                            $("#Picture").val(response);
+                            $('#pictureValidation').addClass("d-none");
+                            alert('圖片上傳成功!!');
+                        }
+                        else {
+                            alert(response);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+            else {
+                alert("請先選擇圖片後再點上傳");
+            }
+        });
 
+        // 使用jQuery的方式綁定otherForm的submit事件
+        $("#sellerForm").submit(function (e) {
+            // 檢查是否至少選擇了一張圖片
+            if ($('#Picture').val() == "") {
+                e.preventDefault(); // 阻止Form的默認提交行為
+                $('#pictureValidation').removeClass("d-none");
+                return;
+            }
+            alert('領取業者身分完成，登入帳號後即可使用業者功能');
+        });
 
-
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    </script>
 }

@@ -1,7 +1,7 @@
 ﻿@model OllieShop.Models.Sellers
 
 @{
-    ViewData["Title"] = "商鋪資訊";
+    ViewData["Title"] = "商店資訊";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
@@ -34,6 +34,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.BankAccount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Picture)
+        </dt>
+        <dd class="col-sm-10">
+            <img class="w-100" src="@Html.DisplayFor(model => model.Picture)" />
         </dd>
     </dl>
 </div>

@@ -41,18 +41,26 @@
     }
 
     <div class="col mt-1 d-flex flex-column">
+        <h1><strong>@productPlusSpec.Name</strong></h1>
         <div class="flex-grow-1">
-            <h1><strong>@productPlusSpec.Name</strong></h1>
-            <div>商品狀況 : @Unopened</div>
-            <div>商品數量 : @(RestQuantity)件</div>
-            <div>備貨日 : @(productPlusSpec.LeadDay)個工作天</div>
-            <div>運費 : NT$@productPlusSpec.DeliveryFee.ToString("0")</div>
-            <div>詢價許可 : @Inquired</div>
-            <div>分期許可 : @Installment</div>
-            <div>商品贈品 : @productPlusSpec.Freebie</div>
-            <div>體積 : @productPlusSpec.Size cm³</div>
-            <div>商品重量 : @productPlusSpec.Weight 公斤</div>
-            <div>商品描述 : @productPlusSpec.Description</div>
+            <div class="fs-5 row">
+                <div class="col">
+                    <div>商品狀況 : @Unopened</div>
+                    <div>商品數量 : @(RestQuantity)件</div>
+                    <div>備貨日 : @(productPlusSpec.LeadDay)個工作天</div>
+                    <div>運費 : NT$@productPlusSpec.DeliveryFee.ToString("0")</div>
+                    <div>商品贈品 : @productPlusSpec.Freebie</div>
+                </div>
+                <div class="col">
+                    <div>詢價許可 : @Inquired</div>
+                    <div>分期許可 : @Installment</div>
+                    <div>體積 : @productPlusSpec.Size cm³</div>
+                    <div>商品重量 : @productPlusSpec.Weight 公斤</div>
+                    <div>商品描述 : @productPlusSpec.Description</div>
+                </div>
+            </div>
+            <div class="p-0 mt-3">@await Component.InvokeAsync("VCSellers" , new{SRID=productPlusSpec.SRID})</div>
+            
         </div>
 
         <div class="row flex-grow-0">

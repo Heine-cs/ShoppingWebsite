@@ -7,162 +7,117 @@
 }
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OllieShop</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/OllieShop.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-        body {
-            /* Margin bottom by footer height */
-            margin-bottom: 60px;
-        }
-        
-        .ShopLogo {
-            height: 70px;
-        }
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - OllieShop</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/OllieShop.styles.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <style> 
+            .dropdown-item {
+                display: block;
+                width: 100%;
+                padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x);
+                clear: both;
+                font-weight: 400;
+                color: #810cb3;
+                text-align: inherit;
+                text-decoration: none;
+                white-space: nowrap;
+                background-color: transparent;
+                border: 0;
+                border-radius: var(--bs-dropdown-item-border-radius, 0);
+            }
 
-        .red {
-            color: rgb(255,0,0);
-        }
-
-        .lightYellow {
-            background-color: #ffe6b3;
-        }
-
-        .rainbowGradient {
-            border-radius: 5px;
-            color: #fff;
-            background: #d6249f;
-            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
-            box-shadow: 0px 3px 10px rgba(0,0,0,.25);
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            /* Set the fixed height of the footer here */
-            height: 60px;
-        }
-
-        .dropdown-item {
-            display: block;
-            width: 100%;
-            padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x);
-            clear: both;
-            font-weight: 400;
-            color: #810cb3;
-            text-align: inherit;
-            text-decoration: none;
-            white-space: nowrap;
-            background-color: transparent;
-            border: 0;
-            border-radius: var(--bs-dropdown-item-border-radius, 0);
-        }
-
-    </style>
-</head>
-<body>
-    <header class="mb-sm-2">
-        <nav class="navbar navbar-expand-lg bg-success" data-bs-theme="dark">
-            <div class="container-fluid">
-                <div>
-                    <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img src="~/img/logo.png" class="ShopLogo"/>
-                    </a>
-
-                    <ul class="nav nav-pills">
-                        <li class="nav-item dropdown mx-auto">
-                            <div class="nav-link dropdown-toggle fs-5 text-primary bg-warning" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="bi bi-menu-button-wide"></i>所有功能</div>
-                            <div class="dropdown-menu lightYellow border-info" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 42px);" data-popper-placement="bottom-start">
-                                <a class="dropdown-item">Action</a>
-                                <a class="dropdown-item">Another action</a>
-                                <a class="dropdown-item" asp-controller="DisplayAnnouncementsForUser" asp-action="Index">商城公告</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item">預留</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarColor01">
-                    <div class="nav-item text-center">
-                        <div class="nav-link navbar-brand container-fluid">
-                            官方帳號
+        </style>
+    </head>
+    <body>
+        <div class="d-flex flex-column min-vh-100">
+            <header class="mb-sm-2">
+                <nav class="navbar navbar-expand-lg bg-success" data-bs-theme="dark">
+                    <div class="container-fluid">
+                        <div>
+                            <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
+                                <img src="~/img/logo.png" class="ShopLogo"/>
+                            </a>
                         </div>
-                        <div class="d-flex fs-4 container-fluid">
-                            <div>
-                                <a href="https://www.facebook.com/groups/javascript.tw" target="_blank">
-                                    <i class="bi bi-facebook m-1"></i>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="https://www.instagram.com/explore/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/" target="_blank">
-                                    <i class="bi bi-instagram m-1 rainbowGradient"></i>
-                                </a>
-                            </div>
+
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarColor01">
+                            <div class="nav-item text-center">
+                                <div class="nav-link navbar-brand container-fluid">
+                                    官方帳號
+                                </div>
+                                <div class="d-flex fs-4 container-fluid">
+                                    <div>
+                                        <a href="https://www.facebook.com/groups/javascript.tw" target="_blank">
+                                            <i class="bi bi-facebook m-1"></i>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="https://www.instagram.com/explore/tags/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/" target="_blank">
+                                            <i class="bi bi-instagram m-1 rainbowGradient"></i>
+                                        </a>
+                                    </div>
                             
-                            <div>
-                                <a href="@Html.Raw("https://youtube.com/@OllieShop-fz1is")" target="_blank">
-                                    <i class="bi bi-youtube m-1 red"></i>
-                                </a>
+                                    <div>
+                                        <a href="@Html.Raw("https://youtube.com/@OllieShop-fz1is")" target="_blank">
+                                            <i class="bi bi-youtube m-1 red"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
+
+                            <form class="d-flex me-auto w-50">
+                                <input class="form-control me-sm-2 text-center bg-light text-dark" type="search" placeholder="需要幫忙嗎? 請輸入你的問題">
+                                <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
+                            </form>
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link navbar-brand" asp-controller="" asp-action="">賣場規範</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link navbar-brand" asp-controller="Home" asp-action="Assistant">協助中心</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link navbar-brand" asp-controller="" asp-action="">最新公告</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </nav>
+            </header>
+ 
+            <div class="container-fluid flex-grow-1 d-flex">
+                <main role="main" class="d-flex flex-column flex-grow-1">
+                    @RenderBody()
+                </main>
+            </div>
+
+            <footer class="border-top sticky-footer text-muted bg-light shadow-lg flex-grow-0">
+                <div class="container-fluid d-flex  d-flex align-items-center p-2">
+                    &copy; 2023 - OllieShop - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="me-auto">隱私權政策</a>
+                    <div class="d-flex">
+                        <div>
+                            <a asp-controller="home" asp-action="OfficialContactInfo" class="btn btn-info me-5">聯絡我們</a>
+                        </div>
+                        <div>
+                            <a asp-controller="" asp-action="" class="btn btn-outline-success me-3">快速訊息</a>
                         </div>
                     </div>
-
-                    <form class="d-flex me-auto w-50">
-                        <input class="form-control me-sm-2 text-center bg-light text-dark" type="search" placeholder="需要幫忙嗎? 請輸入你的問題">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="bi bi-search"></i></button>
-                    </form>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand" asp-controller="" asp-action="">賣場規範</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand" asp-controller="Home" asp-action="Assistant">協助中心</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link navbar-brand" asp-controller="" asp-action="">最新公告</a>
-                        </li>
-                    </ul>
                 </div>
-
-            </div>
-        </nav>
-    </header>
- 
-    <div class="container-fluid">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted bg-light">
-        <div class="container-fluid d-flex">
-            &copy; 2023 - OllieShop - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="me-auto">隱私權政策</a>
-            <div class="d-flex">
-                <div>
-                    <a asp-controller="home" asp-action="OfficialContactInfo" class="btn btn-info me-5">聯絡我們</a>
-                </div>
-                <div>
-                    <a asp-controller="" asp-action="" class="btn btn-outline-success me-3">快速訊息</a>
-                </div>
-            </div>
+            </footer>
         </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
 </html>

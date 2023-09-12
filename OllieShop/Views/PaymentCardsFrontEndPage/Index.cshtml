@@ -4,8 +4,10 @@
     ViewData["Title"] = "消費者信用卡總覽";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
 }
-
-<h1>@ViewData["Title"]</h1>
+<div class="d-flex align-items-center">
+    <h1 class="me-auto">@ViewData["Title"]</h1>
+    <a asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
+</div>
 
 <p>
     <a asp-action="Create" asp-route-CRID="@ViewBag.CRID">新增結帳用信用卡</a>

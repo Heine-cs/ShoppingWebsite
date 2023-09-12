@@ -20,31 +20,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OllieShop</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OllieShop.styles.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/Minty_Bootwatch_bootstrap.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <style>
-        .ShopLogo {
-            height: 70px;
-        }
-
-        .red {
-            color: rgb(255,0,0);
-        }
-        .lightYellow{
-            background-color: #ffe6b3;
-        }
-
-        .rainbowGradient {
-            border-radius: 5px;
-            color: #fff;
-            background: #d6249f;
-            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
-            box-shadow: 0px 3px 10px rgba(0,0,0,.25);
-        }
-
         .dropdown-item {
             display: block;
             width: 100%;
@@ -59,10 +40,6 @@
             border: 0;
             border-radius: var(--bs-dropdown-item-border-radius, 0);
         }
-
-        i {
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -74,19 +51,6 @@
                         <a class="navbar-item navbar-brand" asp-controller="Home" asp-action="Index">
                             <img src="~/img/logo.png" class="ShopLogo" />
                         </a>
-
-                        <ul class="nav nav-pills">
-                            <li class="nav-item dropdown mx-auto">
-                                <div class="nav-link dropdown-toggle fs-5 text-primary bg-warning" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="bi bi-menu-button-wide"></i>所有功能</div>
-                                <div class="dropdown-menu lightYellow border-info" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 42px);" data-popper-placement="bottom-start">
-                                    <a class="dropdown-item">Action</a>
-                                    <a class="dropdown-item">Another action</a>
-                                    <a class="dropdown-item" asp-controller="DisplayAnnouncementsForUser" asp-action="Index">商城公告</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item">預留</a>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -161,8 +125,8 @@
             </nav>
         </header>
 
-        <div class="container-fluid flex-grow-1">
-            <main role="main">
+        <div class="container-fluid flex-grow-1 d-flex">
+            <main role="main" class="d-flex flex-column flex-grow-1">
                 @RenderBody()
             </main>
         </div>

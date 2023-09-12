@@ -33,6 +33,9 @@ public partial class Sellers
     [StringLength(14, ErrorMessage = "銀行帳號長度落在12~14碼之間的數字組合，請檢查是否漏<br>填或填錯")]
     public string BankAccount { get; set; } = null!;
 
+    [Display(Name = "商店對外展示圖片")]
+    public string Picture { get; set; } = null!;
+
     public long? URID { get; set; }
 
     public virtual ICollection<Messages> Messages { get; set; } = new List<Messages>();
@@ -41,8 +44,10 @@ public partial class Sellers
 
     public virtual ICollection<Products> Products { get; set; } = new List<Products>();
 
+    [Display(Name = "付款方式")]
     public virtual ICollection<SellerPaymentMethods> SellerPaymentMethods { get; set; } = new List<SellerPaymentMethods>();
 
+    [Display(Name = "運送方式")]
     public virtual ICollection<SellerShipVias> SellerShipVias { get; set; } = new List<SellerShipVias>();
 
     [JsonIgnore]

@@ -16,7 +16,7 @@
             <label asp-for="Picture" class="control-label"></label>
             <form class="d-flex justify-content-between" asp-controller="FileUpload" asp-action="photoUpload" enctype="multipart/form-data" id="pictureForm">
                 <input type="file" name="photo" id="photoInput" />
-                <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳圖片" />
             </form>
             <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
             <img id="afterUploadShow" class="w-100 my-2"/>
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="col">
-                <input asp-for="Picture" type="hidden" id="pictureAddressInput" />
+                <input asp-for="Picture" type="hidden"/>
                 <div class="form-group">
                     <label>是否加入商品描述?</label>
                     <div class="form-check">
@@ -224,6 +224,17 @@
             }
         });
 
+        //預覽上傳圖片
+        $('#photoInput').change(function(){
+            let file = this.files[0];
+            let reader = new FileReader();
+
+            reader.onload = event =>{
+                $("#afterUploadShow").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+
         // 使用jQuery的方式綁定Form的submit事件
         $("#pictureForm").submit(function (e) {
             e.preventDefault(); // 阻止Form的默認提交行為
@@ -240,9 +251,10 @@
                     success: function (response) {
                         // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
                         if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
-                            $("#pictureAddressInput").val(response);
-                            $("#afterUploadShow").attr("src", response);
+                            $("#Picture").val(response);
+                            //$("#afterUploadShow").attr("src", response);
                             $('#pictureValidation').addClass("d-none");
+                            alert('圖片上傳成功!!');
                         }
                         else {
                             alert(response);
@@ -261,10 +273,11 @@
         // 使用jQuery的方式綁定otherForm的submit事件
         $("#productSpecForm").submit(function (e) {
             // 檢查是否至少選擇了一張圖片
-            if (!$('#photoInput').get(0).files.length) {
+            if ($('#Picture').val()== "") {
                 e.preventDefault(); // 阻止Form的默認提交行為
                 $('#pictureValidation').removeClass("d-none");
             }
+            alert('領取業者身分完成，登入帳號後即可使用業者功能');
         });
     </script>
 

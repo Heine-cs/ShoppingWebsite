@@ -1,0 +1,30 @@
+﻿@model IEnumerable<OllieShop.Models.Products>
+
+@{
+    ViewData["Title"] =@ViewData["ShopName"] + "的商鋪";
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex flex-column container-fluid mt-2">
+    @await Component.InvokeAsync("VCSellers" , new{SRID= @ViewData["SRID"]})
+    @if (Model.Count() == 0)
+    {
+        <a asp-action ="Index" asp-controller="Home" class="text-center text-secondary">商家尚未上架任何商品，返回商城首頁</a>
+        return;
+    }
+    <h3 class="text-center">商品列表</h3>
+    <div class="container">
+        <div id="productInfoCardsContainer" class="row p-0 d-flex justify-content-between row-cols-5">
+            @foreach (var item in Model)
+            {
+                <div class="card col d-flex flex-column p-0 verticalCard" onclick="RedirectToProductPage(@item.PTID)">
+                    <img src="@item.Specifications.FirstOrDefault().Picture" class="card-img-top img-fluid flex-grow-1">
+                    <div class="card-body flex-grow-0">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text text-truncate">@item.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OllieShop.Models;
+using OllieShop.ViewComponents;
 
 namespace OllieShop.Controllers
 {
@@ -20,6 +21,23 @@ namespace OllieShop.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Index(long SRID)
+        {
+            List<Products> sellerProductsWithSpecification = await _context.Products
+                                                                            .Include(p => p.Specifications)
+                                                                            .Where(p => p.SRID == SRID).ToListAsync();
+            ViewData["ShopName"] = _context.Sellers
+                                            .Where(s => s.SRID == SRID)
+                                            .Select(s=>s.ShopNAME)
+                                            .FirstOrDefault()
+                                            .ToString();
+
+            //為了呼叫Sellers ViewComponent存在的參數
+            ViewData["SRID"] = SRID;
+
+            return View(sellerProductsWithSpecification);
+        }
+
         public IActionResult Create(long URID)
         {
             ViewData["URID"] = URID;
@@ -28,7 +46,7 @@ namespace OllieShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID")] Sellers sellers)
+        public async Task<IActionResult> Create([Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID,Picture")] Sellers sellers)
         {
             if (ModelState.IsValid)
             {

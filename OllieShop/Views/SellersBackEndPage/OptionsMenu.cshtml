@@ -6,14 +6,26 @@
     Sellers sellerFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Sellers>(SellerInfomation);
     
 }
+<style>
+    body {
+        background-image: url("/img/CaveBackGround.jpg");
+        background-size: cover;
+    }
 
-<h1>@ViewData["Title"]</h1>
-<a asp-action="Index" asp-controller="SellerProductsManagement" asp-route-SRID="@sellerFullInfo.SRID">商品管理</a>
-<hr>
-<a asp-action="Index" asp-controller="SellerOrdersManagement" asp-route-SRID="@sellerFullInfo.SRID">訂單管理</a>
-<hr>
-<a asp-action="Details" asp-controller="SellersBackEndPage" asp-route-SRID="@sellerFullInfo.SRID">我的店鋪資料</a>
-<hr>
-<a asp-action="Index" asp-controller="SellerPaymentMethodsManagement" asp-route-SRID="@sellerFullInfo.SRID">付款方式管理</a>
-<hr>
-<a asp-action="Index" asp-controller="SellerShipViasManagement" asp-route-SRID="@sellerFullInfo.SRID">運送方式管理</a>
+    .sellerOptionsMenu > h1:first-child {
+        color: Yellow;
+    }
+</style>
+
+<div class="container flex-grow-1 d-flex flex-column justify-content-center">
+    <div class="row justify-content-center">
+        <div class="col-3 text-center sellerOptionsMenu d-flex flex-column fs-3">
+            <h1 class="fontBorder">@ViewData["Title"]</h1>
+            <h2><a class="text-white effect-shine" asp-action="Index" asp-controller="SellerProductsManagement" asp-route-SRID="@sellerFullInfo.SRID">商品管理</a></h2>
+            <h2><a class="text-white effect-shine" asp-action="Index" asp-controller="SellerOrdersManagement" asp-route-SRID="@sellerFullInfo.SRID">訂單管理</a></h2>
+            <h2><a class="text-white effect-shine" asp-action="Details" asp-controller="SellersBackEndPage" asp-route-SRID="@sellerFullInfo.SRID">我的店鋪資料</a></h2>
+            <h2><a class="text-white effect-shine" asp-action="Index" asp-controller="SellerPaymentMethodsManagement" asp-route-SRID="@sellerFullInfo.SRID">付款方式管理</a></h2>
+            <h2><a class="text-white effect-shine" asp-action="Index" asp-controller="SellerShipViasManagement" asp-route-SRID="@sellerFullInfo.SRID">運送方式管理</a></h2>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 ﻿@model OllieShop.Models.Sellers
 
 @{
-    ViewData["Title"] = "修改商鋪資料";
+    ViewData["Title"] = "修改商店資料";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
 
@@ -9,17 +9,17 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="URID" value="@Model.URID" />
             <input type="hidden" asp-for="SRID" />
+            <input type="hidden" asp-for="Picture" />
             <div class="form-group">
                 <label asp-for="ShopNAME" class="control-label"></label>
                 <input asp-for="ShopNAME" class="form-control" />
                 <span asp-validation-for="ShopNAME" class="text-danger"></span>
             </div>
-
-
             <div class="form-group">
                 <label>是否為具有統一編號之業者？</label>
                 <div class="form-check">
@@ -48,54 +48,106 @@
                 <input asp-for="BankAccount" class="form-control" />
                 <span asp-validation-for="BankAccount" class="text-danger"></span>
             </div>
-            <div class="form-group d-none">
-                <label asp-for="URID" class="control-label"></label>
-                <input asp-for="URID" class="form-control" value="@Model.URID"></input>
-                <span asp-validation-for="URID" class="text-danger"></span>
-            </div>
             <div class="form-group my-3">
                 <input type="submit" value="儲存修改" class="btn btn-primary" />
             </div>
         </form>
+        <div>
+            <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">不修改，返回業者後台</a>
+        </div>
+    </div>
+    @*上傳商店概述圖*@
+    <div class="col-8">
+        <label asp-for="Picture" class="control-label"></label>
+        <form class="d-flex justify-content-between" asp-controller="FileUpload" asp-action="sellerOverviewPhotoReplace" enctype="multipart/form-data" id="pictureForm">
+            <input type="file" name="photo" id="photoInput" />
+            <input class="btn btn-outline-dark" type="submit" value="上傳圖片" />
+        </form>
+        <span class="fs-3 text-primary" id="afterRelpaceMessage"></span>
+        <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
+        <img src="@Model.Picture" id="afterUploadShow" class="w-100 my-2" />
     </div>
 </div>
 
-<div>
-    <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">不修改，返回業者後台</a>
-</div>
 
-<script>
-    const taxIdOption1 = document.getElementById("taxIdOption1");
-    const taxIdOption2 = document.getElementById("taxIdOption2");
-    const taxIdInput = document.getElementById("taxIdInput");
 
-    taxIdOption1.addEventListener("change", function () {
-        if (taxIdOption1.checked) {
-            taxIdInput.value = "";
-            taxIdInput.removeAttribute("readonly");
-        }
-    });
-
-    taxIdOption2.addEventListener("change", function () {
-        if (taxIdOption2.checked) {
-
-            taxIdInput.value = "無統一編號之業者";
-            taxIdInput.setAttribute("readonly", "readonly");
-        }
-    });
-
-    // 初始化時根據Radio button的默认选项进行显示和隐藏
-    if (taxIdOption1.checked) {
-        taxIdInputContainer.style.display = "block";
-        setTaxIDInputReadOnly(false);
-    } else if (taxIdOption2.checked) {
-        taxIdInputContainer.style.display = "none";
-        taxIdInput.value = "無統一編號之業者";
-        setTaxIDInputReadOnly(true);
-    }
-
-</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const taxIdOption1 = document.getElementById("taxIdOption1");
+        const taxIdOption2 = document.getElementById("taxIdOption2");
+        const taxIdInput = document.getElementById("taxIdInput");
+
+        taxIdOption1.addEventListener("change", function () {
+            if (taxIdOption1.checked) {
+                taxIdInput.value = "";
+                taxIdInput.removeAttribute("readonly");
+            }
+        });
+
+        taxIdOption2.addEventListener("change", function () {
+            if (taxIdOption2.checked) {
+
+                taxIdInput.value = "無統一編號之業者";
+                taxIdInput.setAttribute("readonly", "readonly");
+            }
+        });
+
+        // 初始化時根據Radio button的默认选项进行显示和隐藏
+        if (taxIdOption1.checked) {
+            taxIdInputContainer.style.display = "block";
+            setTaxIDInputReadOnly(false);
+        } else if (taxIdOption2.checked) {
+            taxIdInputContainer.style.display = "none";
+            taxIdInput.value = "無統一編號之業者";
+            setTaxIDInputReadOnly(true);
+        }
+
+        //預覽上傳圖片
+        $('#photoInput').change(function () {
+            let file = this.files[0];
+            let reader = new FileReader();
+
+            reader.onload = event => {
+                $("#afterUploadShow").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+        // 使用jQuery的方式綁定Form的submit事件
+        $("#pictureForm").submit(function (e) {
+            e.preventDefault(); // 阻止Form的默認提交行為
+            if (photoInput.value != "") {
+                // 使用FormData來構建請求數據，包括文字數據和檔案
+                var formData = new FormData(this);
+                //上傳圖片前，要把保存在圖庫的舊圖片給替換掉，將舊圖路徑參數傳到formData並透過post交由sellerOverviewPhotoReplace action處理
+                formData.append("oldPhotoPath", "@Model.Picture");
+                // 使用AJAX向Controller的Action發送POST請求
+                $.ajax({
+                    url: "@Url.Action("sellerOverviewPhotoReplace", "FileUpload")",
+                    type: "POST",
+                    data: formData, // 把Form中的數據序列化作為請求參數
+                    processData: false, // 不要處理data
+                    contentType: false, // 不要設置contentType，因為FormData已經處理了
+                    success: function (response) {
+                        // 成功接收到返回的字串後，將結果傳到specform需要的欄位與顯示上傳後圖片畫面
+                        if (response != "上傳圖片檔案類型僅限jpg或png兩種格式之一") {
+                            $('#pictureValidation').addClass("d-none");
+                            $('#afterRelpaceMessage').html(response);
+                        }
+                        else {
+                            alert(response);
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+            else {
+                alert("請先選擇圖片後再點上傳");
+            }
+        });
+
+    </script>
 }

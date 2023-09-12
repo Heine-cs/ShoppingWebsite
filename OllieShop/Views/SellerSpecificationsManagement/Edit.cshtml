@@ -13,13 +13,13 @@
             <span>變更</span><label asp-for="Picture" class="control-label"></label>
             <form asp-controller="FileUpload" asp-action="photoReplace" enctype="multipart/form-data" id="pictureForm">
                 <input type="file" name="photo" id="photoInput" />
-                <input class="btn btn-outline-dark" type="submit" value="上傳並預覽" />
+                <input class="btn btn-outline-dark" type="submit" value="上傳圖片" />
             </form>
-            <span class="text-danger d-none" id="pictureValidation">請上傳圖片一張</span>
             <span class="text-success" id="afterRelpaceMessage"></span>
-            <img class="w-100 my-2" src="@Model.Picture" />
+            <img id="afterUploadShow" class="w-100 my-2" src="@Model.Picture" />
         </div>
-        <form class="col" asp-action="Edit">
+    <form class="col" asp-action="Edit">
+        <input type="hidden" asp-for="Picture" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="SNID" />
             <div class="form-group">
@@ -27,11 +27,7 @@
                 <input asp-for="SpecName" class="form-control" />
                 <span asp-validation-for="SpecName" class="text-danger"></span>
             </div>
-            <div class="form-group d-none">
-                <label asp-for="Picture" class="control-label"></label>
-                <input asp-for="Picture" class="form-control"/>
-                <span asp-validation-for="Picture" class="text-danger"></span>
-            </div>
+            
             <div class="form-group">
                 <label asp-for="Weight" class="control-label"></label>
                 <input asp-for="Weight" class="form-control" />
@@ -88,6 +84,16 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        //預覽上傳圖片
+        $('#photoInput').change(function () {
+            let file = this.files[0];
+            let reader = new FileReader();
+
+            reader.onload = event => {
+                $("#afterUploadShow").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
         // 使用jQuery的方式綁定Form的submit事件
         $("#pictureForm").submit(function (e) {
             e.preventDefault(); // 阻止Form的默認提交行為
@@ -98,7 +104,7 @@
                 formData.append("oldPhotoPath", "@Model.Picture");
                 // 使用AJAX向Controller的Action發送POST請求
                 $.ajax({
-                    url: "@Url.Action("photoReplace", "FileUpload",new {SRID=@ViewBag.SRID})",
+                    url: "@Url.Action("photoReplace", "FileUpload")",
                     type: "POST",
                     data: formData, // 把Form中的數據序列化作為請求參數
                     processData: false, // 不要處理data
@@ -122,16 +128,6 @@
                 alert("請先選擇圖片後再點上傳");
             }
         });
-
-        // 使用jQuery的方式綁定otherForm的submit事件
-        $("#specForm").submit(function (e) {
-            // 檢查是否至少選擇了一張圖片
-            if (!$('#photoInput').get(0).files.length) {
-                e.preventDefault(); // 阻止Form的默認提交行為
-                $('#pictureValidation').removeClass("d-none");
-            }
-        });
-
 
         //贈品欄位的Radio選項
         const freebieIdOption1 = document.getElementById("freebieIdOption1");

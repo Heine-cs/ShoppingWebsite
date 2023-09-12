@@ -9,11 +9,6 @@
             top:10px;
         }
 
-        .card {
-            height: 400px;
-            cursor:pointer;
-        }
-
         .carousel-item {
             height: 600px;
         }
@@ -23,10 +18,14 @@
             top: 10px;
         }
 
+        #mainContent{
+            background-image: url('/img/BaseLayoutBackground.jpg');
+            background-size:cover;
+        }
 
     </style>
 </head>
-<div class="row flex-grow-1 justify-content-center">
+<div id="mainContent" class="row flex-grow-1 justify-content-center">
     @*篩選功能*@
     <div class="col-1 p-0">
         <div class="FilterSticky bg-info border border-2 border-secondary-subtle rounded-end p-1">
@@ -52,10 +51,10 @@
 
     <div class="col-9 container" id="container">
         <!--CardComponentPlacePosition-->
-        <div class="row p-0 d-flex justify-content-between">
+        <div id="productInfoCardsContainer" class="row p-0 d-flex justify-content-between">
             @foreach (var productInfo in Model)
             {
-                <div class="col-2 card m-2 p-0 d-flex flex-column PreHiddenItemForCategoryFilter @productInfo.CYID" onclick="RedirectToProductPage(@productInfo.PTID)">
+                <div class="col-2 card m-2 p-0 d-flex flex-column PreHiddenItemForCategoryFilter @productInfo.CYID verticalCard" onclick="RedirectToProductPage(@productInfo.PTID)">
                     <img src="@productInfo.Picture" class="card-img-top flex-grow-1 img-fluid">
                     <div class="card-body flex-grow-0">
                         <h5 class="card-title"><strong>@productInfo.Name</strong></h5>
@@ -103,17 +102,6 @@
 
 @section Scripts{
     <script>
-        function RedirectToProductPage(PTID) {
-            $.ajax({
-                type: "GET",
-                url: "/Home/ProductPage",
-                data: {PTID:PTID},
-                success:function(response){
-                    //跳轉到ProductPageAction
-                    window.location.href = "/Home/ProductPage?PTID=" + PTID;
-                }
-            });
-        }
         //進階篩選功能
         $(document).ready(function (){
             $('.form-check-input').on('change', function () {
@@ -145,5 +133,27 @@
                 });
             });
         });
+        
+        function searchProuducts() {
+            // Declare variables
+            var input, filter, productInfoCardsContainer, cards, strong, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            productInfoCardsContainer = document.getElementById('productInfoCardsContainer');
+            cards = productInfoCardsContainer.getElementsByClassName('card');
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < cards.length; i++) {
+                strong = cards[i].querySelector("strong");
+                txtValue = strong.textContent || strong.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    console.log(cards[i]);
+                    cards[i].classList.remove("d-none");
+                } else {
+                    cards[i].classList.remove("d-none");
+                    cards[i].classList.add("d-none");
+                }
+            }
+        }
     </script>
 }

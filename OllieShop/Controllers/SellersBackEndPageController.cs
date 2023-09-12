@@ -66,12 +66,9 @@ namespace OllieShop.Controllers
             return View(sellers);
         }
 
-        // POST: SellersBackEndPage/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID")] Sellers sellers)
+        public async Task<IActionResult> Edit([Bind("SRID,ShopNAME,TaxID,BankCode,BankAccount,URID,Picture")] Sellers sellers)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +91,6 @@ namespace OllieShop.Controllers
                 TempData["editSuccessMessage"] = "本次修改成功! 您可再次確認是否符合預期";
                 return RedirectToAction(nameof(Details), new {sellers.SRID});
             }
-
             return View(sellers);
         }
 

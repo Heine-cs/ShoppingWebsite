@@ -34,13 +34,7 @@
                     </dt>
                     <dd class = "col-sm-8">
                         @Html.DisplayFor(model => model.PM.Name)
-                    </dd>
-                    <dt class = "col-sm-4">
-                        @Html.DisplayNameFor(model => model.SR.ShopNAME)
-                    </dt>
-                    <dd class = "col-sm-8">
-                        @Html.DisplayFor(model => model.SR.ShopNAME)
-                    </dd>
+                    </dd>                    
                     <dt class = "col-sm-4">
                         @Html.DisplayNameFor(model => model.SV.Name)
                     </dt>
@@ -54,6 +48,7 @@
                         @Html.DisplayFor(model => model.Canceled)
                     </dd>
                 </dl>
+                <div class="p-0 my-3">@await Component.InvokeAsync("VCSellers" , new{SRID=Model.SRID})</div>
                 <div>
                     @*<a asp-action="Edit" asp-route-id="@Model?.ORID">取消訂單</a> |*@
                     <a asp-action="Index" asp-route-CRID="@Model?.CRID">返回我的訂單總覽</a>

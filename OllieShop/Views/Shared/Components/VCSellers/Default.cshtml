@@ -1,0 +1,62 @@
+﻿@model OllieShop.Models.Sellers
+
+@{
+    Layout = null;
+}
+<style>
+    #sellerInfoCard {
+        transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+        cursor: pointer;
+    }
+
+    #sellerInfoCard:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+    }
+
+    #sellerInfoCard > div:first-child + div {
+        background-color:lemonchiffon;
+    }
+
+    #sellerInfoCard > div:first-child + div .card-title span:first-child {
+        color: lightskyblue;
+    }    
+    #sellerInfoCard > div:first-child + div .card-title span:last-child{
+        color: linen;
+    }
+</style>
+<div class="my-3 d-flex container" onclick="redirectToSellerShopPage()">
+    <div class="card w-100">
+        <div id="sellerInfoCard" class="g-0 row">
+            <div class="card text-bg-dark col-4">
+                <img src="@Html.DisplayFor(modelItem => modelItem.Picture)" class="card-img img-fluid rounded-start h-100" alt="...">
+                <div class="card-img-overlay d-flex flex-column justify-content-end p-0">
+                    <h5 class="card-title text-end fontBorder bg-secondary bg-opacity-50 p-1 m-0">賣家 : @Html.DisplayFor(modelItem => Model.ShopNAME)</h5>
+                </div>
+            </div>
+            <div class="card-body col-8 d-flex flex-column justify-content-around fontBorder">
+                <h5 class="card-title"><span>商品</span> : <span>@ViewData["sellerProductAmount"]</span></h5>
+                <h5 class="card-title"><span>已完成訂單</span> : <span>@ViewData["orderAccomplishAmount"]</span></h5>
+                <h5 class="card-title"><span>總評價</span> : <span><i class="bi bi-star-fill text-warning"></i></span></h5>
+                @{
+                    //賣家提供的付款方式與運送方式印在卡片資料欄
+                    List<string> sellerShipVias = ViewData["sellerShipVias"] as List<string>;
+                    string sellerShipViasPlusComma = sellerShipVias.Count()!=0? string.Join("、", sellerShipVias) : "商家未新增付款方式";
+                    List<string> sellerPaymentMethods = ViewData["sellerPaymentMethods"] as List<string>;
+                    string sellerPaymentMethodsPlusComma = sellerPaymentMethods.Count() != 0 ? string.Join("、", sellerPaymentMethods) : "商家未新增運送方式";
+                }
+                <h5 class="card-title"><span>商品@(Html.DisplayNameFor(modelItem => modelItem.SellerPaymentMethods))</span> : <span>@sellerPaymentMethodsPlusComma</span></h5>
+                <h5 class="card-title"><span>商品@(Html.DisplayNameFor(modelItem => modelItem.SellerShipVias))</span> : <span>@sellerShipViasPlusComma</span></h5>
+                @*<h5 class="card-title fontBorder">Card title</h5>*@
+            </div>
+        </div>
+    </div>
+</div>
+@*<a asp-action="Index" asp-controller="SellersFrontEndPage" asp-route-SRID="@Model.SRID">
+    @Html.DisplayFor(modelItem => Model.ShopNAME)
+</a>*@
+<script>
+    function redirectToSellerShopPage(){
+        window.open("/SellersFrontEndPage/Index?SRID=" + @Model.SRID);
+    }
+</script>

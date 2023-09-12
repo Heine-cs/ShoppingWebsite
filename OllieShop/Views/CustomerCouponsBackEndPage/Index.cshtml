@@ -1,12 +1,14 @@
 ﻿@model IEnumerable<OllieShop.Models.CustomerCoupons>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "折價券總覽";
     Layout = "~/Views/Shared/_Layout_Customer.cshtml";
 }
 
-<h1>折價券總覽</h1>
-
+<div class="d-flex align-items-center">
+    <h1 class="me-auto">@ViewData["Title"]</h1>
+    <a asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
+</div>
 <p>
     <a asp-action="Create" asp-route-CRID="@ViewBag.CRID">新增折價券</a>
 </p>
