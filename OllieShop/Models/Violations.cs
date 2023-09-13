@@ -16,6 +16,8 @@ public partial class Violations
     public long? Suspect { get; set; }
 
     [Display(Name = "提交原因")]
+    [Required(ErrorMessage ="必填欄位")]
+    [StringLength(300,ErrorMessage ="檢舉原因不能超過300個字")]
     public string Reason { get; set; } = null!;
 
     [Display(Name = "提交日")]

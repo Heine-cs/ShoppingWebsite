@@ -1,0 +1,82 @@
+﻿@model IEnumerable<OllieShop.Models.Violations>
+
+@{
+    ViewData["Title"] = "檢舉提交總覽";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex flex-column container-fluid pt-2">
+    <h1>@ViewData["Title"]</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubmitDate)
+                </th>
+                <th>
+                    舉報對象
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Disabled)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AD)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int caculactor = 0;
+                List<string> suspectsName = ViewData["suspectsName"] as List<string>;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubmitDate)
+                    </td>                    
+                    <td>
+                        @{
+                            @suspectsName[caculactor]
+                            caculactor++;
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var displayTexts = new Dictionary<string, string>
+                            {
+                               { "True", "停權"},
+                               { "False", "不停權"},
+                               { "", "尚未裁定"}
+                            };
+                        }
+                        @displayTexts[item.Disabled.ToString()]
+                    </td>
+                    <td>
+                        @{
+                            string recordAdminHandleStatus = item.Disabled == null ? "<span class='text-warning fontBorder'>管理員尚未審核完成</span>" : item.AD.Account;
+                        }
+                       @Html.Raw(recordAdminHandleStatus)
+                    </td>
+                    @{
+                        if(item.Disabled == null)
+                        {
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.VioID">編輯內容</a> |
+                                <a asp-action="Details" asp-route-id="@item.VioID">完整內容</a> |
+                                <a asp-action="Delete" asp-route-id="@item.VioID">取消提交</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.VioID">完整內容</a>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

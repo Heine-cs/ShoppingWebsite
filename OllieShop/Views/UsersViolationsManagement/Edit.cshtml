@@ -1,0 +1,49 @@
+﻿@model OllieShop.Models.Violations
+
+@{
+    ViewData["Title"] = "編輯內容";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex flex-column container-fluid">
+    <h1>@ViewData["Title"]</h1>
+
+    <hr />
+    <div class="row">
+        <div class="col-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="VioID" />
+                <input type="hidden" asp-for="ADID" value="@ViewBag.ADID" />
+                <input type="hidden" asp-for="Submitter" value="@ViewBag.Submitter" />
+                <input type="hidden" asp-for="Suspect" value="@ViewBag.Suspect" />
+
+
+                <div class="form-group my-3">
+                    <div>舉報對象</div>
+                    @ViewData["SuspectName"]
+                </div>
+                <div class="form-group my-3">
+                    <label asp-for="Reason" class="control-label"></label>
+                    <input asp-for="Reason" class="form-control"/>
+                    <span asp-validation-for="Reason" class="text-danger"></span>
+                </div>
+                <div class="form-group my-3">
+                    <label asp-for="SubmitDate" class="control-label"></label>
+                    <input asp-for="SubmitDate" class="form-control" readonly/>
+                    <span asp-validation-for="SubmitDate" class="text-danger"></span>
+                </div>
+                <div class="form-group my-3">
+                    <input type="submit" value="儲存修改" class="btn btn-primary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index" asp-route-URID="@Model.Submitter">不修改，返回檢舉提交總覽</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -11,6 +11,17 @@ namespace OllieShop.Models
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<IActionResult> UserIdentityCheckAsync(long URID)
+        {
+            string userAccountInfo = _httpContextAccessor.HttpContext.Session.GetString("UserInfomation");
+            Sellers userAccountInfoToOBject = Newtonsoft.Json.JsonConvert.DeserializeObject<Sellers>(userAccountInfo);
+            if (userAccountInfoToOBject.URID != URID)
+            {
+                return new NotFoundResult();
+            }
+            return new OkResult();
+        }        
+        
         public async Task<IActionResult> SellerIdentityCheckAsync(long SRID)
         {
             string sellerAccountInfo = _httpContextAccessor.HttpContext.Session.GetString("SellerInfomation");
