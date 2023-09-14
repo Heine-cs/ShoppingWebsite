@@ -6,7 +6,10 @@
 }
 <div class="d-flex flex-column container-fluid pt-2">
     <h1>@ViewData["Title"]</h1>
-
+    @if(TempData["CreateSuccessMessage"] != null)
+    {
+        <h3 class="text-primary">@TempData["CreateSuccessMessage"]</h3>
+    }
     <table class="table">
         <thead>
             <tr>

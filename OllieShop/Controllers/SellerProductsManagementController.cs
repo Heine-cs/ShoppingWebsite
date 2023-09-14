@@ -243,7 +243,7 @@ namespace OllieShop.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {SRID = products.SRID});
         }
 
         private bool ProductsExists(long id)

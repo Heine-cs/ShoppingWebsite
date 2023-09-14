@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OllieShop.Models;
+using static Azure.Core.HttpHeader;
 
 namespace OllieShop.Controllers
 {
@@ -34,15 +35,15 @@ namespace OllieShop.Controllers
                                     .Where(v => v.Submitter == URID)
                                     .Include(v => v.AD)
                                     .ToListAsync();
-            List<long> suspectUserIDs = new List<long>();
+            List<string> suspectsName = new List<string>();
+            Users singleUserQuery = null;
             foreach (var item in ollieShopContext)
             {
-                suspectUserIDs.Add(item.Suspect.GetValueOrDefault());
+                singleUserQuery = await _context.Users.FirstOrDefaultAsync(u => u.URID == item.Suspect);
+                suspectsName.Add(singleUserQuery.Name);
             }
-            ViewData["suspectsName"] = await _context.Users
-                                            .Where(s => suspectUserIDs.Contains(s.URID))
-                                            .Select(s => s.Name)
-                                            .ToListAsync();
+
+            ViewData["suspectsName"] = suspectsName;
             return View(ollieShopContext);
         }
 
@@ -61,16 +62,31 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-
+            //驗證使用此action對象之用戶身分是否與session資料相符
+            IActionResult result = await _identityCheck.UserIdentityCheckAsync(violations.Submitter.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
             return View(violations);
         }
 
         // GET: UsersViolationsManagement/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(long SubmitterUserID, long SuspectUserID)
         {
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "Account");
-            ViewData["Submitter"] = new SelectList(_context.Users, "URID", "Email");
-            ViewData["Suspect"] = new SelectList(_context.Users, "URID", "Email");
+            ViewData["SubmitterUserID"] = SubmitterUserID;
+            //驗證使用此action對象之用戶身分是否與session資料相符
+            IActionResult result = await _identityCheck.UserIdentityCheckAsync(SubmitterUserID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+            ViewData["SuspectUserID"] = SuspectUserID;
+            ViewData["SuspectName"] = await  _context.Users
+                                        .Where(u => u.URID == SuspectUserID)
+                                        .Select(u => u.Name)
+                                        .FirstOrDefaultAsync();
+            ViewData["SubmitDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             return View();
         }
 
@@ -83,11 +99,13 @@ namespace OllieShop.Controllers
             {
                 _context.Add(violations);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["CreateSuccessMessage"] = "成功提交檢舉!!";
+                return RedirectToAction(nameof(Index), new { URID = violations.Submitter });
             }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "Account", violations.ADID);
-            ViewData["Submitter"] = new SelectList(_context.Users, "URID", "Email", violations.Submitter);
-            ViewData["Suspect"] = new SelectList(_context.Users, "URID", "Email", violations.Suspect);
+
+            ViewData["SubmitterUserID"] = violations.Submitter;
+            ViewData["SuspectName"] = violations.Suspect;
+
             return View(violations);
         }
 
@@ -172,14 +190,17 @@ namespace OllieShop.Controllers
 
             var violations = await _context.Violations
                 .Include(v => v.AD)
-                .Include(v => v.SubmitterNavigation)
-                .Include(v => v.SuspectNavigation)
                 .FirstOrDefaultAsync(m => m.VioID == id);
             if (violations == null)
             {
                 return NotFound();
             }
-
+            //驗證使用此action對象之用戶身分是否與session資料相符
+            IActionResult result = await _identityCheck.UserIdentityCheckAsync(violations.Submitter.GetValueOrDefault());
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
             return View(violations);
         }
 
@@ -199,7 +220,7 @@ namespace OllieShop.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { URID = violations.Submitter });
         }
 
         private bool ViolationsExists(long id)
