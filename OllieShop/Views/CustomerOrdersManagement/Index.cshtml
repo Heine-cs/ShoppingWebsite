@@ -6,12 +6,12 @@
 }
 <div class="d-flex align-items-center">
     <h1 class="me-auto">@ViewData["Title"]</h1>
-    <a asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
+    <a class="fs-3" asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
 </div
 >@if (Model.FirstOrDefault() == null)
 {
-    <h3>尚未下過任何訂單</h3>
-    <a asp-action="Index" asp-controller="Home">馬上逛逛</a>
+    <h1 class="text-center">尚未下過任何訂單</h1>
+    <a class="text-center fs-3" asp-action="Index" asp-controller="Home">馬上逛逛</a>
 }
 else{
     <table class="table">

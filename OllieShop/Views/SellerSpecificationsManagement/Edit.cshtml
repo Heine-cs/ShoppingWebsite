@@ -22,7 +22,10 @@
         <input type="hidden" asp-for="Picture" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="SNID" />
-            <div class="form-group">
+            <div class="text-end">
+                <a class="fs-3" asp-controller="SellerProductsManagement" asp-action="Edit" asp-route-id="@Model.PTID">不編輯此筆規格，返回商品編輯頁</a>
+            </div>
+            <div class="form-group d-none">
                 <label asp-for="SpecName" class="control-label"></label>
                 <input asp-for="SpecName" class="form-control" />
                 <span asp-validation-for="SpecName" class="text-danger"></span>
@@ -72,13 +75,9 @@
             </div>
             <div class="form-group d-flex justify-content-between mt-4">
                 <input type="submit" value="編輯" class="btn btn-primary" />
-                <a class="btn btn-danger" asp-controller="SellerSpecificationsManagement" asp-action="Delete" asp-route-id="@Model.SNID">刪除</a>
+                @*<a class="btn btn-danger" asp-controller="SellerSpecificationsManagement" asp-action="Delete" asp-route-id="@Model.SNID">刪除</a>*@
             </div>
         </form>
-</div>
-
-<div>
-    <a asp-controller="SellerProductsManagement" asp-action="Edit" asp-route-id="@Model.PTID">不編輯此筆規格，返回商品編輯頁</a>
 </div>
 
 @section Scripts {

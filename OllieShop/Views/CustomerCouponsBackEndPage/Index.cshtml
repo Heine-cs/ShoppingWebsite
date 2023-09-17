@@ -7,7 +7,7 @@
 
 <div class="d-flex align-items-center">
     <h1 class="me-auto">@ViewData["Title"]</h1>
-    <a asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
+    <a class="fs-3" asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
 </div>
 <p>
     <a asp-action="Create" asp-route-CRID="@ViewBag.CRID">新增折價券</a>
@@ -15,7 +15,7 @@
 
 @if(Model.Count() == 0)
 {
-    <h2 class="text-primary">目前您尚未持有折價券，可多多關注賣場活動訊息</h2>
+    <h1 class="text-primary text-center">目前您尚未持有折價券，可多多關注賣場活動訊息</h1>
     return;
 }
 <table class="table">

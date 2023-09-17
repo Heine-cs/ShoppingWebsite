@@ -94,11 +94,13 @@
         </dd>
     </dl>
     <div class="col">
+        <div class="text-end mb-3">
+                <a class="fs-3" asp-action="Index" asp-route-SRID="@Model.SRID">返回商品總覽</a>
+        </div>
         @await Component.InvokeAsync("VCSpecifications" , new{ptid = Model.PTID})
     </div>
 </div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.PTID">編輯</a> |
-    <a asp-action="Index" asp-route-SRID="@Model.SRID">返回商品總覽</a>
+    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@Model?.PTID">編輯</a>
 </div>

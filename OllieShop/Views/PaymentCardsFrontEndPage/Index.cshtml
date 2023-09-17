@@ -6,7 +6,7 @@
 }
 <div class="d-flex align-items-center">
     <h1 class="me-auto">@ViewData["Title"]</h1>
-    <a asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
+    <a class="fs-3" asp-action="OptionsMenu" asp-controller="CustomersBackEndPage">返回消費者功能選單</a>
 </div>
 
 <p>
@@ -22,7 +22,7 @@
 }
 @if(Model.Count() == 0)
 {
-    <h2 class="text-primary">@ViewData["CustomerPaymentCardNotFound"]</h2>
+    <h1 class="text-primary text-center">@ViewData["CustomerPaymentCardNotFound"]</h1>
     return;
 }
 <table class="table">

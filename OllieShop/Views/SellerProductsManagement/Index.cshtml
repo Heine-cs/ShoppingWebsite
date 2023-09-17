@@ -15,19 +15,16 @@
 </style>
 <div class="d-flex align-items-center">
     <h1 class="me-auto">@ViewData["Title"]</h1>
-    <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">返回業者功能選單</a>
+    <a class="fs-3" asp-action="OptionsMenu" asp-controller="SellersBackEndPage">返回業者功能選單</a>
 </div>
-@if (Model.Count() == 0)
-{
-    <h2 class="text-info">目前尚未新增任何商品</h2>
-    <p>
-        <a asp-action="Create">新增商品</a>
-    </p>
-    return;
-}
 <p>
     <a asp-action="Create">新增商品</a>
 </p>
+@if (Model.Count() == 0)
+{
+    <h1 class="text-info text-center">目前尚未新增任何商品</h1>
+    return;
+}
 <table class="table table-hover align-middle text-center table-striped">
     <thead>
         <tr>
@@ -90,8 +87,8 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PTID">編輯</a> |
-                    <a asp-action="Details" asp-route-id="@item.PTID">完整內容</a> |
-                    <a asp-action="Delete" asp-route-id="@item.PTID">刪除</a>
+                    <a asp-action="Details" asp-route-id="@item.PTID">完整內容</a> @*|
+                    <a asp-action="Delete" asp-route-id="@item.PTID">刪除</a>*@
                 </td>
             </tr>
         }
