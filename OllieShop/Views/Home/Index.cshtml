@@ -27,7 +27,7 @@
 </head>
 <div id="mainContent" class="row flex-grow-1 justify-content-center">
     @*篩選功能*@
-    <div class="col-1 p-0">
+    <div class="col-xxl-1 d-none d-xxl-block p-0">
         <div class="FilterSticky bg-info border border-2 border-secondary-subtle rounded-end p-1">
             <i class="me-2 bi bi-funnel-fill fs-3 text-black"></i><span class="fs-5 fontBorder text-secondary"><strong>進階篩選</strong></span>
             <div class="form-check border-top border-2 pt-2">
@@ -37,7 +37,7 @@
                     foreach (var item in AllCategorys)
                     {
                         <div class="border-bottom border-secondary">
-                            <label class="form-check-label text-light fs-5 container-fluid" for="flexCheckChecked@(Caculactor)">
+                            <label class="form-check-label text-light fs-6 container-fluid text-nowrap text-truncate fontBorder" for="flexCheckChecked@(Caculactor)">
                                 @item.Name
                             </label>
                             <input class="form-check-input" type="checkbox" value="@(item.CYID)" id="flexCheckChecked@(Caculactor)">
@@ -54,7 +54,7 @@
         <div id="productInfoCardsContainer" class="row p-0 d-flex justify-content-between">
             @foreach (var productInfo in Model)
             {
-                <div class="col-2 card m-2 p-0 d-flex flex-column PreHiddenItemForCategoryFilter @productInfo.CYID verticalCard" onclick="RedirectToProductPage(@productInfo.PTID)">
+                <div class="col-xl-3 col-xxl-2 col-lg-5 col-md-5 card m-2 p-0 d-flex flex-column PreHiddenItemForCategoryFilter @productInfo.CYID verticalCard" onclick="RedirectToProductPage(@productInfo.PTID)">
                     <img src="@productInfo.Picture" class="card-img-top flex-grow-1 img-fluid">
                     <div class="card-body flex-grow-0">
                         <h5 class="card-title"><strong>@productInfo.Name</strong></h5>
@@ -64,7 +64,7 @@
             }
         </div>
     </div>
-    <div class="col-2 d-flex flex-column p-0">
+    <div class="col-xxl-2 col-xl-3 d-none d-xl-block d-flex flex-column p-0">
         <div class="flex-grow-1">
             <!--carouseforBanner-->
                 <div class="BannerCarouselSticky">
@@ -155,5 +155,7 @@
                 }
             }
         }
+
+        breakCacheStoreRuleForDisplayUpdatePhoto(".card-img-top");
     </script>
 }

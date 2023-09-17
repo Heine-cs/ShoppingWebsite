@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OllieShop.Models;
+using System.Linq;
 
 namespace OllieShop.Controllers
 {
@@ -31,7 +32,16 @@ namespace OllieShop.Controllers
                     ViewData["ErrorMessage"] = "查無此帳號";
                     return View(accounts);
                 }
-                var userInfo = _context.Users.FirstOrDefault(u => u.URID == result.URID);
+                //檢查用戶違規情形
+                var violationRecord =  _context.Violations.FirstOrDefault(v => v.Suspect == result.URID);
+                if (violationRecord != null) { 
+                    if(violationRecord.Disabled == true)
+                    {
+                        ViewData["AccountBanedMessage"] = "您因違反賣場規定，被禁止登入使用此賣場";
+                        return View(accounts);
+                    }
+				}
+				var userInfo = _context.Users.FirstOrDefault(u => u.URID == result.URID);
                 if (userInfo != null)
                 {
                     HttpContext.Session.SetString("UserInfomation", JsonConvert.SerializeObject(userInfo));

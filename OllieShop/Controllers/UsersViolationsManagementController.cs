@@ -99,7 +99,7 @@ namespace OllieShop.Controllers
             {
                 _context.Add(violations);
                 await _context.SaveChangesAsync();
-                TempData["CreateSuccessMessage"] = "成功提交檢舉!!";
+                TempData["CreateSuccessMessage"] = "成功提交檢舉!! 請靜待管理員審核案件";
                 return RedirectToAction(nameof(Index), new { URID = violations.Submitter });
             }
 

@@ -64,7 +64,7 @@
         {  
             <tr>
                 <td>
-                    <img class="w-100 h-100" src="@Html.DisplayFor(modelItem => item.Picture)"/>
+                    <img class="w-100 h-100 productImg" src="@Html.DisplayFor(modelItem => item.Picture)"/>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -134,3 +134,9 @@
     }
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        breakCacheStoreRuleForDisplayUpdatePhoto(".productImg");
+    </script>
+}

@@ -61,3 +61,19 @@ function RedirectToProductPage(PTID) {
     //ProductPageAction get
     window.open("/Home/ProductPage?PTID=" + PTID);
 }
+
+function RedirectToLogin() {
+    alert("請先完成會員登入喔!!");
+    window.location = ("/Accounts/UserLogin");
+}
+//呼叫以下function時需要帶入要破壞src的圖片id或class或標籤，以符合jquery選擇器語法
+function breakCacheStoreRuleForDisplayUpdatePhoto(applyTarget) {
+    $(document).ready(function () {
+        $(applyTarget).each(function () {
+            var currentSrc = $(this).attr('src'); // 获取当前图片的src属性值
+            var randomSuffix = Math.floor(Math.random() * 1000); // 生成一个随机数作为后缀
+            var newSrc = currentSrc + "?v=" + randomSuffix; // 在原有的src后面添加需要的字符串
+            $(this).attr('src', newSrc); // 设置新的src属性值
+        });
+    });
+}

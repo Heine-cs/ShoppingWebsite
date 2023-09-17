@@ -37,7 +37,7 @@
             <div class="card-body col-8 d-flex flex-column justify-content-around fontBorder">
                 <h5 class="card-title"><span>商品</span> : <span>@ViewData["sellerProductAmount"]</span></h5>
                 <h5 class="card-title"><span>已完成訂單</span> : <span>@ViewData["orderAccomplishAmount"]</span></h5>
-                <h5 class="card-title"><span>總評價</span> : <span><i class="bi bi-star-fill text-warning"></i></span></h5>
+                @*<h5 class="card-title"><span>總評價</span> : <span><i class="bi bi-star-fill text-warning"></i></span></h5>*@
                 @{
                     //賣家提供的付款方式與運送方式印在卡片資料欄
                     List<string> sellerShipVias = ViewData["sellerShipVias"] as List<string>;
@@ -52,11 +52,14 @@
         </div>
     </div>
 </div>
-@*<a asp-action="Index" asp-controller="SellersFrontEndPage" asp-route-SRID="@Model.SRID">
-    @Html.DisplayFor(modelItem => Model.ShopNAME)
-</a>*@
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js"></script>
 <script>
     function redirectToSellerShopPage(){
         window.open("/SellersFrontEndPage/Index?SRID=" + @Model.SRID);
     }
+
+    breakCacheStoreRuleForDisplayUpdatePhoto(".card-img");
 </script>

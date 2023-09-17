@@ -86,7 +86,7 @@
                         <div class="card mb-3">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img src="@purchaseProductsSpecificationInfo[i].Picture" class="img-fluid rounded-start w-100 h-100" alt="...">
+                                    <img src="@purchaseProductsSpecificationInfo[i].Picture" class="productImage img-fluid rounded-start w-100 h-100" alt="...">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
@@ -105,3 +105,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        breakCacheStoreRuleForDisplayUpdatePhoto(".productImage");
+    </script>
+}

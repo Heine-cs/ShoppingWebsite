@@ -77,79 +77,82 @@
         </div>
     </div>
 </div>
-<script>
-    
-    function ProductQuantityChange(QuantityChangeValue) {
-        let InputQuantity = document.getElementById("InputQuantity");
-        let IntInputQuantity = parseInt(InputQuantity.value);
-        if (IntInputQuantity === 1 && QuantityChangeValue === -1){
-            return "";
-        }
-        IntInputQuantity += QuantityChangeValue;
-        if (IntInputQuantity > @RestQuantity) {
-            return ""; 
-        }
-        InputQuantity.value = IntInputQuantity;
-    }
-
-    function InputvalidateAndClear() {
-        
-        let inputElement = document.getElementById("InputQuantity");
-        let inputValue = inputElement.value;
-        // 執行驗證邏輯
-        if (inputValue > @RestQuantity || inputValue === 0) {
-        // 驗證失敗，清除輸入
-        inputElement.value = 1;
-        }
-    }
-
-    function saveProductToCart() {
-        // 取得當前存在 localStorage 的商品資料
-        let cartData = localStorage.getItem('cartData');
-        let newCartData = [];
-        let InputQuantity = Number(document.getElementById("InputQuantity").value);
-        if (cartData !== null) {
-            // 從localStorage取出序列化後的2D ARRAY先轉回Javascript的陣列放入 newCartData 陣列儲存
-            newCartData = JSON.parse(cartData);
-            //push到newCartData陣列之前先到存放specificationsID的陣列搜尋SNID，搜尋到就直接在inputQuantityArr加總，
-            //indexof找不到會回傳-1
-            let SNIDIndexValue = newCartData[1].indexOf(@Model.FirstOrDefault().SNID);
-            if (SNIDIndexValue == -1) {
-                newCartData[0].push(@Model.FirstOrDefault().PTID);
-                newCartData[1].push(@Model.FirstOrDefault().SNID);
-                newCartData[2].push(InputQuantity);
-            }
-            //搜尋到撈出記錄在newCartData的數量
-            //與當前inputQuantityArr加總確認是否超出商品數量，如果超出跳警告，沒有超出就新增
-            if ((InputQuantity + newCartData[2][SNIDIndexValue]) > @RestQuantity){
-                alert('加入購物車操作失敗，因加入數量與購物車商品數量加總超出商品數量【@RestQuantity】件，請先確認購物車商品數量再重新添加');
+@section Scripts{
+    <script>
+        function ProductQuantityChange(QuantityChangeValue) {
+            let InputQuantity = document.getElementById("InputQuantity");
+            let IntInputQuantity = parseInt(InputQuantity.value);
+            if (IntInputQuantity === 1 && QuantityChangeValue === -1){
                 return "";
             }
-            //沒有超出商品數量就新增
-            newCartData[2][SNIDIndexValue] += InputQuantity;
+            IntInputQuantity += QuantityChangeValue;
+            if (IntInputQuantity > @RestQuantity) {
+                return ""; 
+            }
+            InputQuantity.value = IntInputQuantity;
         }
-        else {
-            // 初始化 productID 、specificationsID 、 inputQuantity
-            let productID = [];
-            let specificationsID = [];
-            let inputQuantityArr = [];
 
-            // PTID 放在第一個陣列
-            productID.push(@Model.FirstOrDefault().PTID);
-            newCartData.push(productID);
+        function InputvalidateAndClear() {
+        
+            let inputElement = document.getElementById("InputQuantity");
+            let inputValue = inputElement.value;
+            // 執行驗證邏輯
+            if (inputValue > @RestQuantity || inputValue === 0) {
+            // 驗證失敗，清除輸入
+            inputElement.value = 1;
+            }
+        }
+
+        function saveProductToCart() {
+            // 取得當前存在 localStorage 的商品資料
+            let cartData = localStorage.getItem('cartData');
+            let newCartData = [];
+            let InputQuantity = Number(document.getElementById("InputQuantity").value);
+            if (cartData !== null) {
+                // 從localStorage取出序列化後的2D ARRAY先轉回Javascript的陣列放入 newCartData 陣列儲存
+                newCartData = JSON.parse(cartData);
+                //push到newCartData陣列之前先到存放specificationsID的陣列搜尋SNID，搜尋到就直接在inputQuantityArr加總，
+                //indexof找不到會回傳-1
+                let SNIDIndexValue = newCartData[1].indexOf(@Model.FirstOrDefault().SNID);
+                if (SNIDIndexValue == -1) {
+                    newCartData[0].push(@Model.FirstOrDefault().PTID);
+                    newCartData[1].push(@Model.FirstOrDefault().SNID);
+                    newCartData[2].push(InputQuantity);
+                }
+                //搜尋到撈出記錄在newCartData的數量
+                //與當前inputQuantityArr加總確認是否超出商品數量，如果超出跳警告，沒有超出就新增
+                if ((InputQuantity + newCartData[2][SNIDIndexValue]) > @RestQuantity){
+                    alert('加入購物車操作失敗，因加入數量與購物車商品數量加總超出商品數量【@RestQuantity】件，請先確認購物車商品數量再重新添加');
+                    return "";
+                }
+                //沒有超出商品數量就新增
+                newCartData[2][SNIDIndexValue] += InputQuantity;
+            }
+            else {
+                // 初始化 productID 、specificationsID 、 inputQuantity
+                let productID = [];
+                let specificationsID = [];
+                let inputQuantityArr = [];
+
+                // PTID 放在第一個陣列
+                productID.push(@Model.FirstOrDefault().PTID);
+                newCartData.push(productID);
             
-            // SNID 放在第二個陣列
-            specificationsID.push(@Model.FirstOrDefault().SNID);
-            newCartData.push(specificationsID);
+                // SNID 放在第二個陣列
+                specificationsID.push(@Model.FirstOrDefault().SNID);
+                newCartData.push(specificationsID);
 
-            // InputQuantity 放在第三個陣列
-            inputQuantityArr.push(InputQuantity);
-            newCartData.push(inputQuantityArr);
+                // InputQuantity 放在第三個陣列
+                inputQuantityArr.push(InputQuantity);
+                newCartData.push(inputQuantityArr);
+            }
+            // 存储到 localStorage
+            localStorage.setItem('cartData', JSON.stringify(newCartData));
+
+            //提示用戶存入購物車操作成功
+            alert('成功將商品加入購物車!!');
         }
-        // 存储到 localStorage
-        localStorage.setItem('cartData', JSON.stringify(newCartData));
 
-        //提示用戶存入購物車操作成功
-        alert('成功將商品加入購物車!!');
+        breakCacheStoreRuleForDisplayUpdatePhoto("#ImgContainer img"); 
+    </script>
     }
-</script>

@@ -2,17 +2,37 @@
 
 @{
     ViewData["Title"] =@ViewData["ShopName"] + "的商鋪";
-    
+
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var UserInfomation = Context.Session.GetString("UserInfomation");
 }
-<div class="d-flex flex-column container-fluid mt-2">
+@{
+    Users userFullInfo = new Users();
+    if (UserInfomation != null)
+    {
+        userFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Users>(UserInfomation);
+    }
+}
+<div class="d-flex flex-column container-fluid">
     @await Component.InvokeAsync("VCSellers" , new{SRID= @ViewData["SRID"]})
     @if (Model.Count() == 0)
     {
         <a asp-action ="Index" asp-controller="Home" class="text-center text-secondary">商家尚未上架任何商品，返回商城首頁</a>
         return;
     }
-    <h3 class="text-center">商品列表</h3>
+    <div class="d-flex container">
+        <h2 class="me-auto">商品列表</h2>
+        @if (UserInfomation == null)
+        {
+            <h2><a href="#" onclick="RedirectToLogin()" class="text-danger effect-shine"><i class="bi bi-exclamation-triangle text-warning"></i>檢舉賣家</a></h2>
+
+        }
+        else{
+            <h2><a href="#" onclick="redirectToUsersViolationCreateAction(event)" class="text-danger effect-shine"><i class="bi bi-exclamation-triangle text-warning"></i>檢舉賣家</a></h2>
+        }
+    </div>
+
+
     <div class="container">
         <div id="productInfoCardsContainer" class="row p-0 d-flex justify-content-between row-cols-5">
             @foreach (var item in Model)
@@ -28,3 +48,13 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        function redirectToUsersViolationCreateAction(event) {
+            event.preventDefault();
+            window.location = "/UsersViolationsManagement/Create?SubmitterUserID=@userFullInfo.URID&SuspectUserID=@ViewBag.SRID";
+        }
+        breakCacheStoreRuleForDisplayUpdatePhoto(".card-img-top");
+    </script>
+}

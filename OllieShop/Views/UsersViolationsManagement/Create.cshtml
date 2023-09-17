@@ -15,7 +15,7 @@
                 <h3>本次檢舉對象名稱 : <span class="text-info">@ViewData["SuspectName"]</span></h3>
                 <div class="form-group">
                     <label asp-for="Reason" class="control-label"></label>
-                    <input asp-for="Reason" class="form-control" />
+                    <textarea asp-for="Reason" class="form-control p-1"></textarea>
                     <span asp-validation-for="Reason" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -41,6 +41,16 @@
         function redirectToPreviousPage(event){
             event.preventDefault();
             history.back();
+        }
+        //欄位按下enter後自動擴張輸入框
+        var textarea = document.querySelector('textarea');
+        textarea.addEventListener('keydown', autosize);
+        function autosize() {
+            var el = this;
+            setTimeout(function () {
+                el.style.cssText = 'height:auto; padding:0';
+                el.style.cssText = 'height:' + el.scrollHeight + 'px';
+            }, 0);
         }
     </script>
 }

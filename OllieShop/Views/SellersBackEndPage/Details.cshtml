@@ -4,46 +4,57 @@
     ViewData["Title"] = "商店資訊";
     Layout = "~/Views/Shared/_Layout_Seller.cshtml";
 }
-
-<h1>@ViewData["Title"]</h1>
-
-<div>
-    <hr />
-    <h2 class="text-primary">@TempData["editSuccessMessage"]</h2>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShopNAME)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShopNAME)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TaxID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TaxID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BankCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BankCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BankAccount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BankAccount)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Picture)
-        </dt>
-        <dd class="col-sm-10">
-            <img class="w-100" src="@Html.DisplayFor(model => model.Picture)" />
-        </dd>
-    </dl>
+<div class="d-flex align-items-center">
+    <h1 class="me-auto">@ViewData["Title"]</h1>
+    <a class="fs-3" asp-action="OptionsMenu" asp-controller="SellersBackEndPage">返回業者後台</a>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-SRID="@Model?.SRID">修改內容</a> |
-    <a asp-action="OptionsMenu" asp-controller="SellersBackEndPage">返回業者後台</a>
+
+<hr />
+<div class="container-fluid">
+    <div class="d-flex row">
+        <div class="col">
+            <h2 class="text-primary">@TempData["editSuccessMessage"]</h2>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ShopNAME)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ShopNAME)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.TaxID)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.TaxID)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.BankCode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.BankCode)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.BankAccount)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.BankAccount)
+                </dd>
+                <a class="mt-2 btn btn-outline-dark col-sm-2" asp-action="Edit" asp-route-SRID="@Model?.SRID">修改內容</a>
+            </dl>
+        </div>
+        <div id="sellerOverViewInfoContainer" class="d-flex col">
+            <h2 class="textVertical text-center text-bg-primary m-0 p-1">
+                @Html.DisplayNameFor(model => model.Picture)
+            </h2>
+            <div>
+                <img class="w-100" id="sellerOverViewImage" src="@Html.DisplayFor(model => model.Picture)" />
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts{
+    <script>
+        breakCacheStoreRuleForDisplayUpdatePhoto("#sellerOverViewImage");
+    </script>
+}

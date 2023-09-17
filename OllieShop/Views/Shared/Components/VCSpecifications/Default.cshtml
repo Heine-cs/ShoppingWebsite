@@ -27,7 +27,7 @@
         " + @Html.DisplayNameFor(a => specificationsInfo.Picture) + @":
     </dt>
     <dd class='col-sm-10 w-50'>
-        <img class = 'w-50' src=' " + specificationsInfo.Picture + @" ' />" + @"
+        <img class = 'w-50 productImg' src=' " + specificationsInfo.Picture + @"' />" + @"
     </dd>
     <hr>
     <dt class='col-sm-2'>
@@ -76,3 +76,9 @@
     accordionCaculactor++;
     <div>@Html.Raw(accordionContent)</div>
 }
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js"></script>
+<script>
+    breakCacheStoreRuleForDisplayUpdatePhoto(".productImg");
+</script>
