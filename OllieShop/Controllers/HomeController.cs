@@ -246,7 +246,7 @@ namespace OllieShop.Controllers
                 };
             if (CustomerUseableCouponsQuery.Any() == false)
             {
-                ViewData["CustomerUseableCouponsNotFound"] = "目前尚無可使用的折價券，您可再次關注賣場活動，多多領券!!";
+                ViewData["CustomerUseableCouponsNotFound"] = "目前尚無可使用的折價券，您可再次關注賣場活動或者公告發布區，多多領券!!";
             }
             ViewData["CustomerUseableCoupons"] = new SelectList(await CustomerUseableCouponsQuery.ToListAsync(), "CNID", "CODE");
             
