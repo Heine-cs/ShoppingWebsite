@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "違規案件列表(尚未處理)";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    string adminInfomation = Context.Session.GetString("AdminInfomation");
+    Admins adminFullInfo = new Admins();
+    if(adminInfomation != null)
+    {
+       adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
+    }
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -41,14 +47,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Suspect)
                 </td>
-                <td class="text-warning">
+                <td class="text-warning fontBorder">
                     尚未審核
                 </td>
-                <td class="text-warning">
+                <td class="text-warning fontBorder">
                     尚未有人員處理
                 </td>
                 <td>
-                    <a target="_blank" asp-action="Edit" asp-route-id="@item.VioID">審核</a>
+                    <a target="_blank" asp-action="Edit" asp-route-id="@item.VioID" asp-route-ADID="@adminFullInfo.ADID">審核</a>
                 </td>
             </tr>
         }

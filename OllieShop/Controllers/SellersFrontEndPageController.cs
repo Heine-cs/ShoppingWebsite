@@ -35,6 +35,12 @@ namespace OllieShop.Controllers
             //為了呼叫Sellers ViewComponent存在的參數
             ViewData["SRID"] = SRID;
 
+            //為了檢舉賣家需要用到的UserID
+            ViewData["SellerUserID"] = _context.Sellers
+                                        .Where(s => s.SRID == SRID)
+                                        .Select(s => s.URID)
+                                        .FirstOrDefault();
+
             return View(sellerProductsWithSpecification);
         }
 

@@ -12,10 +12,12 @@ namespace OllieShop.Controllers
     public class ViolationsController : Controller
     {
         private readonly OllieShopContext _context;
+        private readonly IdentityCheck _identityCheck;
 
-        public ViolationsController(OllieShopContext context)
+        public ViolationsController(OllieShopContext context,IdentityCheck identityCheck)
         {
             _context = context;
+            _identityCheck = identityCheck;
         }
 
         public async Task<IActionResult> Index()
@@ -48,9 +50,16 @@ namespace OllieShop.Controllers
             return View(violations);
         }
 
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(long? id,short ADID)
         {
             if (id == null || _context.Violations == null)
+            {
+                return NotFound();
+            }
+
+            //驗證使用此action對象之管理員身分是否與session資料相符
+            IActionResult result = await _identityCheck.AdminCheckAsync(ADID);
+            if(result is NotFoundResult)
             {
                 return NotFound();
             }
@@ -60,7 +69,7 @@ namespace OllieShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["ADID"] = new SelectList(_context.Admins, "ADID", "Account", violations.ADID);
+            ViewData["ADID"] = ADID;
             return View(violations);
         }
 

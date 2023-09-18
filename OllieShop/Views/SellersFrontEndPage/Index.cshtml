@@ -53,7 +53,7 @@
     <script>
         function redirectToUsersViolationCreateAction(event) {
             event.preventDefault();
-            window.location = "/UsersViolationsManagement/Create?SubmitterUserID=@userFullInfo.URID&SuspectUserID=@ViewBag.SRID";
+            window.location = "/UsersViolationsManagement/Create?SubmitterUserID=@userFullInfo.URID&SuspectUserID=@ViewBag.SellerUserID";
         }
         breakCacheStoreRuleForDisplayUpdatePhoto(".card-img-top");
     </script>

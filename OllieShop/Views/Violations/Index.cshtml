@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = "違規案件列表";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+    string adminInfomation = Context.Session.GetString("AdminInfomation");
+    Admins adminFullInfo = new Admins();
+    if(adminInfomation != null)
+    {
+       adminFullInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Admins>(adminInfomation);
+    }
+    
 }
 <h1 id="headTitle">@ViewData["Title"]</h1>
 
@@ -82,7 +89,7 @@
                         尚未有人員處理
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.VioID" class="text-white">審核</a> |
+                        <a asp-action="Edit" asp-route-id="@item.VioID" asp-route-ADID="@adminFullInfo.ADID" class="text-white">審核</a> |
                         <a asp-action="Details" asp-route-id="@item.VioID" class="text-white">完整內容</a>
                     </td>
                 </tr>
