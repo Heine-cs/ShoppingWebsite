@@ -85,4 +85,5 @@ Ollie Shop ┴╩кленеx╢}╡oйl▓╫░ЄйєкA░╚л╚дск║и╧йR╖PбAд]е┐мOж]м░╡°е╬дс╗▌иDм░дvеЇбA║Є║
 ###  ╣ъ┼щ├Ў┴p╣╧(E-R Diagram)
 ![E-R Diagram](https://i.imgur.com/0S68PqB.jpeg)
 
+
 л∙─Є╝Wе[дд...е╝з╣л▌─Є
