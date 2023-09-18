@@ -230,7 +230,7 @@ namespace OllieShop.Controllers
         public async Task<IActionResult> PlaceOrder(string CartTableWithChildNode,long CRID,long URID,int ProductFeeCount,decimal DeliveryFeeCount)
         {
             ViewData["CartTableWithChildNode"] = CartTableWithChildNode;
-            ViewData["OrderEstablishDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            ViewData["OrderEstablishDate"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             ViewData["CRID"] = CRID;
             ViewData["CustomerAddresses"] = new SelectList(_context.Addresses.Where(A => A.URID == URID), "ASID", "Street");
