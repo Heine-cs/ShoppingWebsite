@@ -19,19 +19,20 @@
             </tr>
         </thead>
         <tbody>
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PublicDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.ATID">完整內容</a>
-                </td>
-            </tr>
-    }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PublicDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.ATID">完整內容</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
