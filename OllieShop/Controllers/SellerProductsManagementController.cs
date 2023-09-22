@@ -94,6 +94,30 @@ namespace OllieShop.Controllers
 
         public IActionResult Create()
         {
+            string sellerInfomation = HttpContext.Session.GetString("SellerInfomation");
+            Sellers sellerFullInfo= Newtonsoft.Json.JsonConvert.DeserializeObject<Sellers>(sellerInfomation);
+
+            //檢查上架商品前，是否至少將商店的運送方式與付款方式都註冊一組
+            bool sellerShipViasQuery = _context.SellerShipVias.Any(s => s.SRID == sellerFullInfo.SRID);
+            bool SellerPaymentMethodsQuery = _context.SellerPaymentMethods.Any(s => s.SRID == sellerFullInfo.SRID);
+            if(sellerShipViasQuery == false && SellerPaymentMethodsQuery == false)
+            {
+                return RedirectToAction(nameof(SignUpShopPaymentMethodAndShipVia), new {sellerFullInfo.SRID});
+            }
+
+            if (sellerShipViasQuery == false)
+            {
+                TempData["BindShipViaReason"] = "您尚未替商店綁定運送方式，需綁定一組方式才能開始上架商品";
+                return RedirectToAction("Create", "SellerShipViasManagement", new { sellerFullInfo.SRID });
+            }            
+
+            if (SellerPaymentMethodsQuery == false)
+            {
+                TempData["BindPaymentMethodReason"] = "您尚未替商店綁定付款方式，需綁定一組方式才能開始上架商品";
+                return RedirectToAction("Create", "SellerPaymentMethodsManagement", new { sellerFullInfo.SRID });
+            }
+
+
             ViewData["LaunchDate"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             ViewData["CategorysSelectList"] = new SelectList(_context.Categorys, "CYID", "Name");
             return View();
@@ -250,5 +274,38 @@ namespace OllieShop.Controllers
         {
           return (_context.Products?.Any(e => e.PTID == id)).GetValueOrDefault();
         }
+
+        //為商店綁定一組付款方式與運送方式
+        public async Task<IActionResult> SignUpShopPaymentMethodAndShipVia(long SRID)
+        {
+            //驗證使用此action對象之賣家身分是否與session資料相符
+            IActionResult result = await _identityCheck.SellerIdentityCheckAsync(SRID);
+            if (result is NotFoundResult)
+            {
+                return NotFound();
+            }
+            ViewData["PMInfo"] = new SelectList(_context.PaymentMethods, "PMID", "Name");
+            ViewData["SVInfo"] = new SelectList(_context.ShipVias, "SVID", "Name");
+            ViewData["SRID"] = SRID;
+            ViewData["BindReason"] = "您尚未替商店綁定付款方式與運送方式，需個別綁定一組交易方式才能開始上架商品";
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignUpShopPaymentMethodAndShipVia(SignUpShopPaymentMethodAndShipVia signUpShopPaymentMethodAndShipVia)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(signUpShopPaymentMethodAndShipVia.sellerPaymentMethod);
+                await _context.SaveChangesAsync();
+                _context.Add(signUpShopPaymentMethodAndShipVia.sellerShipVia);
+                await _context.SaveChangesAsync();
+                //綁定成功，開始新增第一筆商店商品
+                return RedirectToAction(nameof(Create));
+            }
+            return View(signUpShopPaymentMethodAndShipVia);
+        }
+
     }
 }
